@@ -1,0 +1,6 @@
+{
+  "name": "Trang web cá nhân",
+  "description": "Khung trang web tối giản với thanh điều hướng trên cùng, menu bên và tài khoản người dùng.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
