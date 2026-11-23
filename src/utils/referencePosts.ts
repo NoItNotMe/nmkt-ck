@@ -22,10 +22,25 @@ export interface ArticleCarouselBlock {
   slides: readonly ArticleCarouselSlide[];
 }
 
+export interface ArticleBarChartDatum {
+  label: string;
+  value: number;
+  highlight?: boolean;
+}
+
+export interface ArticleBarChartBlock {
+  type: 'chart';
+  title: string;
+  subtitle?: string;
+  caption: string;
+  items: readonly ArticleBarChartDatum[];
+}
+
 export type ArticleContentBlock =
   | string
   | ArticleFigureBlock
-  | ArticleCarouselBlock;
+  | ArticleCarouselBlock
+  | ArticleBarChartBlock;
 
 export interface ReferencePost {
   id: string;
@@ -473,6 +488,91 @@ export const OTHER_REFERENCE_POSTS: readonly ReferencePost[] = [
       'Quan trọng hơn cả là khả năng tự học suốt đời. Một thế hệ vi điều khiển, chuẩn giao tiếp không dây hay công cụ mô phỏng có thể thay đổi chỉ sau vài năm, nhưng tư duy phân tích bài toán từ nguyên lý gốc và thói quen kiểm chứng bằng thực nghiệm sẽ giúp người kỹ sư thích nghi trước mọi làn sóng công nghệ mới.',
       '---',
       '> Bản lý lịch chỉ giúp mở cánh cửa phỏng vấn; chính chiều sâu chuyên môn, tính kỷ luật và khả năng phối hợp giải quyết vấn đề mới là điều giữ người kỹ sư đứng vững và đi xa trong nghề.',
+    ],
+  },
+  {
+    id: 'other-engineering-choice',
+    category: 'Chương 1',
+    detailCategory: 'Chương 1: Giới thiệu nhập môn kỹ thuật',
+    title: 'Kỹ thuật có còn là lựa chọn hấp dẫn?',
+    sapo: 'Từ giảng đường đến thị trường lao động: Những con số, kỳ vọng và năng lực mà một kỹ sư tương lai cần chuẩn bị.',
+    imageLabel: 'Kỹ thuật có còn là lựa chọn hấp dẫn?',
+    imageSrc: '/assets/aistudio/image_dca56eee.png',
+    imageAlt: 'Nhóm sinh viên kỹ thuật trẻ cùng lắp ráp và thảo luận về mô hình robot thực hành',
+    readTime: '6 phút đọc',
+    initialLikes: 0,
+    initialComments: [],
+    bodyParagraphs: [
+      '> Chọn ngành kỹ thuật không chỉ là lựa chọn một chương trình đại học. Đó còn là quyết định bước vào một thế giới nghề nghiệp đòi hỏi kiến thức chuyên môn, khả năng thích nghi và tinh thần học hỏi liên tục. Nhưng điều gì thực sự chờ đợi một sinh viên sau khi tốt nghiệp?',
+      '---',
+      'Mỗi năm, hàng nghìn học sinh đứng trước quyết định lựa chọn ngành học đại học. Với những người quan tâm đến kỹ thuật, câu hỏi không chỉ là mình có phù hợp với toán học, vật lý hay công nghệ hay không. Họ còn muốn biết ngành học nào có nhiều cơ hội nghề nghiệp, thị trường lao động cần những chuyên môn gì và mức thu nhập sau khi tốt nghiệp có thể ra sao.',
+      'Đây cũng là những vấn đề được đặt ra trong phần cuối của Chương 1, khi giáo trình chuyển từ việc giới thiệu lịch sử và chức năng nghề nghiệp sang thống kê về đào tạo và triển vọng nghề nghiệp kỹ thuật.',
+      '---',
+      'Một trong những dữ liệu được sử dụng trong giáo trình là số lượng sinh viên nhập học tại Đại học Bách khoa – Đại học Quốc gia TP.HCM theo từng khoa vào năm 2011. Theo thống kê được trình bày, Khoa Kỹ thuật Xây dựng có số lượng sinh viên nhập học cao nhất với 958 người. Khoa Cơ khí đứng tiếp theo với 647 sinh viên, trong khi Khoa Điện – Điện tử có 584 sinh viên. Các khoa khác cũng ghi nhận số lượng tuyển sinh đáng chú ý, gồm Kỹ thuật Hóa học với 417 sinh viên và Khoa Khoa học và Kỹ thuật Máy tính với 292 sinh viên.',
+      {
+        type: 'chart',
+        title: 'Biểu đồ 1: Số lượng sinh viên nhập học theo khoa năm 2011',
+        subtitle: 'ĐHBK – ĐHQG TP.HCM (sinh viên)',
+        caption:
+          'Số liệu tuyển sinh Đại học Bách khoa – ĐHQG TP.HCM năm 2011, trích từ giáo trình Nhập môn về kỹ thuật.',
+        items: [
+          { label: 'Kỹ thuật Xây dựng', value: 958 },
+          { label: 'Cơ khí', value: 647 },
+          { label: 'Điện – Điện tử', value: 584, highlight: true },
+          { label: 'Kỹ thuật Hóa học', value: 417 },
+          { label: 'Khoa học & KT Máy tính', value: 292 },
+          { label: 'Quản lý Công nghiệp', value: 234 },
+          { label: 'Kỹ thuật Giao thông', value: 175 },
+          { label: 'Công nghệ Vật liệu', value: 171 },
+          { label: 'Môi trường', value: 169 },
+          { label: 'Kỹ thuật Địa chất – Dầu khí', value: 165 },
+          { label: 'Khoa học Ứng dụng', value: 123 },
+        ],
+      },
+      'Những con số này cho thấy kỹ thuật là một nhóm ngành có quy mô đào tạo đa dạng, với nhiều chuyên ngành phục vụ các lĩnh vực khác nhau của nền kinh tế. Điện – Điện tử cũng là một trong những khoa có quy mô tuyển sinh đáng kể trong thống kê được giới thiệu. Tuy nhiên, cần nhấn mạnh rằng đây là dữ liệu lịch sử năm 2011, không phản ánh tình hình tuyển sinh hiện tại.',
+      '---',
+      'Bên cạnh số lượng sinh viên nhập học, giáo trình còn đưa ra số liệu tốt nghiệp của các khoa trong cùng năm. Khoa Kỹ thuật Xây dựng có 566 sinh viên tốt nghiệp, Khoa Cơ khí có 368 sinh viên, còn Khoa Điện – Điện tử có 384 sinh viên. Khoa Khoa học và Kỹ thuật Máy tính ghi nhận 284 sinh viên tốt nghiệp, trong khi Khoa Kỹ thuật Hóa học có 255 sinh viên.',
+      {
+        type: 'chart',
+        title: 'Biểu đồ 2: Số lượng sinh viên tốt nghiệp theo khoa năm 2011',
+        subtitle: 'ĐHBK – ĐHQG TP.HCM (sinh viên)',
+        caption:
+          'Thống kê sinh viên tốt nghiệp năm 2011 tại Đại học Bách khoa – ĐHQG TP.HCM.',
+        items: [
+          { label: 'Kỹ thuật Xây dựng', value: 566 },
+          { label: 'Điện – Điện tử', value: 384, highlight: true },
+          { label: 'Cơ khí', value: 368 },
+          { label: 'Khoa học & KT Máy tính', value: 284 },
+          { label: 'Kỹ thuật Hóa học', value: 255 },
+          { label: 'Quản lý Công nghiệp', value: 206 },
+          { label: 'Công nghệ Vật liệu', value: 138 },
+          { label: 'Môi trường', value: 100 },
+          { label: 'Kỹ thuật Địa chất – Dầu khí', value: 95 },
+          { label: 'Kỹ thuật Giao thông', value: 76 },
+          { label: 'Khoa học Ứng dụng', value: 67 },
+        ],
+      },
+      'Việc đặt số liệu tuyển sinh và tốt nghiệp cạnh nhau giúp người đọc hình dung quy mô đào tạo của các lĩnh vực kỹ thuật trong cùng một năm. Tuy nhiên, không nên lấy số sinh viên nhập học và tốt nghiệp của cùng năm để tính tỷ lệ hoàn thành chương trình học. Hai nhóm số liệu không nhất thiết thuộc cùng một khóa tuyển sinh. Dù vậy, những thống kê này vẫn có giá trị tham khảo trong việc tìm hiểu cơ cấu đào tạo và quy mô các ngành kỹ thuật tại một trường đại học.',
+      '---',
+      'Một trong những vấn đề được sinh viên quan tâm nhất khi lựa chọn ngành nghề là thu nhập. Giáo trình đặt ra câu hỏi về mức lương của kỹ sư điện – điện tử mới ra trường, kỹ sư có 5 năm kinh nghiệm và kỹ sư có 10 năm kinh nghiệm. Đây là cách tiếp cận hợp lý vì thu nhập của người lao động có thể thay đổi theo kinh nghiệm, vị trí công việc và năng lực chuyên môn.',
+      'Tuy nhiên, phần số liệu tiền lương trong slide hiện không có các con số hoàn chỉnh. Thời điểm thu thập dữ liệu cũng được để trống. Vì vậy, không thể sử dụng phần này để đưa ra một mức lương cụ thể hoặc kết luận về thu nhập hiện tại của kỹ sư điện – điện tử. Điều đáng chú ý hơn là câu hỏi mà giáo trình đặt ra: kinh nghiệm nghề nghiệp và năng lực chuyên môn có thể ảnh hưởng như thế nào đến cơ hội phát triển của một kỹ sư?',
+      '---',
+      'Nếu bằng cấp là điều kiện giúp ứng viên bước vào thị trường lao động, thì những năng lực thực tế mới là yếu tố giúp họ đáp ứng yêu cầu công việc. Trong phần cuối chương, giáo trình tổng hợp một số lời khuyên từ nhà tuyển dụng về những khả năng mà sinh viên tốt nghiệp cần có.',
+      'Đầu tiên là giao tiếp tốt. Một kỹ sư thường phải trao đổi với đồng nghiệp, khách hàng, nhà cung cấp và nhiều bộ phận chuyên môn khác, vì vậy khả năng truyền đạt thông tin rõ ràng là yêu cầu quan trọng. Thứ hai là làm việc nhóm hiệu quả: những dự án kỹ thuật thường có sự tham gia của nhiều người với chuyên môn khác nhau, đòi hỏi kỹ sư cần biết phối hợp, chia sẻ thông tin và cùng nhóm giải quyết vấn đề. Thứ ba là năng lực quản lý và lãnh đạo — khi đảm nhận những nhiệm vụ có quy mô lớn hơn, kỹ sư cần biết tổ chức công việc, quản lý thời gian và phối hợp nguồn lực. Bên cạnh đó, nhà tuyển dụng cũng quan tâm đến khả năng sử dụng máy tính, kiến thức kỹ thuật chuyên ngành và thái độ làm việc chăm chỉ, nghiêm túc.',
+      {
+        type: 'figure',
+        src: '/assets/aistudio/image_dca56eee.png',
+        alt: 'Nhóm kỹ sư trẻ cùng thảo luận và lắp ráp mô hình dự án kỹ thuật',
+        caption:
+          'Làm việc nhóm và giao tiếp là những năng lực được nhà tuyển dụng nhấn mạnh trong giáo trình.',
+      },
+      '---',
+      'Một trong những nhận thức quan trọng mà sinh viên cần có là quá trình học tập không kết thúc khi nhận bằng tốt nghiệp. Công nghệ luôn thay đổi; những công cụ, phương pháp và quy trình được sử dụng trong doanh nghiệp có thể tiếp tục phát triển theo thời gian. Một kỹ sư muốn duy trì năng lực nghề nghiệp cần liên tục cập nhật kiến thức, học hỏi từ kinh nghiệm thực tế và thích nghi với những yêu cầu mới. Bên cạnh đó, kiến thức chuyên môn cần được kết hợp với những kỹ năng cá nhân và liên cá nhân: khả năng giải quyết vấn đề, giao tiếp, làm việc nhóm và quản lý công việc đều góp phần quyết định hiệu quả làm việc.',
+      '---',
+      'Nhìn lại các nội dung của chương, có thể thấy nghề kỹ thuật không chỉ được định hình bởi lịch sử phát triển của công nghệ hay những phát minh nổi tiếng. Nó còn được định hình bởi hệ thống giáo dục, nhu cầu của doanh nghiệp và khả năng phát triển của từng cá nhân. Các số liệu tuyển sinh năm 2011 cho thấy quy mô đào tạo đa dạng của những ngành kỹ thuật tại Đại học Bách khoa, còn những lời khuyên từ nhà tuyển dụng lại cho thấy một kỹ sư cần nhiều hơn kiến thức chuyên ngành để có thể làm việc hiệu quả.',
+      'Đối với sinh viên, việc chuẩn bị nghề nghiệp nên bắt đầu ngay từ những năm đầu đại học. Học tốt các môn chuyên môn là cần thiết, nhưng tham gia dự án, thực hành, rèn luyện kỹ năng giao tiếp và làm việc nhóm cũng quan trọng không kém.',
+      '---',
+      '> Thị trường lao động có thể thay đổi, công nghệ có thể liên tục tiến hóa, nhưng khả năng học hỏi, giải quyết vấn đề và tạo ra giá trị thực tế vẫn luôn là nền tảng của một kỹ sư.',
     ],
   },
   GUI_DEBATE_POST,

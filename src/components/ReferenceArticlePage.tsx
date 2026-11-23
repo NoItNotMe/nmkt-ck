@@ -2,6 +2,7 @@ import { type FormEvent, useEffect, useRef, useState } from 'react';
 import { ArrowLeft, Heart, MessageCircle, Send } from 'lucide-react';
 import { type UserAccount } from '../utils/auth';
 import { type ReferenceComment, type ReferencePost } from '../utils/referencePosts';
+import { ArticleBarChartFigure } from './ArticleBarChartFigure';
 import { ArticleCarouselFigure } from './ArticleCarouselFigure';
 
 interface ReferenceArticlePageProps {
@@ -157,6 +158,9 @@ export function ReferenceArticlePage({
                   postId={post.id}
                 />
               );
+            }
+            if (block.type === 'chart') {
+              return <ArticleBarChartFigure key={idx} block={block} />;
             }
             return (
               <figure key={idx} className="my-6">

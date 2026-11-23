@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { computeSortedChartRows } from '../components/ArticleBarChartFigure';
 import { getCarouselTrackOffsetPercent } from '../components/ArticleCarouselFigure';
 import {
   addArticleComment,
@@ -69,24 +70,25 @@ test('FEATURED_REFERENCE_POSTS has 2 main articles assigned to Chương 3 and Ch
     FEATURED_REFERENCE_POSTS[1].sourceUrl,
     'https://medium.com/@davidsehyeonbaek/the-great-gui-debate-steve-jobs-bill-gates-and-the-borrowed-innovation-from-xerox-6402e7b654c8'
   );
-  assert.equal(OTHER_REFERENCE_POSTS.length, 16);
+  assert.equal(OTHER_REFERENCE_POSTS.length, 17);
 
   const sidebarPosts = getSidebarReferencePosts();
   const gridPosts = getGridReferencePosts();
   assert.equal(sidebarPosts.length, SIDEBAR_REFERENCE_LIMIT);
   assert.equal(sidebarPosts.length, 5);
-  assert.equal(gridPosts.length, 11);
+  assert.equal(gridPosts.length, 12);
   assert.equal(sidebarPosts[0]?.id, 'other-1');
   assert.equal(sidebarPosts[1]?.id, 'other-inventions');
   assert.equal(sidebarPosts[2]?.id, 'other-minds');
   assert.equal(sidebarPosts[3]?.id, 'other-roles');
   assert.equal(sidebarPosts[4]?.id, 'other-careers');
   assert.equal(gridPosts[0]?.id, 'other-ee-profile');
-  assert.equal(gridPosts[1]?.id, 'featured-2');
-  assert.equal(gridPosts[2]?.category, 'Chương 2');
-  assert.equal(gridPosts[3]?.id, 'featured-1');
-  assert.equal(gridPosts[3]?.category, 'Chương 3');
-  assert.equal(gridPosts[10]?.category, 'Chương 10');
+  assert.equal(gridPosts[1]?.id, 'other-engineering-choice');
+  assert.equal(gridPosts[2]?.id, 'featured-2');
+  assert.equal(gridPosts[3]?.category, 'Chương 2');
+  assert.equal(gridPosts[4]?.id, 'featured-1');
+  assert.equal(gridPosts[4]?.category, 'Chương 3');
+  assert.equal(gridPosts[11]?.category, 'Chương 10');
 
   assert.equal(REFERENCE_CHAPTERS.length, 10);
   assert.equal(
@@ -96,11 +98,12 @@ test('FEATURED_REFERENCE_POSTS has 2 main articles assigned to Chương 3 and Ch
   assert.equal(getReferenceChapterInfo(3).detailLabel, 'Chương 3');
 
   const ch1Posts = getReferencePostsByChapter(1);
-  assert.equal(ch1Posts.length, 7);
+  assert.equal(ch1Posts.length, 8);
   assert.ok(ch1Posts.some((p) => p.id === 'other-minds'));
   assert.ok(ch1Posts.some((p) => p.id === 'other-roles'));
   assert.ok(ch1Posts.some((p) => p.id === 'other-careers'));
   assert.ok(ch1Posts.some((p) => p.id === 'other-ee-profile'));
+  assert.ok(ch1Posts.some((p) => p.id === 'other-engineering-choice'));
   assert.ok(ch1Posts.some((p) => p.id === 'featured-2'));
 
   const ch3Posts = getReferencePostsByChapter(3);
@@ -180,6 +183,39 @@ test('FEATURED_REFERENCE_POSTS has 2 main articles assigned to Chương 3 and Ch
     eeCarousel.slides.every((slide) => slide.src !== eePost.imageSrc),
     'other-ee-profile carousel must exclude the article thumbnail imageSrc'
   );
+
+  const choicePost = findReferencePostById('other-engineering-choice');
+  assert.ok(choicePost);
+  assert.equal(choicePost.title, 'Kỹ thuật có còn là lựa chọn hấp dẫn?');
+  assert.equal(choicePost.category, 'Chương 1');
+  assert.equal(choicePost.imageSrc, '/assets/aistudio/image_dca56eee.png');
+  const choiceCharts = choicePost.bodyParagraphs.filter(
+    (b) => typeof b !== 'string' && b.type === 'chart'
+  );
+  assert.equal(choiceCharts.length, 2);
+  if (
+    typeof choiceCharts[0] !== 'string' &&
+    choiceCharts[0]?.type === 'chart' &&
+    typeof choiceCharts[1] !== 'string' &&
+    choiceCharts[1]?.type === 'chart'
+  ) {
+    assert.equal(choiceCharts[0].items.length, 11);
+    assert.equal(choiceCharts[1].items.length, 11);
+    const enrollmentRows = computeSortedChartRows(choiceCharts[0].items);
+    assert.equal(enrollmentRows[0]?.label, 'Kỹ thuật Xây dựng');
+    assert.equal(enrollmentRows[0]?.value, 958);
+    assert.equal(enrollmentRows[0]?.widthPercent, 100);
+    const graduationRows = computeSortedChartRows(choiceCharts[1].items);
+    assert.equal(graduationRows[0]?.label, 'Kỹ thuật Xây dựng');
+    assert.equal(graduationRows[0]?.value, 566);
+    assert.equal(graduationRows[1]?.label, 'Điện – Điện tử');
+    assert.equal(graduationRows[1]?.value, 384);
+    assert.equal(graduationRows[1]?.highlight, true);
+  }
+  const choiceFigures = choicePost.bodyParagraphs.filter(
+    (b) => typeof b !== 'string' && b.type === 'figure'
+  );
+  assert.equal(choiceFigures.length, 1);
 
   for (const post of ALL_REFERENCE_POSTS) {
     assert.equal(post.initialLikes, 0);
