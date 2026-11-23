@@ -95,7 +95,7 @@ export default function App() {
         className="w-full"
       >
         {activeSection === 'home' ? (
-          <HomePage />
+          <HomePage hasOpenOverlay={isSidePanelOpen || authModalState.isOpen} />
         ) : (
           <div className="mx-auto min-h-[calc(100vh_-_3.5rem)] w-full max-w-6xl px-4 py-8 sm:px-6">
             <h1 className="sr-only">{currentItem.label}</h1>

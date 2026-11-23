@@ -46,32 +46,28 @@ export const HOME_HERO_CONTENT: HomeHeroContent = {
 export const HOME_SUBSECTIONS: readonly HomeSubsection[] = [
   {
     id: 'part-2',
-    title: 'Tự Động Hóa',
+    title: 'Điều Khiển và Tự Động Hóa',
     bullets: [
       'Điều khiển tự động, PLC và hệ thống SCADA trong dây chuyền công nghiệp.',
       'Robot công nghiệp, cảm biến thông minh và cơ điện tử chính xác.',
       'Tối ưu hóa quy trình vận hành và giám sát thời gian thực.',
     ],
-    imageSrc: '/src/assets/images/tu_dong_hoa_robotics_1795376194029.jpg',
-    imageAlt: 'Hệ thống cánh tay robot công nghiệp và tủ điều khiển PLC trong phòng thí nghiệm tự động hóa',
+    imageSrc: '/assets/aistudio/64_TSDH_TQImage_1691462323202_cb32d264.jpg',
+    imageAlt: 'Hai cánh tay robot tự động hóa màu cam trong trạm pha chế và điều khiển tự động',
     imageSide: 'right',
     detailLead:
-      'Chỗ này là nội dung chi tiết mẫu cho Tự Động Hóa. Bạn có thể thay thế bằng giới thiệu chuyên sâu về hệ thống điều khiển, kiến trúc PLC/SCADA hoặc sản phẩm minh họa của nhóm.',
+      'Ngành Kỹ thuật điều khiển & Tự động hóa dành cho các sinh viên có đam mê về lĩnh vực điều khiển như robot, phương tiện tự hành, tự động hóa các quá trình sản xuất, số hóa nhà máy. Chương trình đào tạo bao gồm hai hướng: Kỹ thuật điều khiển và Tự động hóa. Chương trình bao gồm các môn học liên quan đến các công nghệ tiêu biểu như: Điều khiển thông minh, Trí tuệ nhân tạo trong điều khiển, Thị giác máy tính, Hệ thống điều khiển nhúng, Điều khiển chuyển động, Kỹ thuật Robot, Thiết bị và Hệ thống tự động, Lập trình PLC và Hệ thống SCADA.\n\nChương trình sẽ đào tạo người học thành những kỹ sư có kiến thức chuyên môn và tay nghề cao. Sinh viên sau khi tốt nghiệp có khả năng thiết kế và xây dựng các hệ thống điều khiển độ chính xác cao, có khả năng nghiên cứu, thiết kế và phát triển hệ thống tự động hóa trong nhiều lĩnh vực: tự động hóa nhà máy, số hóa nhà máy, robot, và quản lý năng lượng.',
     detailHighlights: [
       {
-        heading: 'Mục tiêu & Phạm vi (Placeholder)',
-        body: 'Trình bày nguyên lý vòng điều khiển phản hồi PID, tích hợp cảm biến công nghiệp và giao thức truyền thông công nghiệp.',
+        heading: 'Điểm đặc biệt',
+        body: 'Ngành Kỹ thuật điều khiển và Tự động hóa dành cho các sinh viên có sở thích liên quan đến thiết kế, chế tạo thiết bị điều khiển và thiết kế, lập trình tự động hóa trong các hệ thống sản xuất công nghiệp. Chương trình đào tạo có tính liên ngành bao gồm các môn học cốt lõi cần thiết về kỹ thuật điều khiển, kỹ thuật điện – điện tử và kỹ thuật lập trình.\n\nChương trình đào tạo được xây dựng theo hai hướng chuyên ngành Kỹ thuật điều khiển và Công nghệ tự động hóa, nhằm mục tiêu đào tạo những cử nhân có khả năng thiết kế bộ điều khiển cho máy móc công nghiệp, robot, xe tự hành; có khả năng áp dụng các công nghệ tự động hóa tiên tiến nhằm phục vụ sự nghiệp công nghiệp hóa và hiện đại hóa đất nước.',
       },
       {
-        heading: 'Ứng dụng thực tiễn (Placeholder)',
-        body: 'Dây chuyền lắp ráp tự động, cánh tay robot đa bậc tự do, hệ thống phân loại sản phẩm bằng thị giác máy tính.',
-      },
-      {
-        heading: 'Định hướng mở rộng (Placeholder)',
-        body: 'Kết hợp trí tuệ nhân tạo biên và bản sao số (Digital Twin) để dự đoán bảo trì và tối ưu năng lượng.',
+        heading: 'Cơ sở vật chất',
+        body: 'Các phòng thí nghiệm được trang bị hiện đại, được tài trợ từ các tập đoàn công nghiệp lớn như Siemens, Schneider Electric, Endress+Hauser, Rockwell Automation, Yaskawa,.. Trong đó, có các phòng thí nghiệm thực hành điển hình: Phòng thực hành robot Yaskawa, Phòng thực hành tự động hóa IIOT Siemens, Phòng nghiên cứu thiết kế phương tiện tự hành, Phòng thí nghiệm cảm biến đo lường.',
       },
     ],
-    anchor: 'tu-dong-hoa',
+    anchor: 'dieu-khien-va-tu-dong-hoa',
   },
   {
     id: 'part-3',
@@ -81,23 +77,19 @@ export const HOME_SUBSECTIONS: readonly HomeSubsection[] = [
       'Máy điện quay, máy biến áp và bảo vệ rơ-le hệ thống điện.',
       'Năng lượng tái tạo, điện mặt trời, điện gió và lưu trữ năng lượng.',
     ],
-    imageSrc: '/src/assets/images/ky_thuat_dien_grid_1795376193087.jpg',
-    imageAlt: 'Trạm biến áp cao thế và thiết bị đóng cắt lưới điện hiện đại',
+    imageSrc: '/assets/aistudio/63_TSDH_TQImage_1691461428936_a5a8ebc8.jpg',
+    imageAlt: 'Máy biến áp cao thế với các sứ cách điện và đường dây truyền tải điện',
     imageSide: 'left',
     detailLead:
-      'Chỗ này là nội dung chi tiết mẫu cho Kỹ Thuật Điện. Bạn có thể chỉnh sửa để mô tả cấu trúc lưới điện, tính toán công suất hoặc mô hình năng lượng bền vững.',
+      'Ngành Kỹ thuật Điện dành cho sinh viên có sở thích và đam mê làm việc trong lĩnh vực công nghệ tiên tiến phục vụ cho quá trình phát, truyền tải, phân phối và sử dụng điện năng. Chương trình đào tạo bao gồm các môn học liên quan đến các công nghệ tiêu biểu như thiết kế và điều khiển máy điện, các bộ biến đổi điện tử công suất, thiết kế và vận hành các hệ thống điện truyền tải, phân phối và nhà máy điện.\n\nChương trình sẽ đào tạo người học thành những cử nhân có kiến thức chuyên môn và tay nghề cao; có khả năng thiết kế, vận hành và nâng cao độ tin cậy các hệ thống điện và thiết bị điện; có khả năng thiết kế các nhà máy điện năng lượng tái tạo; có khả năng nghiên cứu các vấn đề phát sinh trong quá trình chuyển đổi hệ thống điện truyền thống sang lưới điện thông minh.',
     detailHighlights: [
       {
-        heading: 'Hệ thống & Truyền tải (Placeholder)',
-        body: 'Phân tích trào lưu công suất, ổn định điện áp – tần số và điều độ vận hành trạm biến áp.',
+        heading: 'Cơ hội nghề nghiệp',
+        body: 'Các cử nhân Điện Bách khoa sau khi tốt nghiệp sẽ được các nhà tuyển dụng quan tâm cao và sẽ thành công trong nhiều lĩnh vực khác nhau. Cơ hội nghề nghiệp bao gồm các công việc về tư vấn, thiết kế và quản lý vận hành các hệ thống điện lưới quốc gia, hệ thống cơ điện, hệ thống năng lượng tái tạo, các dự án về năng lượng, hệ thống chiếu sáng thông minh, các hệ thống giám sát-quản lý-điều khiển tiên tiến cho hệ thống điện/dây chuyền công nghiệp/thiết bị điện...',
       },
       {
-        heading: 'Điện tử công suất (Placeholder)',
-        body: 'Bộ nghịch lưu, chỉnh lưu hiệu suất cao dùng trong truyền động điện và hòa lưới năng lượng tái tạo.',
-      },
-      {
-        heading: 'Lưới điện thông minh (Placeholder)',
-        body: 'Giám sát phụ tải thời gian thực, tích hợp nguồn phân tán và hệ thống lưu trữ pin quy mô lớn.',
+        heading: 'Doanh nghiệp tuyển dụng',
+        body: 'Các công ty thường tuyển dụng các cử nhân Kỹ thuật điện tốt nghiệp trường Đại học Bách khoa: tổng công ty Điện lực Tp. HCM (EVN HCMC), tổng công ty Điện lực Miền Nam (EVN SPC), các công ty Tư vấn Xây dựng điện (PECC 2, PECC3, PECC5...), công ty Điện Quang, công ty Bosch, công ty Mitsubishi, công ty Coteccons, công ty Holcim, công ty Schneider Electric Vietnam, công ty Siemens, công ty ABB, công ty Vinfast, công ty Unilever, công ty P&G…',
       },
     ],
     anchor: 'ky-thuat-dien',
@@ -110,23 +102,19 @@ export const HOME_SUBSECTIONS: readonly HomeSubsection[] = [
       'Xử lý tín hiệu số (DSP), truyền thông vô tuyến RF và ăng-ten.',
       'Mạng truyền dẫn quang, viễn thông thế hệ mới và kết nối IoT.',
     ],
-    imageSrc: '/src/assets/images/dien_tu_vien_thong_lab_1795376193175.jpg',
-    imageAlt: 'Bàn thí nghiệm điện tử viễn thông với máy hiện sóng, mạch RF và đầu nối cáp quang',
+    imageSrc: '/assets/aistudio/65_TSDH_Image_1691466014493_fa7a55dc.jpg',
+    imageAlt: 'Bo mạch điện tử với linh kiện dán bề mặt và đường mạch in chi tiết',
     imageSide: 'right',
     detailLead:
-      'Chỗ này là nội dung chi tiết mẫu cho Điện Tử - Viễn Thông. Có thể bổ sung sơ đồ khối hệ thống thu phát, phân tích phổ tín hiệu hoặc dự án mạch phần cứng.',
+      'Ngành Kỹ thuật điện tử-viễn thông dành cho sinh viên có sở thích và đam mê làm việc trong lĩnh vực công nghệ viễn thông và thông tin, vi mạch, hệ thống nhúng và hệ thống điện tử ứng dụng, xử lý tín hiệu và trí tuệ nhân tạo. Chương trình bao gồm các môn học liên quan đến các công nghệ tiêu biểu như thông tin di động và không dây, các hệ thống kết nối Internet IoT, siêu cao tần và anten, mạng viễn thông và mạng máy tính, xử lý số tín hiệu, máy học và trí tuệ nhân tạo, vi mạch số, vi mạch tín hiệu tương tự và hỗn hợp, MEMS, hệ thống nhúng, vi điều khiển, FPGA, thiết kế hệ thống trên chip SoC.\n\nChương trình sẽ đào tạo người học thành những kỹ sư có kiến thức chuyên môn và tay nghề cao; có khả năng khai thác, vận hành, nâng cấp các hệ thống, thiết bị điện tử-viễn thông; có khả năng nghiên cứu, thiết kế và phát triển hệ thống ứng dụng trong công nghiệp và dân dụng sử dụng công nghệ viễn thông, công nghệ vi mạch, xử lý tín hiệu, trí tuệ nhân tạo.',
     detailHighlights: [
       {
-        heading: 'Xử lý tín hiệu & Phần cứng (Placeholder)',
-        body: 'Thu thập dữ liệu từ cảm biến, lọc nhiễu số, thiết kế PCB đa lớp và kiểm thử trên máy hiện sóng.',
+        heading: 'Cơ hội nghề nghiệp',
+        body: 'Ngành Điện tử - Viễn thông là một trong những lĩnh vực có nhiều cơ hội nghề nghiệp và được các nhà tuyển dụng quan tâm cao. Sau khi tốt nghiệp, sinh viên có thể làm việc trong các lĩnh vực như vận hành, quản lý, khai thác và thiết kế các mạng điện thoại cố định và di động, mạng truyền dẫn quang, viba, thông tin vệ tinh, phát thanh truyền hình, mạng thông tin dữ liệu và nhiều lĩnh vực khác.\n\nCác sinh viên tốt nghiệp có thể làm việc tại các tập đoàn, tổng công ty, các phòng kỹ thuật, các viện nghiên cứu và các trường đại học về lĩnh vực điện tử viễn thông. Nhiều tập đoàn và công ty lớn như VNPT, Viettel, FPT, SVTECH, Intel, Renesas, Marvell, Bosch, Ericssion, Sony, Samsung, Siemens, Motorola đều tuyển dụng các kỹ sư Điện tử - Viễn thông tốt nghiệp Trường Đại học Bách khoa.',
       },
       {
-        heading: 'Truyền thông không dây & Quang (Placeholder)',
-        body: 'Điều chế tín hiệu số, truyền dẫn sợi quang tốc độ cao và chuẩn kết nối IoT băng hẹp.',
-      },
-      {
-        heading: 'Hệ thống nhúng kết nối (Placeholder)',
-        body: 'Phát triển firmware thời gian thực cho vi điều khiển, đồng bộ dữ liệu cảm biến lên nền tảng đám mây.',
+        heading: 'Truyền thông & Đối tác chiến lược',
+        body: 'Các đài truyền hình, đài phát thanh cũng cần đến nhân sự trong lĩnh vực này như HTV, VTV, VOH. Với nhiều cơ hội nghề nghiệp, sinh viên sau khi tốt nghiệp sẽ có nhiều lựa chọn và có thể phát triển sự nghiệp một cách bền vững.\n\nTrường Đại học Bách khoa là đối tác chiến lược với nhiều công ty Điện tử - Viễn thông hàng đầu thế giới như BOSCH, RENESAS, INTEL, MARVELL và nhiều công ty trong nước như VNPT, FPT, SVTECH, VIETTEL, TMA Solutions. Các công ty này thường tuyển dụng các kỹ sư và sinh viên trường Đại học Bách khoa làm việc trong lĩnh vực thiết kế, phát triển, sản xuất và lắp ráp các sản phẩm điện tử và viễn thông, đặc biệt là các sản phẩm liên quan đến AUTOSAR, lập trình nhúng; khai thác vận hành, thiết kế, tối ưu hệ thống viễn thông, mạng thông tin dữ liệu, IoT và trí tuệ nhân tạo.',
       },
     ],
     anchor: 'dien-tu-vien-thong',
@@ -139,23 +127,19 @@ export const HOME_SUBSECTIONS: readonly HomeSubsection[] = [
       'Thiết kế mạch tích hợp tương tự (Analog IC) và bố trí layout.',
       'Kiểm thử xác minh (Verification) và quy trình chế tạo bán dẫn.',
     ],
-    imageSrc: '/src/assets/images/thiet_ke_vi_mach_wafer_1795376193714.jpg',
-    imageAlt: 'Tấm wafer bán dẫn silicon với các chip vi mạch tích hợp dưới ánh sáng phòng sạch',
+    imageSrc: '/assets/aistudio/181_TSDH_TQImage_1715675275938_b30b1bdc.jpg',
+    imageAlt: 'Chip vi mạch tích hợp gắn trên bo mạch bán dẫn hiện đại',
     imageSide: 'left',
     detailLead:
-      'Chỗ này là nội dung chi tiết mẫu cho Thiết Kế Vi Mạch. Bạn có thể thay bằng luồng thiết kế ASIC/FPGA, sơ đồ khối vi xử lý hoặc kết quả mô phỏng dạng sóng.',
+      'Ngành Thiết kế Vi mạch là một trong những ngành đào tạo chất lượng cao, có tính ứng dụng cao và mang tính xu hướng toàn cầu. Thế kỷ XXI, những tiến bộ của khoa học công nghệ như trí tuệ nhân tạo (AI), điện toán đám mây, phân tích dữ liệu lớn (Big Data), việc áp dụng các kỹ thuật này vào đời sống yêu cầu sự gia tăng đột biến việc sử dụng các chip, vi mạch điện tử trên toàn cầu. Do đó, xã hội đòi hỏi ngày càng tăng nhu cầu tuyển dụng các cử nhân Thiết kế Vi mạch có trình độ cao để tham gia vào các công ty vi mạch trong và ngoài nước, cũng như để nghiên cứu, phát triển các chip ứng dụng. Đây là cơ hội để ngành Thiết kế Vi mạch phát triển. Chương trình đào tạo Thiết kế vi mạch tại Trường Đại học Bách khoa - ĐHQG-HCM hướng tới giúp các sinh viên phát triển kỹ năng toàn diện và trở thành những chuyên gia trong lĩnh vực thiết kế vi mạch, đáp ứng nhu cầu về nguồn lực cho các công ty vi mạch và có khả năng giải quyết các thách thức công nghệ của thời đại, đóng góp cho sự phát triển của xã hội. Chương trình đào tạo tập trung vào phát triển các kỹ năng chuyên môn cần thiết để sinh viên sau khi tốt nghiệp có khả năng nghiên cứu, thiết kế và ứng dụng công nghệ vi mạch vào đời sống. Bên cạnh đó, chương trình đào tạo còn hướng tới phát triển các kỹ năng mềm để sinh viên phát triển toàn diện, gợi mở khả năng tư duy, nghiên cứu, sáng tạo, thích nghi với sự phát triển không ngừng của công nghệ trong thời đại mới.',
     detailHighlights: [
       {
-        heading: 'Thiết kế Front-end & RTL (Placeholder)',
-        body: 'Đặc tả kiến trúc, mô tả phần cứng bằng HDL, tổng hợp logic và tối ưu diện tích – công suất – xung nhịp (PPA).',
+        heading: 'Vị trí việc làm',
+        body: 'Ngành Thiết kế Vi mạch cung cấp cho sinh viên một loạt các vị trí việc làm đa dạng trong nhiều lĩnh vực khác nhau, bao gồm thiết kế, phát triển, sản xuất, và kiểm định vi mạch. Sinh viên sau khi tốt nghiệp có thể đảm nhận các vị trí như kỹ sư thiết kế, kỹ sư phát triển sản phẩm, kỹ sư sản xuất, kỹ sư kiểm định vi mạch, và kỹ sư ứng dụng hệ thống vi mạch. Những cơ hội việc làm này thường có tại các công ty nghiên cứu và phát triển, các tổ chức sản xuất phần cứng và phần mềm, cũng như các công ty đa quốc gia trong ngành công nghệ cao.',
       },
       {
-        heading: 'Thiết kế Back-end & Layout (Placeholder)',
-        body: 'Đặt và đi dây (Place & Route), kiểm tra quy tắc thiết kế (DRC/LVS) và phân tích ký sinh.',
-      },
-      {
-        heading: 'Xác minh & Kiểm thử (Placeholder)',
-        body: 'Xây dựng môi trường mô phỏng UVM, kiểm thử trên FPGA và đánh giá chip mẫu sau đóng gói.',
+        heading: 'Doanh nghiệp & Triển vọng',
+        body: 'Bên cạnh đó, sinh viên có thể tham gia làm việc tại các công ty quốc tế trong lĩnh vực vi mạch như Intel, Renesas, Marvell, ARM, Texas Instruments, Qualcomm, Samsung, và nhiều công ty khác. Các doanh nghiệp này thường đánh giá cao sự sáng tạo và năng lực của sinh viên trong lĩnh vực thiết kế vi mạch, đặc biệt khi họ được đào tạo bài bản tại Trường Đại học Bách khoa - ĐHQG-HCM. Hơn nữa, với xu hướng phát triển của ngành công nghệ, nhu cầu tuyển dụng các kỹ sư chuyên nghiệp trong lĩnh vực này vẫn không ngừng gia tăng, mang lại triển vọng nghề nghiệp đầy hứa hẹn.',
       },
     ],
     anchor: 'thiet-ke-vi-mach',

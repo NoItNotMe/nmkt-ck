@@ -23,7 +23,7 @@ test('HOME_SUBSECTIONS defines 4 alternating sections without "Phần" prefix', 
   assert.deepEqual(
     HOME_SUBSECTIONS.map((section) => [section.title, section.imageSide]),
     [
-      ['Tự Động Hóa', 'right'],
+      ['Điều Khiển và Tự Động Hóa', 'right'],
       ['Kỹ Thuật Điện', 'left'],
       ['Điện Tử - Viễn Thông', 'right'],
       ['Thiết Kế Vi Mạch', 'left'],
@@ -33,9 +33,35 @@ test('HOME_SUBSECTIONS defines 4 alternating sections without "Phần" prefix', 
   for (const section of HOME_SUBSECTIONS) {
     assert.equal(section.title.includes('Phần'), false);
     assert.ok(section.bullets.length >= 3);
-    assert.ok(section.detailHighlights.length >= 3);
-    assert.ok(section.imageSrc.startsWith('/src/assets/images/'));
+    assert.ok(section.detailHighlights.length >= 2);
+    assert.ok(section.imageSrc.startsWith('/assets/aistudio/'));
   }
+
+  assert.ok(getSubsectionById('part-2')?.detailLead.includes('PLC và Hệ thống SCADA'));
+  assert.ok(getSubsectionById('part-3')?.detailLead.includes('lưới điện thông minh'));
+  assert.ok(getSubsectionById('part-4')?.detailLead.includes('hệ thống trên chip SoC'));
+  assert.ok(
+    getSubsectionById('part-5')?.detailLead.includes(
+      'Trường Đại học Bách khoa - ĐHQG-HCM'
+    )
+  );
+
+  assert.equal(
+    getSubsectionById('part-2')?.imageSrc,
+    '/assets/aistudio/64_TSDH_TQImage_1691462323202_cb32d264.jpg'
+  );
+  assert.equal(
+    getSubsectionById('part-3')?.imageSrc,
+    '/assets/aistudio/63_TSDH_TQImage_1691461428936_a5a8ebc8.jpg'
+  );
+  assert.equal(
+    getSubsectionById('part-4')?.imageSrc,
+    '/assets/aistudio/65_TSDH_Image_1691466014493_fa7a55dc.jpg'
+  );
+  assert.equal(
+    getSubsectionById('part-5')?.imageSrc,
+    '/assets/aistudio/181_TSDH_TQImage_1715675275938_b30b1bdc.jpg'
+  );
 
   assert.equal(getSubsectionById('part-4')?.title, 'Điện Tử - Viễn Thông');
   assert.equal(getSubsectionById(null), undefined);
