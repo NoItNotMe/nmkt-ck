@@ -1,15 +1,22 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { getCarouselTrackOffsetPercent } from '../components/ArticleCarouselFigure';
 import {
   addArticleComment,
   ALL_REFERENCE_POSTS,
   FEATURED_REFERENCE_POSTS,
   findReferencePostById,
   getEngagementForPost,
+  getGridReferencePosts,
+  getReferenceChapterInfo,
   getReferencePostById,
+  getReferencePostsByChapter,
+  getSidebarReferencePosts,
   loadEngagementMap,
   OTHER_REFERENCE_POSTS,
+  REFERENCE_CHAPTERS,
   saveEngagementMap,
+  SIDEBAR_REFERENCE_LIMIT,
   stepReferenceIndex,
   toggleArticleLike,
 } from './referencePosts';
@@ -38,12 +45,13 @@ function createMemoryStorage(): Storage {
   };
 }
 
-test('FEATURED_REFERENCE_POSTS has 2 main articles and all posts start with 0 likes and 0 comments', () => {
+test('FEATURED_REFERENCE_POSTS has 2 main articles assigned to Chương 3 and Chương 1 and all posts start at 0', () => {
   assert.equal(FEATURED_REFERENCE_POSTS.length, 2);
   assert.equal(
     FEATURED_REFERENCE_POSTS[0].title,
-    'Câu chuyện của Dell và Asus'
+    'Câu chuyện của Dell và Asus, thiết kế và gia công'
   );
+  assert.equal(FEATURED_REFERENCE_POSTS[0].category, 'Chương 3');
   assert.equal(
     FEATURED_REFERENCE_POSTS[0].sourceUrl,
     'https://scashwin.medium.com/the-case-of-dell-and-asus-acac9a35db56'
@@ -52,17 +60,126 @@ test('FEATURED_REFERENCE_POSTS has 2 main articles and all posts start with 0 li
     FEATURED_REFERENCE_POSTS[1].title,
     'Cuộc tranh luận lịch sử về GUI: Steve Jobs, Bill Gates và phát minh "mượn" từ Xerox'
   );
+  assert.equal(FEATURED_REFERENCE_POSTS[1].category, 'Chương 1');
+  assert.equal(
+    FEATURED_REFERENCE_POSTS[1].detailCategory,
+    'Chương 1: Giới thiệu nhập môn kỹ thuật'
+  );
   assert.equal(
     FEATURED_REFERENCE_POSTS[1].sourceUrl,
     'https://medium.com/@davidsehyeonbaek/the-great-gui-debate-steve-jobs-bill-gates-and-the-borrowed-innovation-from-xerox-6402e7b654c8'
   );
-  assert.ok(OTHER_REFERENCE_POSTS.length >= 4);
+  assert.equal(OTHER_REFERENCE_POSTS.length, 16);
 
-  const featuredIds = new Set(FEATURED_REFERENCE_POSTS.map((p) => p.id));
+  const sidebarPosts = getSidebarReferencePosts();
+  const gridPosts = getGridReferencePosts();
+  assert.equal(sidebarPosts.length, SIDEBAR_REFERENCE_LIMIT);
+  assert.equal(sidebarPosts.length, 5);
+  assert.equal(gridPosts.length, 11);
+  assert.equal(sidebarPosts[0]?.id, 'other-1');
+  assert.equal(sidebarPosts[1]?.id, 'other-inventions');
+  assert.equal(sidebarPosts[2]?.id, 'other-minds');
+  assert.equal(sidebarPosts[3]?.id, 'other-roles');
+  assert.equal(sidebarPosts[4]?.id, 'other-careers');
+  assert.equal(gridPosts[0]?.id, 'other-ee-profile');
+  assert.equal(gridPosts[1]?.id, 'featured-2');
+  assert.equal(gridPosts[2]?.category, 'Chương 2');
+  assert.equal(gridPosts[3]?.id, 'featured-1');
+  assert.equal(gridPosts[3]?.category, 'Chương 3');
+  assert.equal(gridPosts[10]?.category, 'Chương 10');
+
+  assert.equal(REFERENCE_CHAPTERS.length, 10);
+  assert.equal(
+    getReferenceChapterInfo(1).detailLabel,
+    'Chương 1: Giới thiệu nhập môn kỹ thuật'
+  );
+  assert.equal(getReferenceChapterInfo(3).detailLabel, 'Chương 3');
+
+  const ch1Posts = getReferencePostsByChapter(1);
+  assert.equal(ch1Posts.length, 7);
+  assert.ok(ch1Posts.some((p) => p.id === 'other-minds'));
+  assert.ok(ch1Posts.some((p) => p.id === 'other-roles'));
+  assert.ok(ch1Posts.some((p) => p.id === 'other-careers'));
+  assert.ok(ch1Posts.some((p) => p.id === 'other-ee-profile'));
+  assert.ok(ch1Posts.some((p) => p.id === 'featured-2'));
+
+  const ch3Posts = getReferencePostsByChapter(3);
+  assert.equal(ch3Posts.length, 1);
+  assert.equal(ch3Posts[0]?.id, 'featured-1');
+
   for (const post of OTHER_REFERENCE_POSTS) {
-    assert.equal(featuredIds.has(post.id), false);
+    assert.match(post.category, /^Chương (?:[1-9]|10)$/);
+    assert.ok(post.detailCategory?.startsWith(post.category));
     assert.ok(post.readTime.includes('phút đọc'));
   }
+
+  const mindsPost = findReferencePostById('other-minds');
+  assert.ok(mindsPost);
+  assert.equal(
+    mindsPost.title,
+    'Những bộ óc đứng sau các cuộc cách mạng công nghệ'
+  );
+  assert.equal(mindsPost.category, 'Chương 1');
+  const mindsFigures = mindsPost.bodyParagraphs.filter(
+    (b) => typeof b !== 'string' && b.type === 'figure'
+  );
+  assert.equal(mindsFigures.length, 5);
+
+  const rolesPost = findReferencePostById('other-roles');
+  assert.ok(rolesPost);
+  assert.equal(rolesPost.title, 'Kỹ sư, nhà khoa học hay nhà công nghệ?');
+  assert.equal(rolesPost.category, 'Chương 1');
+  const rolesCarousel = rolesPost.bodyParagraphs.find(
+    (b) => typeof b !== 'string' && b.type === 'carousel'
+  );
+  assert.ok(rolesCarousel && typeof rolesCarousel !== 'string' && rolesCarousel.type === 'carousel');
+  assert.equal(rolesCarousel.slides.length, 5);
+  assert.ok(
+    rolesCarousel.slides.every((slide) => slide.src !== rolesPost.imageSrc),
+    'other-roles carousel must exclude the article thumbnail imageSrc'
+  );
+
+  const careersPost = findReferencePostById('other-careers');
+  assert.ok(careersPost);
+  assert.equal(
+    careersPost.title,
+    'Một tấm bằng kỹ thuật, hàng chục con đường sự nghiệp'
+  );
+  assert.equal(careersPost.category, 'Chương 1');
+  const careersFigures = careersPost.bodyParagraphs.filter(
+    (b) => typeof b !== 'string' && b.type === 'figure'
+  );
+  assert.equal(careersFigures.length, 3);
+  assert.deepEqual(
+    careersFigures.map((f) => (typeof f !== 'string' && f.type === 'figure' ? f.src : '')),
+    [
+      '/assets/aistudio/image_21118581.png',
+      '/assets/aistudio/image_f472512e.png',
+      '/assets/aistudio/image_4f3ccc78.png',
+    ]
+  );
+
+  const eePost = findReferencePostById('other-ee-profile');
+  assert.ok(eePost);
+  assert.equal(eePost.title, 'Chân dung một kỹ sư điện – điện tử');
+  assert.equal(eePost.category, 'Chương 1');
+  assert.equal(eePost.imageSrc, '/assets/aistudio/image_52f797e7.png');
+  const eeCarousel = eePost.bodyParagraphs.find(
+    (b) => typeof b !== 'string' && b.type === 'carousel'
+  );
+  assert.ok(eeCarousel && typeof eeCarousel !== 'string' && eeCarousel.type === 'carousel');
+  assert.equal(eeCarousel.slides.length, 2);
+  assert.deepEqual(
+    eeCarousel.slides.map((s) => s.src),
+    [
+      '/assets/aistudio/image_e516cc48.png',
+      '/assets/aistudio/image_1906b8ac.png',
+    ]
+  );
+  assert.ok(
+    eeCarousel.slides.every((slide) => slide.src !== eePost.imageSrc),
+    'other-ee-profile carousel must exclude the article thumbnail imageSrc'
+  );
 
   for (const post of ALL_REFERENCE_POSTS) {
     assert.equal(post.initialLikes, 0);
@@ -70,7 +187,17 @@ test('FEATURED_REFERENCE_POSTS has 2 main articles and all posts start with 0 li
   }
 
   assert.equal(findReferencePostById('featured-1')?.id, 'featured-1');
+  assert.equal(findReferencePostById('other-10')?.id, 'other-10');
   assert.equal(findReferencePostById('nonexistent'), null);
+});
+
+test('getCarouselTrackOffsetPercent peeks adjacent slides cleanly on start, middle, and end', () => {
+  assert.equal(getCarouselTrackOffsetPercent(0, 1), 0);
+  assert.equal(getCarouselTrackOffsetPercent(0, 5), 0);
+  assert.equal(getCarouselTrackOffsetPercent(1, 5), -67);
+  assert.equal(getCarouselTrackOffsetPercent(4, 5), -290);
+  assert.equal(getCarouselTrackOffsetPercent(0, 2), 0);
+  assert.equal(getCarouselTrackOffsetPercent(1, 2), -56);
 });
 
 test('stepReferenceIndex wraps smoothly across the 2 featured articles', () => {

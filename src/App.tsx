@@ -16,8 +16,10 @@ import {
   type UserAccount,
 } from './utils/auth';
 import {
+  buildReferenceChapterHash,
   buildReferencePostHash,
   getNavItemById,
+  parseReferenceChapterFromHash,
   parseReferencePostIdFromHash,
   parseSectionFromHash,
   type NavSection,
@@ -34,6 +36,13 @@ export default function App() {
   >(() =>
     typeof window !== 'undefined'
       ? parseReferencePostIdFromHash(window.location.hash)
+      : null
+  );
+  const [selectedReferenceChapter, setSelectedReferenceChapter] = useState<
+    number | null
+  >(() =>
+    typeof window !== 'undefined'
+      ? parseReferenceChapterFromHash(window.location.hash)
       : null
   );
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
@@ -53,6 +62,7 @@ export default function App() {
       const currentHash = window.location.hash;
       setActiveSection(parseSectionFromHash(currentHash));
       setSelectedReferencePostId(parseReferencePostIdFromHash(currentHash));
+      setSelectedReferenceChapter(parseReferenceChapterFromHash(currentHash));
     }
 
     window.addEventListener('hashchange', syncFromLocationHash);
@@ -66,6 +76,7 @@ export default function App() {
   function handleSelectSection(section: NavSection) {
     setActiveSection(section);
     setSelectedReferencePostId(null);
+    setSelectedReferenceChapter(null);
     const targetHash = getNavItemById(section).hash;
     if (window.location.hash !== targetHash) {
       window.history.pushState(null, '', targetHash);
@@ -75,8 +86,20 @@ export default function App() {
 
   function handleOpenReferencePost(postId: string) {
     setActiveSection('reference');
+    setSelectedReferenceChapter(null);
     setSelectedReferencePostId(postId);
     const targetHash = buildReferencePostHash(postId);
+    if (window.location.hash !== targetHash) {
+      window.history.pushState(null, '', targetHash);
+    }
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  function handleOpenReferenceChapter(chapterNumber: number) {
+    setActiveSection('reference');
+    setSelectedReferencePostId(null);
+    setSelectedReferenceChapter(chapterNumber);
+    const targetHash = buildReferenceChapterHash(chapterNumber);
     if (window.location.hash !== targetHash) {
       window.history.pushState(null, '', targetHash);
     }
@@ -86,6 +109,7 @@ export default function App() {
   function handleBackToReferenceList() {
     setActiveSection('reference');
     setSelectedReferencePostId(null);
+    setSelectedReferenceChapter(null);
     const targetHash = getNavItemById('reference').hash;
     if (window.location.hash !== targetHash) {
       window.history.pushState(null, '', targetHash);
@@ -137,7 +161,9 @@ export default function App() {
           <ReferencePage
             user={user}
             selectedPostId={selectedReferencePostId}
+            selectedChapter={selectedReferenceChapter}
             onOpenPost={handleOpenReferencePost}
+            onOpenChapter={handleOpenReferenceChapter}
             onBackToList={handleBackToReferenceList}
             onRequireAuth={() => handleOpenAuthModal('login')}
           />

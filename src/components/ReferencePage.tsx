@@ -13,19 +13,25 @@ import {
   FEATURED_REFERENCE_POSTS,
   findReferencePostById,
   getEngagementForPost,
+  getGridReferencePosts,
+  getSidebarReferencePosts,
+  INITIAL_GRID_VISIBLE_COUNT,
   loadEngagementMap,
-  OTHER_REFERENCE_POSTS,
   type ReferencePost,
   saveEngagementMap,
   stepReferenceIndex,
   toggleArticleLike,
 } from '../utils/referencePosts';
+import { ChapterIndexButton } from './ChapterIndexButton';
 import { ReferenceArticlePage } from './ReferenceArticlePage';
+import { ReferenceChapterPage } from './ReferenceChapterPage';
 
 interface ReferencePageProps {
   user: UserAccount | null;
   selectedPostId: string | null;
+  selectedChapter: number | null;
   onOpenPost: (postId: string) => void;
+  onOpenChapter: (chapterNumber: number) => void;
   onBackToList: () => void;
   onRequireAuth: () => void;
 }
@@ -33,12 +39,15 @@ interface ReferencePageProps {
 export function ReferencePage({
   user,
   selectedPostId,
+  selectedChapter,
   onOpenPost,
+  onOpenChapter,
   onBackToList,
   onRequireAuth,
 }: ReferencePageProps) {
   const [activeFeaturedIndex, setActiveFeaturedIndex] = useState(0);
   const [focusCommentsOnOpen, setFocusCommentsOnOpen] = useState(false);
+  const [isGridExpanded, setIsGridExpanded] = useState(false);
   const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
   const [engagementMap, setEngagementMap] = useState<EngagementMap>(() =>
     typeof window !== 'undefined' ? loadEngagementMap(window.localStorage) : {}
@@ -66,6 +75,12 @@ export function ReferencePage({
     featuredPost,
     user?.email
   );
+  const sidebarPosts = getSidebarReferencePosts();
+  const gridPosts = getGridReferencePosts();
+  const visibleGridPosts = isGridExpanded
+    ? gridPosts
+    : gridPosts.slice(0, INITIAL_GRID_VISIBLE_COUNT);
+  const hasMoreGridPosts = gridPosts.length > INITIAL_GRID_VISIBLE_COUNT;
 
   function handlePrevFeatured() {
     setActiveFeaturedIndex((prev) =>
@@ -127,14 +142,10 @@ export function ReferencePage({
       activePost,
       user?.email
     );
-    const isFeatured = FEATURED_REFERENCE_POSTS.some(
-      (post) => post.id === activePost.id
-    );
 
     return (
       <ReferenceArticlePage
         post={activePost}
-        isFeatured={isFeatured}
         user={user}
         likeCount={activeEngagement.likeCount}
         isLiked={activeEngagement.isLiked}
@@ -147,6 +158,22 @@ export function ReferencePage({
         onToggleLike={() => handleToggleLike(activePost)}
         onSubmitComment={(text) => handleSubmitComment(activePost, text)}
         onRequireAuth={onRequireAuth}
+      />
+    );
+  }
+
+  if (selectedChapter !== null) {
+    return (
+      <ReferenceChapterPage
+        chapterNumber={selectedChapter}
+        user={user}
+        engagementMap={engagementMap}
+        failedImages={failedImages}
+        onImageError={markImageFailed}
+        onOpenPost={openArticlePage}
+        onSelectChapter={onOpenChapter}
+        onBackToList={onBackToList}
+        onToggleLike={handleToggleLike}
       />
     );
   }
@@ -253,8 +280,12 @@ export function ReferencePage({
             </button>
           </div>
 
-          {/* Minimalist Text Block directly beneath Featured Image (no borders, no category, no author/date) */}
+          {/* Minimalist Text Block directly beneath Featured Image (with category, no borders, no author/date) */}
           <div className="mt-4 px-9 sm:px-11">
+            <span className="mb-1.5 block text-xs font-medium text-slate-500">
+              {featuredPost.category}
+            </span>
+
             <a
               href={buildReferencePostHash(featuredPost.id)}
               onClick={(event) => {
@@ -309,12 +340,12 @@ export function ReferencePage({
           </div>
         </div>
 
-        {/* Right Column: Other Borderless Articles (Thumbnails + Category / Title) */}
+        {/* Right Column: Exactly 5 Chapter Articles (Chương 1..5) */}
         <aside
           aria-label="Các bài báo khác"
           className="flex flex-col gap-5 lg:col-span-5"
         >
-          {OTHER_REFERENCE_POSTS.map((post) => {
+          {sidebarPosts.map((post) => {
             const stats = getEngagementForPost(engagementMap, post, user?.email);
             return (
               <a
@@ -371,6 +402,89 @@ export function ReferencePage({
           })}
         </aside>
       </div>
+
+      {/* Small Square Chapter Index Control between main spotlight and remaining chapters */}
+      <div className="my-10 flex items-center gap-4">
+        <div className="h-px flex-1 bg-slate-200" aria-hidden="true" />
+        <ChapterIndexButton onSelectChapter={onOpenChapter} />
+        <div className="h-px flex-1 bg-slate-200" aria-hidden="true" />
+      </div>
+
+      {/* Bottom 4-Column Grid for Remaining Articles + Xem thêm */}
+      {gridPosts.length > 0 ? (
+        <div
+          aria-label="Danh sách các chương tiếp theo"
+          className="mt-2"
+        >
+          <div className="grid grid-cols-1 gap-x-6 gap-y-9 sm:grid-cols-2 lg:grid-cols-4">
+            {visibleGridPosts.map((post) => {
+              const stats = getEngagementForPost(engagementMap, post, user?.email);
+              return (
+                <a
+                  key={post.id}
+                  href={buildReferencePostHash(post.id)}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    openArticlePage(post, false);
+                  }}
+                  className="group flex flex-col text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700"
+                >
+                  <div className="aspect-[16/10] w-full overflow-hidden bg-slate-100">
+                    {failedImages[post.id] ? (
+                      <div className="flex h-full w-full items-center justify-center p-3 text-center text-xs text-slate-500">
+                        {post.imageLabel}
+                      </div>
+                    ) : (
+                      <img
+                        src={post.imageSrc}
+                        alt={post.imageAlt}
+                        referrerPolicy="no-referrer"
+                        onError={() => markImageFailed(post.id)}
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                      />
+                    )}
+                  </div>
+
+                  <span className="mt-3 block text-xs font-medium text-slate-500">
+                    {post.category}
+                  </span>
+                  <h3 className="mt-1.5 line-clamp-3 text-base font-bold leading-snug text-slate-900 transition-colors group-hover:text-blue-700">
+                    {post.title}
+                  </h3>
+                  <div className="mt-2.5 flex items-center gap-3 text-xs text-slate-400">
+                    <span>{post.readTime}</span>
+                    <span className="inline-flex items-center gap-1">
+                      <Heart
+                        className={`h-3 w-3 ${
+                          stats.isLiked ? 'fill-rose-600 text-rose-600' : ''
+                        }`}
+                        aria-hidden="true"
+                      />
+                      {stats.likeCount}
+                    </span>
+                    <span className="inline-flex items-center gap-1">
+                      <MessageCircle className="h-3 w-3" aria-hidden="true" />
+                      {stats.commentCount}
+                    </span>
+                  </div>
+                </a>
+              );
+            })}
+          </div>
+
+          {hasMoreGridPosts ? (
+            <div className="mt-10 flex justify-center">
+              <button
+                type="button"
+                onClick={() => setIsGridExpanded((prev) => !prev)}
+                className="border border-slate-900 bg-white px-5 py-2 text-xs font-medium text-slate-900 transition-colors hover:bg-slate-900 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700"
+              >
+                {isGridExpanded ? 'Thu gọn' : 'Xem thêm'}
+              </button>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
     </section>
   );
 }

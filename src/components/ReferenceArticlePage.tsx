@@ -2,10 +2,10 @@ import { type FormEvent, useEffect, useRef, useState } from 'react';
 import { ArrowLeft, Heart, MessageCircle, Send } from 'lucide-react';
 import { type UserAccount } from '../utils/auth';
 import { type ReferenceComment, type ReferencePost } from '../utils/referencePosts';
+import { ArticleCarouselFigure } from './ArticleCarouselFigure';
 
 interface ReferenceArticlePageProps {
   post: ReferencePost;
-  isFeatured: boolean;
   user: UserAccount | null;
   likeCount: number;
   isLiked: boolean;
@@ -22,7 +22,6 @@ interface ReferenceArticlePageProps {
 
 export function ReferenceArticlePage({
   post,
-  isFeatured,
   user,
   likeCount,
   isLiked,
@@ -86,17 +85,13 @@ export function ReferenceArticlePage({
         </button>
       </div>
 
-      {!isFeatured ? (
-        <span className="block text-xs font-medium text-slate-500">
-          {post.category}
-        </span>
-      ) : null}
+      <span className="block text-xs font-medium text-slate-500">
+        {post.detailCategory ?? post.category}
+      </span>
 
       <h1
         id="reference-article-title"
-        className={`${
-          !isFeatured ? 'mt-2' : ''
-        } text-balance text-2xl font-bold leading-snug tracking-tight text-slate-900 sm:text-4xl`}
+        className="mt-2 text-balance text-2xl font-bold leading-snug tracking-tight text-slate-900 sm:text-4xl"
       >
         {post.title}
       </h1>
@@ -152,8 +147,34 @@ export function ReferenceArticlePage({
       </div>
 
       <div className="mt-7 space-y-4 text-base leading-relaxed text-slate-700">
-        {post.bodyParagraphs.map((paragraph, idx) => {
-          if (paragraph === '---') {
+        {post.bodyParagraphs.map((block, idx) => {
+          if (typeof block !== 'string') {
+            if (block.type === 'carousel') {
+              return (
+                <ArticleCarouselFigure
+                  key={idx}
+                  block={block}
+                  postId={post.id}
+                />
+              );
+            }
+            return (
+              <figure key={idx} className="my-6">
+                <div className="overflow-hidden bg-slate-100">
+                  <img
+                    src={block.src}
+                    alt={block.alt}
+                    referrerPolicy="no-referrer"
+                    className="aspect-[16/10] w-full object-cover"
+                  />
+                </div>
+                <figcaption className="mt-2 text-center text-xs italic text-slate-500">
+                  {block.caption}
+                </figcaption>
+              </figure>
+            );
+          }
+          if (block === '---') {
             return (
               <hr
                 key={idx}
@@ -162,17 +183,17 @@ export function ReferenceArticlePage({
               />
             );
           }
-          if (paragraph.startsWith('> ')) {
+          if (block.startsWith('> ')) {
             return (
               <blockquote
                 key={idx}
                 className="border-l-2 border-slate-300 pl-4 italic text-slate-800"
               >
-                {paragraph.slice(2)}
+                {block.slice(2)}
               </blockquote>
             );
           }
-          return <p key={idx}>{paragraph}</p>;
+          return <p key={idx}>{block}</p>;
         })}
       </div>
 

@@ -13,6 +13,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
 ] as const;
 
 export const REFERENCE_HASH_PREFIX = '#tham-khao/';
+export const REFERENCE_CHAPTER_HASH_PREFIX = '#tham-khao/chuong/';
 
 export function parseSectionFromHash(hash: string): NavSection {
   const normalized = hash.trim().toLowerCase();
@@ -26,10 +27,31 @@ export function parseSectionFromHash(hash: string): NavSection {
   return matched ? matched.id : 'home';
 }
 
+export function parseReferenceChapterFromHash(hash: string): number | null {
+  const trimmed = hash.trim();
+  const lower = trimmed.toLowerCase();
+  if (!lower.startsWith(REFERENCE_CHAPTER_HASH_PREFIX)) {
+    return null;
+  }
+  const raw = trimmed.slice(REFERENCE_CHAPTER_HASH_PREFIX.length).trim();
+  const num = Number(raw);
+  if (!Number.isInteger(num) || num < 1 || num > 10) {
+    return null;
+  }
+  return num;
+}
+
+export function buildReferenceChapterHash(chapterNumber: number): string {
+  return `${REFERENCE_CHAPTER_HASH_PREFIX}${chapterNumber}`;
+}
+
 export function parseReferencePostIdFromHash(hash: string): string | null {
   const trimmed = hash.trim();
   const lower = trimmed.toLowerCase();
-  if (!lower.startsWith(REFERENCE_HASH_PREFIX)) {
+  if (
+    !lower.startsWith(REFERENCE_HASH_PREFIX) ||
+    lower.startsWith(REFERENCE_CHAPTER_HASH_PREFIX)
+  ) {
     return null;
   }
   const postId = trimmed.slice(REFERENCE_HASH_PREFIX.length).trim();
