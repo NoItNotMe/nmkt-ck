@@ -12,10 +12,32 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { id: 'reference', label: 'Tham khảo', hash: '#tham-khao' },
 ] as const;
 
+export const REFERENCE_HASH_PREFIX = '#tham-khao/';
+
 export function parseSectionFromHash(hash: string): NavSection {
   const normalized = hash.trim().toLowerCase();
+  if (
+    normalized === '#tham-khao' ||
+    normalized.startsWith(REFERENCE_HASH_PREFIX)
+  ) {
+    return 'reference';
+  }
   const matched = NAV_ITEMS.find((item) => item.hash === normalized);
   return matched ? matched.id : 'home';
+}
+
+export function parseReferencePostIdFromHash(hash: string): string | null {
+  const trimmed = hash.trim();
+  const lower = trimmed.toLowerCase();
+  if (!lower.startsWith(REFERENCE_HASH_PREFIX)) {
+    return null;
+  }
+  const postId = trimmed.slice(REFERENCE_HASH_PREFIX.length).trim();
+  return postId ? decodeURIComponent(postId) : null;
+}
+
+export function buildReferencePostHash(postId: string): string {
+  return `${REFERENCE_HASH_PREFIX}${encodeURIComponent(postId)}`;
 }
 
 export function getNavItemById(id: NavSection): NavItem {
