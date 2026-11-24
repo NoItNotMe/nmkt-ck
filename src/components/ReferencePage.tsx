@@ -10,13 +10,11 @@ import { buildReferencePostHash } from '../utils/navigation';
 import {
   addArticleComment,
   type EngagementMap,
-  FEATURED_REFERENCE_POSTS,
   findReferencePostById,
   getEngagementForPost,
-  getGridReferencePosts,
-  getSidebarReferencePosts,
   INITIAL_GRID_VISIBLE_COUNT,
   loadEngagementMap,
+  PAGE_LOAD_REFERENCE_FEED,
   type ReferencePost,
   saveEngagementMap,
   stepReferenceIndex,
@@ -68,15 +66,15 @@ export function ReferencePage({
 
   const activePost = findReferencePostById(selectedPostId);
 
+  const { featuredPosts, sidebarPosts, gridPosts } = PAGE_LOAD_REFERENCE_FEED;
+
   const featuredPost =
-    FEATURED_REFERENCE_POSTS[activeFeaturedIndex] ?? FEATURED_REFERENCE_POSTS[0];
+    featuredPosts[activeFeaturedIndex] ?? featuredPosts[0];
   const featuredEngagement = getEngagementForPost(
     engagementMap,
     featuredPost,
     user?.email
   );
-  const sidebarPosts = getSidebarReferencePosts();
-  const gridPosts = getGridReferencePosts();
   const visibleGridPosts = isGridExpanded
     ? gridPosts
     : gridPosts.slice(0, INITIAL_GRID_VISIBLE_COUNT);
@@ -84,13 +82,13 @@ export function ReferencePage({
 
   function handlePrevFeatured() {
     setActiveFeaturedIndex((prev) =>
-      stepReferenceIndex(prev, -1, FEATURED_REFERENCE_POSTS.length)
+      stepReferenceIndex(prev, -1, featuredPosts.length)
     );
   }
 
   function handleNextFeatured() {
     setActiveFeaturedIndex((prev) =>
-      stepReferenceIndex(prev, 1, FEATURED_REFERENCE_POSTS.length)
+      stepReferenceIndex(prev, 1, featuredPosts.length)
     );
   }
 
@@ -202,7 +200,7 @@ export function ReferencePage({
       ) : null}
 
       <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-12 lg:gap-12">
-        {/* Left/Center Column: 2 Main Featured Articles (< [ Image + 2 Dots ] >) without category */}
+        {/* Left/Center Column: 4 Main Featured Articles (< [ Image + 4 Dots ] >) */}
         <div className="lg:col-span-7">
           <div className="flex items-center gap-2 sm:gap-3">
             <button
@@ -214,7 +212,13 @@ export function ReferencePage({
               <ChevronLeft className="h-5 w-5" aria-hidden="true" />
             </button>
 
-            <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100">
+            <div
+              className={`relative aspect-[16/10] w-full overflow-hidden ${
+                featuredPost.imageFit === 'contain'
+                  ? 'border border-slate-200/80 bg-white'
+                  : 'bg-slate-100'
+              }`}
+            >
               <a
                 href={buildReferencePostHash(featuredPost.id)}
                 onClick={(event) => {
@@ -234,23 +238,30 @@ export function ReferencePage({
                     alt={featuredPost.imageAlt}
                     referrerPolicy="no-referrer"
                     onError={() => markImageFailed(featuredPost.id)}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                    className={`h-full w-full transition-transform duration-500 group-hover:scale-[1.02] ${
+                      featuredPost.imageFit === 'contain'
+                        ? 'object-contain p-3 pb-8'
+                        : 'object-cover'
+                    }`}
                   />
                 )}
-                <span
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-black/30 to-transparent"
-                />
+                {featuredPost.imageFit === 'contain' ? null : (
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-black/30 to-transparent"
+                  />
+                )}
               </a>
 
-              {/* 2 Minimal Pagination Dots inside bottom of image */}
+              {/* 4 Minimal Pagination Dots inside bottom of image */}
               <div
                 role="tablist"
                 aria-label="Chọn bài báo chính"
                 className="absolute bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-2"
               >
-                {FEATURED_REFERENCE_POSTS.map((post, index) => {
+                {featuredPosts.map((post, index) => {
                   const isActive = index === activeFeaturedIndex;
+                  const isLightBg = featuredPost.imageFit === 'contain';
                   return (
                     <button
                       key={post.id}
@@ -259,10 +270,18 @@ export function ReferencePage({
                       aria-selected={isActive}
                       aria-label={`Chuyển đến ${post.title}`}
                       onClick={() => setActiveFeaturedIndex(index)}
-                      className={`h-2 w-2 rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
-                        isActive
-                          ? 'scale-110 bg-white'
-                          : 'bg-white/55 hover:bg-white/85'
+                      className={`h-2 w-2 rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 ${
+                        isLightBg
+                          ? `focus-visible:ring-blue-700 ${
+                              isActive
+                                ? 'scale-110 bg-slate-900'
+                                : 'bg-slate-400/75 hover:bg-slate-600'
+                            }`
+                          : `focus-visible:ring-white ${
+                              isActive
+                                ? 'scale-110 bg-white'
+                                : 'bg-white/55 hover:bg-white/85'
+                            }`
                       }`}
                     />
                   );
@@ -357,7 +376,13 @@ export function ReferencePage({
                 }}
                 className="group flex w-full items-start gap-4 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700"
               >
-                <div className="aspect-[16/10] w-32 shrink-0 overflow-hidden bg-slate-100 sm:w-36">
+                <div
+                  className={`aspect-[16/10] w-32 shrink-0 overflow-hidden sm:w-36 ${
+                    post.imageFit === 'contain'
+                      ? 'border border-slate-200/80 bg-white'
+                      : 'bg-slate-100'
+                  }`}
+                >
                   {failedImages[post.id] ? (
                     <div className="flex h-full w-full items-center justify-center p-2 text-center text-[11px] text-slate-500">
                       {post.imageLabel}
@@ -368,7 +393,11 @@ export function ReferencePage({
                       alt={post.imageAlt}
                       referrerPolicy="no-referrer"
                       onError={() => markImageFailed(post.id)}
-                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                      className={`h-full w-full transition-transform duration-300 group-hover:scale-[1.03] ${
+                        post.imageFit === 'contain'
+                          ? 'object-contain p-1'
+                          : 'object-cover'
+                      }`}
                     />
                   )}
                 </div>
@@ -429,7 +458,13 @@ export function ReferencePage({
                   }}
                   className="group flex flex-col text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700"
                 >
-                  <div className="aspect-[16/10] w-full overflow-hidden bg-slate-100">
+                  <div
+                    className={`aspect-[16/10] w-full overflow-hidden ${
+                      post.imageFit === 'contain'
+                        ? 'border border-slate-200/80 bg-white'
+                        : 'bg-slate-100'
+                    }`}
+                  >
                     {failedImages[post.id] ? (
                       <div className="flex h-full w-full items-center justify-center p-3 text-center text-xs text-slate-500">
                         {post.imageLabel}
@@ -440,7 +475,11 @@ export function ReferencePage({
                         alt={post.imageAlt}
                         referrerPolicy="no-referrer"
                         onError={() => markImageFailed(post.id)}
-                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                        className={`h-full w-full transition-transform duration-300 group-hover:scale-[1.03] ${
+                          post.imageFit === 'contain'
+                            ? 'object-contain p-1.5'
+                            : 'object-cover'
+                        }`}
                       />
                     )}
                   </div>

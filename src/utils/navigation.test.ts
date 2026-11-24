@@ -3,11 +3,16 @@ import assert from 'node:assert/strict';
 import {
   buildReferenceChapterHash,
   buildReferencePostHash,
+  canNavigateBack,
   getNavItemById,
   NAV_ITEMS,
+  normalizeAppHash,
   parseReferenceChapterFromHash,
   parseReferencePostIdFromHash,
   parseSectionFromHash,
+  pushRouteHistory,
+  resolvePreviousRoute,
+  syncRouteHistoryOnExternalNavigation,
 } from './navigation';
 
 test('NAV_ITEMS contains the three required Vietnamese sections in order', () => {
@@ -51,3 +56,51 @@ test('getNavItemById returns matching item', () => {
   assert.equal(getNavItemById('groups').label, 'Nhóm');
   assert.equal(getNavItemById('reference').hash, '#tham-khao');
 });
+
+test('route history helpers track navigation stack and resolve previous routes', () => {
+  assert.equal(normalizeAppHash(''), '#trang-chu');
+  assert.equal(normalizeAppHash('#unknown'), '#trang-chu');
+  assert.equal(normalizeAppHash('#tham-khao/ch2-ten-steps'), '#tham-khao/ch2-ten-steps');
+
+  let stack = ['#trang-chu'];
+  stack = pushRouteHistory(stack, '#tham-khao');
+  stack = pushRouteHistory(stack, '#tham-khao/chuong/2');
+  stack = pushRouteHistory(stack, '#tham-khao/ch2-ten-steps');
+  stack = pushRouteHistory(stack, '#tham-khao/ch2-ten-steps');
+  assert.deepEqual(stack, [
+    '#trang-chu',
+    '#tham-khao',
+    '#tham-khao/chuong/2',
+    '#tham-khao/ch2-ten-steps',
+  ]);
+  assert.equal(canNavigateBack(stack, '#tham-khao/ch2-ten-steps'), true);
+
+  const step1 = resolvePreviousRoute(stack);
+  assert.equal(step1.targetHash, '#tham-khao/chuong/2');
+  const step2 = resolvePreviousRoute(step1.nextStack);
+  assert.equal(step2.targetHash, '#tham-khao');
+  const step3 = resolvePreviousRoute(step2.nextStack);
+  assert.equal(step3.targetHash, '#trang-chu');
+  const step4 = resolvePreviousRoute(step3.nextStack);
+  assert.equal(step4.targetHash, null);
+  assert.equal(canNavigateBack(step3.nextStack, '#trang-chu'), false);
+
+  // External popstate back pops stack
+  const popped = syncRouteHistoryOnExternalNavigation(
+    ['#trang-chu', '#tham-khao'],
+    '#trang-chu'
+  );
+  assert.deepEqual(popped, ['#trang-chu']);
+
+  // Direct deep-link fallback parent navigation
+  assert.equal(
+    resolvePreviousRoute(['#tham-khao/ch2-ten-steps']).targetHash,
+    '#tham-khao'
+  );
+  assert.equal(
+    resolvePreviousRoute(['#tham-khao/chuong/2']).targetHash,
+    '#tham-khao'
+  );
+  assert.equal(resolvePreviousRoute(['#tham-khao']).targetHash, '#trang-chu');
+});
+

@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react';
 import { AuthModal } from './components/AuthModal';
 import { HomePage } from './components/HomePage';
 import { ReferencePage } from './components/ReferencePage';
-import { SidePanel } from './components/SidePanel';
 import { TopBar } from './components/TopBar';
 import {
   clearStoredUser,
@@ -18,10 +17,15 @@ import {
 import {
   buildReferenceChapterHash,
   buildReferencePostHash,
+  canNavigateBack,
   getNavItemById,
+  normalizeAppHash,
   parseReferenceChapterFromHash,
   parseReferencePostIdFromHash,
   parseSectionFromHash,
+  pushRouteHistory,
+  resolvePreviousRoute,
+  syncRouteHistoryOnExternalNavigation,
   type NavSection,
 } from './utils/navigation';
 
@@ -45,7 +49,11 @@ export default function App() {
       ? parseReferenceChapterFromHash(window.location.hash)
       : null
   );
-  const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
+  const [routeHistory, setRouteHistory] = useState<string[]>(() =>
+    typeof window !== 'undefined'
+      ? [normalizeAppHash(window.location.hash)]
+      : ['#trang-chu']
+  );
   const [user, setUser] = useState<UserAccount | null>(() =>
     typeof window !== 'undefined' ? loadStoredUser(window.localStorage) : null
   );
@@ -57,12 +65,19 @@ export default function App() {
     mode: 'login',
   });
 
+  function applyHashState(targetHash: string) {
+    setActiveSection(parseSectionFromHash(targetHash));
+    setSelectedReferencePostId(parseReferencePostIdFromHash(targetHash));
+    setSelectedReferenceChapter(parseReferenceChapterFromHash(targetHash));
+  }
+
   useEffect(() => {
     function syncFromLocationHash() {
       const currentHash = window.location.hash;
-      setActiveSection(parseSectionFromHash(currentHash));
-      setSelectedReferencePostId(parseReferencePostIdFromHash(currentHash));
-      setSelectedReferenceChapter(parseReferenceChapterFromHash(currentHash));
+      applyHashState(currentHash);
+      setRouteHistory((prev) =>
+        syncRouteHistoryOnExternalNavigation(prev, currentHash)
+      );
     }
 
     window.addEventListener('hashchange', syncFromLocationHash);
@@ -73,44 +88,38 @@ export default function App() {
     };
   }, []);
 
-  function handleSelectSection(section: NavSection) {
-    setActiveSection(section);
-    setSelectedReferencePostId(null);
-    setSelectedReferenceChapter(null);
-    const targetHash = getNavItemById(section).hash;
+  function navigateToHash(targetHash: string) {
+    applyHashState(targetHash);
+    setRouteHistory((prev) => pushRouteHistory(prev, targetHash));
     if (window.location.hash !== targetHash) {
       window.history.pushState(null, '', targetHash);
     }
     window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  function handleSelectSection(section: NavSection) {
+    navigateToHash(getNavItemById(section).hash);
   }
 
   function handleOpenReferencePost(postId: string) {
-    setActiveSection('reference');
-    setSelectedReferenceChapter(null);
-    setSelectedReferencePostId(postId);
-    const targetHash = buildReferencePostHash(postId);
-    if (window.location.hash !== targetHash) {
-      window.history.pushState(null, '', targetHash);
-    }
-    window.scrollTo({ top: 0, behavior: 'auto' });
+    navigateToHash(buildReferencePostHash(postId));
   }
 
   function handleOpenReferenceChapter(chapterNumber: number) {
-    setActiveSection('reference');
-    setSelectedReferencePostId(null);
-    setSelectedReferenceChapter(chapterNumber);
-    const targetHash = buildReferenceChapterHash(chapterNumber);
-    if (window.location.hash !== targetHash) {
-      window.history.pushState(null, '', targetHash);
-    }
-    window.scrollTo({ top: 0, behavior: 'auto' });
+    navigateToHash(buildReferenceChapterHash(chapterNumber));
   }
 
   function handleBackToReferenceList() {
-    setActiveSection('reference');
-    setSelectedReferencePostId(null);
-    setSelectedReferenceChapter(null);
-    const targetHash = getNavItemById('reference').hash;
+    navigateToHash(getNavItemById('reference').hash);
+  }
+
+  function handleGoBack() {
+    const { nextStack, targetHash } = resolvePreviousRoute(routeHistory);
+    if (!targetHash) {
+      return;
+    }
+    setRouteHistory(nextStack);
+    applyHashState(targetHash);
     if (window.location.hash !== targetHash) {
       window.history.pushState(null, '', targetHash);
     }
@@ -132,22 +141,20 @@ export default function App() {
   }
 
   const currentItem = getNavItemById(activeSection);
+  const currentHash =
+    typeof window !== 'undefined' ? window.location.hash : '#trang-chu';
+  const canGoBack = canNavigateBack(routeHistory, currentHash);
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
       <TopBar
         activeSection={activeSection}
         onSelectSection={handleSelectSection}
-        isSidePanelOpen={isSidePanelOpen}
-        onOpenSidePanel={() => setIsSidePanelOpen(true)}
+        canGoBack={canGoBack}
+        onGoBack={handleGoBack}
         user={user}
         onOpenAuthModal={handleOpenAuthModal}
         onSignOut={handleSignOut}
-      />
-
-      <SidePanel
-        isOpen={isSidePanelOpen}
-        onClose={() => setIsSidePanelOpen(false)}
       />
 
       <main
@@ -156,7 +163,7 @@ export default function App() {
         className="w-full"
       >
         {activeSection === 'home' ? (
-          <HomePage hasOpenOverlay={isSidePanelOpen || authModalState.isOpen} />
+          <HomePage hasOpenOverlay={authModalState.isOpen} />
         ) : activeSection === 'reference' ? (
           <ReferencePage
             user={user}

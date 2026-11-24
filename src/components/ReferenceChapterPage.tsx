@@ -92,7 +92,11 @@ export function ReferenceChapterPage({
                     onOpenPost(post, false);
                   }}
                   aria-label={`Đọc bài viết ${post.title}`}
-                  className="block aspect-[16/10] w-full overflow-hidden bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700"
+                  className={`block aspect-[16/10] w-full overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 ${
+                    post.imageFit === 'contain'
+                      ? 'border border-slate-200/80 bg-white'
+                      : 'bg-slate-100'
+                  }`}
                 >
                   {failedImages[post.id] ? (
                     <div className="flex h-full w-full items-center justify-center p-3 text-center text-xs text-slate-500">
@@ -104,7 +108,11 @@ export function ReferenceChapterPage({
                       alt={post.imageAlt}
                       referrerPolicy="no-referrer"
                       onError={() => onImageError(post.id)}
-                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                      className={`h-full w-full transition-transform duration-300 group-hover:scale-[1.03] ${
+                        post.imageFit === 'contain'
+                          ? 'object-contain p-1.5'
+                          : 'object-cover'
+                      }`}
                     />
                   )}
                 </a>

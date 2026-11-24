@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
-import { Bell, LogOut, Menu } from 'lucide-react';
+import { ArrowLeft, Bell, LogOut } from 'lucide-react';
 import { getUserInitials, type AuthMode, type UserAccount } from '../utils/auth';
 import { NAV_ITEMS, type NavSection } from '../utils/navigation';
 
 interface TopBarProps {
   activeSection: NavSection;
   onSelectSection: (section: NavSection) => void;
-  isSidePanelOpen: boolean;
-  onOpenSidePanel: () => void;
+  canGoBack: boolean;
+  onGoBack: () => void;
   user: UserAccount | null;
   onOpenAuthModal: (mode: AuthMode) => void;
   onSignOut: () => void;
@@ -16,8 +16,8 @@ interface TopBarProps {
 export function TopBar({
   activeSection,
   onSelectSection,
-  isSidePanelOpen,
-  onOpenSidePanel,
+  canGoBack,
+  onGoBack,
   user,
   onOpenAuthModal,
   onSignOut,
@@ -55,17 +55,21 @@ export function TopBar({
   return (
     <header className="sticky top-0 z-30 h-14 w-full border-b border-slate-300/80 bg-slate-100/95 shadow-[0_1px_2px_rgba(15,23,42,0.05)] backdrop-blur-sm">
       <div className="grid h-full w-full grid-cols-[auto_1fr_auto] items-center pl-1 pr-2 sm:grid-cols-[1fr_auto_1fr] sm:pl-2 sm:pr-5">
-        {/* Left zone: flush-left 3-bar menu trigger */}
+        {/* Left zone: flush-left back navigation button */}
         <div className="flex items-center justify-start">
           <button
             type="button"
-            onClick={onOpenSidePanel}
-            aria-label="Mở menu bên"
-            aria-expanded={isSidePanelOpen}
-            aria-controls="side-panel-menu"
-            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-slate-700 transition-colors hover:bg-slate-200/80 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900"
+            onClick={onGoBack}
+            disabled={!canGoBack}
+            aria-label="Quay lại trang trước"
+            title="Quay lại trang trước"
+            className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 ${
+              canGoBack
+                ? 'text-slate-700 hover:bg-slate-200/80 hover:text-slate-950'
+                : 'cursor-default text-slate-300'
+            }`}
           >
-            <Menu className="h-5 w-5" strokeWidth={1.75} aria-hidden="true" />
+            <ArrowLeft className="h-5 w-5" strokeWidth={1.75} aria-hidden="true" />
           </button>
         </div>
 

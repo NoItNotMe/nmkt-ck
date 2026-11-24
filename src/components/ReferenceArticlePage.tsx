@@ -1,9 +1,22 @@
-import { type FormEvent, useEffect, useRef, useState } from 'react';
+import { type FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowLeft, Heart, MessageCircle, Send } from 'lucide-react';
 import { type UserAccount } from '../utils/auth';
-import { type ReferenceComment, type ReferencePost } from '../utils/referencePosts';
+import { groupArticleBodySegments } from '../utils/referenceArticleLayout';
+import {
+  type ArticleContentBlock,
+  type ReferenceComment,
+  type ReferencePost,
+} from '../utils/referencePosts';
 import { ArticleBarChartFigure } from './ArticleBarChartFigure';
 import { ArticleCarouselFigure } from './ArticleCarouselFigure';
+import { ArticleComparisonPanel } from './ArticleComparisonPanel';
+import { ArticleComparisonTable } from './ArticleComparisonTable';
+import { ArticleProcessDiagram } from './ArticleProcessDiagram';
+import { ArticleProjectCharterFigure } from './ArticleProjectCharterFigure';
+import { ArticlePullQuote } from './ArticlePullQuote';
+import { ArticleStatSpotlight } from './ArticleStatSpotlight';
+import { ArticleStepsOverview } from './ArticleStepsOverview';
+import { ArticleTeamEvaluationFigure } from './ArticleTeamEvaluationFigure';
 
 interface ReferenceArticlePageProps {
   post: ReferencePost;
@@ -40,6 +53,15 @@ export function ReferenceArticlePage({
   const commentSectionRef = useRef<HTMLDivElement>(null);
   const commentInputRef = useRef<HTMLInputElement>(null);
 
+  const layoutVariant = post.layoutVariant ?? 'default';
+  const isMagazine =
+    layoutVariant === 'magazine-dropcap' || layoutVariant === 'magazine-dossier';
+
+  const bodySegments = useMemo(
+    () => groupArticleBodySegments(post.bodyParagraphs, isMagazine),
+    [post.bodyParagraphs, isMagazine]
+  );
+
   useEffect(() => {
     setCommentInput('');
   }, [post.id]);
@@ -70,10 +92,222 @@ export function ReferenceArticlePage({
     }
   }
 
+  function renderSingleBlock(block: ArticleContentBlock, idx: number) {
+    if (typeof block !== 'string') {
+      if (block.type === 'pullQuote') {
+        return <ArticlePullQuote key={idx} block={block} />;
+      }
+      if (block.type === 'processDiagram') {
+        return <ArticleProcessDiagram key={idx} block={block} />;
+      }
+      if (block.type === 'statSpotlight') {
+        return <ArticleStatSpotlight key={idx} block={block} />;
+      }
+      if (block.type === 'comparison') {
+        return <ArticleComparisonPanel key={idx} block={block} />;
+      }
+      if (block.type === 'carousel') {
+        return (
+          <ArticleCarouselFigure
+            key={idx}
+            block={block}
+            postId={post.id}
+          />
+        );
+      }
+      if (block.type === 'chart') {
+        return <ArticleBarChartFigure key={idx} block={block} />;
+      }
+      if (block.type === 'steps') {
+        return <ArticleStepsOverview key={idx} block={block} />;
+      }
+      if (block.type === 'charter') {
+        return <ArticleProjectCharterFigure key={idx} block={block} />;
+      }
+      if (block.type === 'evaluation') {
+        return <ArticleTeamEvaluationFigure key={idx} block={block} />;
+      }
+      if (block.type === 'table') {
+        return <ArticleComparisonTable key={idx} block={block} />;
+      }
+      if (block.type === 'formula') {
+        return (
+          <div
+            key={idx}
+            className="my-5 overflow-x-auto border border-slate-200 bg-slate-50 px-4 py-3 text-center font-mono text-sm font-semibold tracking-wide text-slate-900 sm:text-base"
+          >
+            {block.expression}
+          </div>
+        );
+      }
+      if (block.type === 'step-heading') {
+        return (
+          <div
+            key={idx}
+            className="mt-6 flex items-baseline gap-3 pt-1"
+          >
+            <span className="shrink-0 text-sm font-bold tabular-nums text-blue-700">
+              Bước {block.number}
+            </span>
+            <h3 className="text-base font-semibold leading-snug text-slate-900">
+              {block.title}
+            </h3>
+          </div>
+        );
+      }
+      const isContain = block.fit === 'contain';
+      return (
+        <figure key={idx} className="my-6">
+          <div
+            className={
+              isContain
+                ? 'overflow-hidden border border-slate-200 bg-white'
+                : 'overflow-hidden bg-slate-100'
+            }
+          >
+            <img
+              src={block.src}
+              alt={block.alt}
+              referrerPolicy="no-referrer"
+              className={
+                isContain
+                  ? 'max-h-[480px] w-full object-contain'
+                  : 'aspect-[16/10] w-full object-cover'
+              }
+            />
+          </div>
+          <figcaption className="mt-2 text-center text-xs italic text-slate-500">
+            {block.caption}
+          </figcaption>
+        </figure>
+      );
+    }
+
+    if (block === '---') {
+      return (
+        <hr
+          key={idx}
+          aria-hidden="true"
+          className={
+            isMagazine
+              ? 'my-7 border-t border-slate-200'
+              : 'mx-auto my-6 w-12 border-t border-slate-200'
+          }
+        />
+      );
+    }
+
+    if (block.startsWith('### ')) {
+      if (layoutVariant === 'magazine-dossier') {
+        return (
+          <div key={idx} className="pt-5">
+            <span className="inline-block bg-slate-900 px-2.5 py-1 text-[11px] font-bold uppercase tracking-widest text-white">
+              Chuyên mục phân tích
+            </span>
+            <h2 className="mt-2.5 font-['Playfair_Display',Georgia,serif] text-2xl font-bold leading-snug tracking-tight text-slate-900 sm:text-3xl">
+              {block.slice(4)}
+            </h2>
+          </div>
+        );
+      }
+      if (layoutVariant === 'magazine-dropcap') {
+        return (
+          <h2
+            key={idx}
+            className="border-t border-slate-900 pt-4 font-['Playfair_Display',Georgia,serif] text-2xl font-bold leading-snug tracking-tight text-slate-900 sm:text-3xl"
+          >
+            {block.slice(4)}
+          </h2>
+        );
+      }
+      return (
+        <h2
+          key={idx}
+          className="pt-4 text-xl font-bold leading-snug tracking-tight text-slate-900 sm:text-2xl"
+        >
+          {block.slice(4)}
+        </h2>
+      );
+    }
+
+    if (block.startsWith('> ')) {
+      return (
+        <blockquote
+          key={idx}
+          className="whitespace-pre-line border-y border-slate-200 bg-slate-50/70 px-5 py-4 font-['Playfair_Display',Georgia,serif] text-lg italic leading-relaxed text-slate-800"
+        >
+          {block.slice(2)}
+        </blockquote>
+      );
+    }
+
+    return <p key={idx}>{block}</p>;
+  }
+
+  const metadataRow = (
+    <div className="mt-4 flex flex-wrap items-center gap-5 border-b border-slate-100 pb-5 text-xs text-slate-500">
+      <span>{post.readTime}</span>
+
+      <button
+        type="button"
+        onClick={onToggleLike}
+        aria-pressed={isLiked}
+        aria-label={`Thích bài viết (${likeCount} lượt thích)`}
+        className={`inline-flex items-center gap-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 ${
+          isLiked
+            ? 'font-medium text-rose-600'
+            : 'text-slate-500 hover:text-slate-900'
+        }`}
+      >
+        <Heart
+          className={`h-3.5 w-3.5 ${
+            isLiked ? 'fill-rose-600 text-rose-600' : ''
+          }`}
+          aria-hidden="true"
+        />
+        <span>{likeCount} lượt thích</span>
+      </button>
+
+      <span className="inline-flex items-center gap-1.5 text-slate-500">
+        <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" />
+        <span>{commentCount} bình luận</span>
+      </span>
+    </div>
+  );
+
+  const heroImage = (
+    <div
+      className={`mt-6 overflow-hidden ${
+        post.imageFit === 'contain'
+          ? 'border border-slate-200 bg-white'
+          : 'bg-slate-100'
+      }`}
+    >
+      {hasFailedImage ? (
+        <div className="flex aspect-[16/9] w-full items-center justify-center bg-slate-100 p-6 text-center text-sm text-slate-500">
+          {post.imageLabel}
+        </div>
+      ) : (
+        <img
+          src={post.imageSrc}
+          alt={post.imageAlt}
+          referrerPolicy="no-referrer"
+          onError={onImageError}
+          className={`aspect-[16/9] w-full ${
+            post.imageFit === 'contain' ? 'object-contain p-2' : 'object-cover'
+          }`}
+        />
+      )}
+    </div>
+  );
+
   return (
     <article
       aria-labelledby="reference-article-title"
-      className="mx-auto min-h-[calc(100svh_-_3.5rem)] w-full max-w-3xl px-4 py-8 sm:px-8 sm:py-10"
+      data-layout={layoutVariant}
+      className={`mx-auto min-h-[calc(100svh_-_3.5rem)] w-full px-4 py-8 sm:px-8 sm:py-10 ${
+        isMagazine ? 'max-w-4xl' : 'max-w-3xl'
+      }`}
     >
       <div className="mb-6">
         <button
@@ -86,118 +320,118 @@ export function ReferenceArticlePage({
         </button>
       </div>
 
-      <span className="block text-xs font-medium text-slate-500">
-        {post.detailCategory ?? post.category}
-      </span>
-
-      <h1
-        id="reference-article-title"
-        className="mt-2 text-balance text-2xl font-bold leading-snug tracking-tight text-slate-900 sm:text-4xl"
-      >
-        {post.title}
-      </h1>
-
-      <p className="mt-3.5 text-base leading-relaxed text-slate-600 sm:text-lg">
-        {post.sapo}
-      </p>
-
-      {/* Metadata directly under Sapo: reading minutes + Like & Comment counts */}
-      <div className="mt-4 flex flex-wrap items-center gap-5 border-b border-slate-100 pb-5 text-xs text-slate-500">
-        <span>{post.readTime}</span>
-
-        <button
-          type="button"
-          onClick={onToggleLike}
-          aria-pressed={isLiked}
-          aria-label={`Thích bài viết (${likeCount} lượt thích)`}
-          className={`inline-flex items-center gap-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 ${
-            isLiked
-              ? 'font-medium text-rose-600'
-              : 'text-slate-500 hover:text-slate-900'
-          }`}
-        >
-          <Heart
-            className={`h-3.5 w-3.5 ${
-              isLiked ? 'fill-rose-600 text-rose-600' : ''
-            }`}
-            aria-hidden="true"
-          />
-          <span>{likeCount} lượt thích</span>
-        </button>
-
-        <span className="inline-flex items-center gap-1.5 text-slate-500">
-          <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" />
-          <span>{commentCount} bình luận</span>
-        </span>
-      </div>
-
-      <div className="mt-6 overflow-hidden bg-slate-100">
-        {hasFailedImage ? (
-          <div className="flex aspect-[16/9] w-full items-center justify-center bg-slate-100 p-6 text-center text-sm text-slate-500">
-            {post.imageLabel}
+      {layoutVariant === 'magazine-dossier' ? (
+        <header className="border-b-2 border-slate-900 pb-6">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-3">
+            <span className="text-xs font-semibold uppercase tracking-widest text-slate-500">
+              {post.detailCategory ?? post.category}
+            </span>
+            <span className="bg-slate-900 px-2.5 py-1 text-[11px] font-bold uppercase tracking-widest text-white">
+              {post.editorialBadge ?? 'Hồ sơ chuyên đề'}
+            </span>
           </div>
-        ) : (
-          <img
-            src={post.imageSrc}
-            alt={post.imageAlt}
-            referrerPolicy="no-referrer"
-            onError={onImageError}
-            className="aspect-[16/9] w-full object-cover"
-          />
-        )}
-      </div>
 
-      <div className="mt-7 space-y-4 text-base leading-relaxed text-slate-700">
-        {post.bodyParagraphs.map((block, idx) => {
-          if (typeof block !== 'string') {
-            if (block.type === 'carousel') {
-              return (
-                <ArticleCarouselFigure
-                  key={idx}
-                  block={block}
-                  postId={post.id}
-                />
-              );
-            }
-            if (block.type === 'chart') {
-              return <ArticleBarChartFigure key={idx} block={block} />;
-            }
-            return (
-              <figure key={idx} className="my-6">
-                <div className="overflow-hidden bg-slate-100">
-                  <img
-                    src={block.src}
-                    alt={block.alt}
-                    referrerPolicy="no-referrer"
-                    className="aspect-[16/10] w-full object-cover"
-                  />
-                </div>
-                <figcaption className="mt-2 text-center text-xs italic text-slate-500">
-                  {block.caption}
-                </figcaption>
-              </figure>
-            );
-          }
-          if (block === '---') {
-            return (
-              <hr
-                key={idx}
-                aria-hidden="true"
-                className="mx-auto my-6 w-12 border-t border-slate-200"
-              />
-            );
-          }
-          if (block.startsWith('> ')) {
-            return (
-              <blockquote
-                key={idx}
-                className="border-l-2 border-slate-300 pl-4 italic text-slate-800"
+          <div className="mt-5 grid grid-cols-1 items-stretch gap-5 md:grid-cols-12 md:gap-7">
+            <div className="flex items-center border-2 border-slate-900 bg-white p-5 sm:p-6 md:col-span-7">
+              <h1
+                id="reference-article-title"
+                className="text-balance font-['Playfair_Display',Georgia,serif] text-2xl font-bold leading-tight tracking-tight text-slate-900 sm:text-4xl"
               >
-                {block.slice(2)}
-              </blockquote>
-            );
+                {post.title}
+              </h1>
+            </div>
+            <div className="flex flex-col justify-center border-t border-slate-200 pt-4 md:col-span-5 md:border-l md:border-t-0 md:pl-6 md:pt-0">
+              <div className="inline-block self-start bg-slate-900 px-2.5 py-1 text-[11px] font-bold uppercase tracking-widest text-yellow-300">
+                {post.dossierSummary?.label ?? 'Tóm lược trọng tâm'}
+              </div>
+              <p className="mt-3 text-sm leading-relaxed text-slate-700 sm:text-base">
+                {post.dossierSummary?.text ?? post.sapo}
+              </p>
+            </div>
+          </div>
+
+          {post.dossierSummary ? (
+            <p className="mt-4 text-base leading-relaxed text-slate-600">
+              {post.sapo}
+            </p>
+          ) : null}
+
+          {metadataRow}
+          {heroImage}
+        </header>
+      ) : layoutVariant === 'magazine-dropcap' ? (
+        <header>
+          <div className="flex items-center justify-between gap-4 border-t-4 border-slate-900 pt-3">
+            <span className="text-xs font-semibold uppercase tracking-widest text-slate-500">
+              {post.detailCategory ?? post.category}
+            </span>
+            <span className="text-[11px] font-bold uppercase tracking-widest text-blue-700">
+              {post.editorialBadge ?? 'Tạp chí chuyên sâu'}
+            </span>
+          </div>
+
+          <h1
+            id="reference-article-title"
+            className="mt-3 text-balance font-['Playfair_Display',Georgia,serif] text-3xl font-bold leading-tight tracking-tight text-slate-900 sm:text-5xl"
+          >
+            {post.title}
+          </h1>
+
+          <p className="mt-4 max-w-3xl text-base leading-relaxed text-slate-600 sm:text-lg">
+            {post.sapo}
+          </p>
+
+          {metadataRow}
+          {heroImage}
+        </header>
+      ) : (
+        <header>
+          <span className="block text-xs font-medium text-slate-500">
+            {post.detailCategory ?? post.category}
+          </span>
+
+          <h1
+            id="reference-article-title"
+            className="mt-2 text-balance text-2xl font-bold leading-snug tracking-tight text-slate-900 sm:text-4xl"
+          >
+            {post.title}
+          </h1>
+
+          <p className="mt-3.5 text-base leading-relaxed text-slate-600 sm:text-lg">
+            {post.sapo}
+          </p>
+
+          {metadataRow}
+          {heroImage}
+        </header>
+      )}
+
+      <div className="mt-7 space-y-5 text-base leading-relaxed text-slate-700">
+        {bodySegments.map((segment) => {
+          if (segment.kind === 'block') {
+            return renderSingleBlock(segment.block, segment.index);
           }
-          return <p key={idx}>{block}</p>;
+
+          const containerClasses = segment.useTwoColumns
+            ? 'space-y-4 md:columns-2 md:gap-8 md:space-y-0 md:[&_p+p]:mt-4'
+            : 'space-y-4';
+
+          return (
+            <div key={`prose-${segment.startIndex}`} className={containerClasses}>
+              {segment.paragraphs.map((paragraph, pIdx) => (
+                <p
+                  key={`${segment.startIndex}-${pIdx}`}
+                  className={
+                    segment.hasDropCap && pIdx === 0
+                      ? "first-letter:float-left first-letter:mr-3 first-letter:mt-1 first-letter:font-['Playfair_Display',Georgia,serif] first-letter:text-5xl first-letter:font-bold first-letter:leading-[0.82] first-letter:text-slate-900"
+                      : undefined
+                  }
+                >
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+          );
         })}
       </div>
 
