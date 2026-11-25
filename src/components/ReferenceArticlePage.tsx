@@ -92,6 +92,26 @@ export function ReferenceArticlePage({
     }
   }
 
+  const isHeroImageInBody = useMemo(() => {
+    return post.bodyParagraphs.some((b) => {
+      if (typeof b === 'string') return false;
+      if (b.type === 'figure' && b.src === post.imageSrc) return true;
+      if (
+        b.type === 'carousel' &&
+        b.slides.some((s) => s.src === post.imageSrc)
+      ) {
+        return true;
+      }
+      return false;
+    });
+  }, [post.bodyParagraphs, post.imageSrc]);
+
+  const shouldRenderHeroImage = !isHeroImageInBody;
+  const renderedImages = new Set<string>();
+  if (shouldRenderHeroImage) {
+    renderedImages.add(post.imageSrc);
+  }
+
   function renderSingleBlock(block: ArticleContentBlock, idx: number) {
     if (typeof block !== 'string') {
       if (block.type === 'pullQuote') {
@@ -107,10 +127,24 @@ export function ReferenceArticlePage({
         return <ArticleComparisonPanel key={idx} block={block} />;
       }
       if (block.type === 'carousel') {
+        const uniqueSlides = block.slides.filter((slide) => {
+          if (renderedImages.has(slide.src)) {
+            return false;
+          }
+          renderedImages.add(slide.src);
+          return true;
+        });
+        if (uniqueSlides.length === 0) {
+          return null;
+        }
+        const cleanBlock =
+          uniqueSlides.length === block.slides.length
+            ? block
+            : { ...block, slides: uniqueSlides };
         return (
           <ArticleCarouselFigure
             key={idx}
-            block={block}
+            block={cleanBlock}
             postId={post.id}
           />
         );
@@ -155,32 +189,39 @@ export function ReferenceArticlePage({
           </div>
         );
       }
-      const isContain = block.fit === 'contain';
-      return (
-        <figure key={idx} className="my-6">
-          <div
-            className={
-              isContain
-                ? 'overflow-hidden border border-slate-200 bg-white'
-                : 'overflow-hidden bg-slate-100'
-            }
-          >
-            <img
-              src={block.src}
-              alt={block.alt}
-              referrerPolicy="no-referrer"
+      if (block.type === 'figure') {
+        if (renderedImages.has(block.src)) {
+          return null;
+        }
+        renderedImages.add(block.src);
+        const isContain = block.fit === 'contain';
+        return (
+          <figure key={idx} className="my-6">
+            <div
               className={
                 isContain
-                  ? 'max-h-[480px] w-full object-contain'
-                  : 'aspect-[16/10] w-full object-cover'
+                  ? 'overflow-hidden border border-slate-200 bg-white'
+                  : 'overflow-hidden bg-slate-100'
               }
-            />
-          </div>
-          <figcaption className="mt-2 text-center text-xs italic text-slate-500">
-            {block.caption}
-          </figcaption>
-        </figure>
-      );
+            >
+              <img
+                src={block.src}
+                alt={block.alt}
+                referrerPolicy="no-referrer"
+                className={
+                  isContain
+                    ? 'max-h-[480px] w-full object-contain'
+                    : 'aspect-[16/10] w-full object-cover'
+                }
+              />
+            </div>
+            <figcaption className="mt-2 text-center text-xs italic text-slate-500">
+              {block.caption}
+            </figcaption>
+          </figure>
+        );
+      }
+      return null;
     }
 
     if (block === '---') {
@@ -357,7 +398,7 @@ export function ReferenceArticlePage({
           ) : null}
 
           {metadataRow}
-          {heroImage}
+          {shouldRenderHeroImage ? heroImage : null}
         </header>
       ) : layoutVariant === 'magazine-dropcap' ? (
         <header>
@@ -382,7 +423,7 @@ export function ReferenceArticlePage({
           </p>
 
           {metadataRow}
-          {heroImage}
+          {shouldRenderHeroImage ? heroImage : null}
         </header>
       ) : (
         <header>
@@ -402,7 +443,7 @@ export function ReferenceArticlePage({
           </p>
 
           {metadataRow}
-          {heroImage}
+          {shouldRenderHeroImage ? heroImage : null}
         </header>
       )}
 

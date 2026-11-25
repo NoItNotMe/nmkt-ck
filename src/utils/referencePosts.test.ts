@@ -17,6 +17,7 @@ import {
   getSidebarReferencePosts,
   isPlaceholderReferencePost,
   loadEngagementMap,
+  MANDATORY_FEATURED_REFERENCE_IDS,
   OTHER_REFERENCE_POSTS,
   PAGE_LOAD_REFERENCE_FEED,
   REFERENCE_CHAPTERS,
@@ -527,7 +528,6 @@ test('FEATURED_REFERENCE_POSTS has 2 main articles assigned to Chương 3 and Ch
     '/assets/aistudio/image_d88dfc09.png',
     '/assets/aistudio/image_831e9357.png',
     '/assets/aistudio/image_9692170e.png',
-    '/assets/aistudio/image_31fa7087.png',
     '/assets/aistudio/image_3b09e416.png',
     '/assets/aistudio/image_c6290052.png',
     '/assets/aistudio/image_94a4caf6.png',
@@ -548,12 +548,10 @@ test('FEATURED_REFERENCE_POSTS has 2 main articles assigned to Chương 3 and Ch
   );
   assert.deepEqual(ch5FigureSrcs, [
     '/assets/aistudio/image_1a3a66c1.png',
-    '/assets/aistudio/image_7161404f.png',
     '/assets/aistudio/image_729076e9.png',
     '/assets/aistudio/image_2f8d5f8d.png',
     '/assets/aistudio/image_00b9ac63.png',
     '/assets/aistudio/image_60f1388a.png',
-    '/assets/aistudio/image_729076e9.png',
     '/assets/aistudio/image_6978874c.png',
   ]);
 
@@ -664,7 +662,7 @@ test('stepReferenceIndex wraps smoothly across 4 featured articles', () => {
   assert.equal(stepReferenceIndex(2, -1, 4), 1);
 });
 
-test('createRandomizedReferenceFeed selects 4 real featured posts, 5 real sidebar posts, and remaining grid posts without duplicates', () => {
+test('createRandomizedReferenceFeed anchors Bill Gates & Steve Jobs (Chương 1) and Dell & Asus (Chương 3) with 2 randomized posts', () => {
   function makeLcg(seed: number) {
     let state = seed >>> 0;
     return () => {
@@ -672,6 +670,11 @@ test('createRandomizedReferenceFeed selects 4 real featured posts, 5 real sideba
       return state / 0x100000000;
     };
   }
+
+  assert.deepEqual(MANDATORY_FEATURED_REFERENCE_IDS, [
+    'featured-2',
+    'featured-1',
+  ]);
 
   const feedA = createRandomizedReferenceFeed(ALL_REFERENCE_POSTS, makeLcg(11));
   const feedB = createRandomizedReferenceFeed(ALL_REFERENCE_POSTS, makeLcg(99));
@@ -683,6 +686,26 @@ test('createRandomizedReferenceFeed selects 4 real featured posts, 5 real sideba
       feedA.sidebarPosts.length +
       feedA.gridPosts.length,
     ALL_REFERENCE_POSTS.length
+  );
+
+  // Both feedA and feedB must always contain Steve Jobs & Bill Gates (featured-2) and Dell & Asus (featured-1)
+  const feedAFeaturedIds = feedA.featuredPosts.map((p) => p.id);
+  const feedBFeaturedIds = feedB.featuredPosts.map((p) => p.id);
+  assert.ok(
+    feedAFeaturedIds.includes('featured-2'),
+    'Featured posts must include Steve Jobs & Bill Gates'
+  );
+  assert.ok(
+    feedAFeaturedIds.includes('featured-1'),
+    'Featured posts must include Dell & Asus'
+  );
+  assert.ok(
+    feedBFeaturedIds.includes('featured-2'),
+    'Featured posts in feedB must include Steve Jobs & Bill Gates'
+  );
+  assert.ok(
+    feedBFeaturedIds.includes('featured-1'),
+    'Featured posts in feedB must include Dell & Asus'
   );
 
   for (const post of [...feedA.featuredPosts, ...feedA.sidebarPosts]) {
@@ -700,14 +723,21 @@ test('createRandomizedReferenceFeed selects 4 real featured posts, 5 real sideba
   ].map((p) => p.id);
   assert.equal(new Set(allIdsA).size, ALL_REFERENCE_POSTS.length);
 
+  // The remaining 2 posts in featured should vary across different seeds
   assert.notDeepEqual(
-    feedA.featuredPosts.map((p) => p.id),
-    feedB.featuredPosts.map((p) => p.id),
-    'Different seeds should produce different featured sets'
+    feedAFeaturedIds,
+    feedBFeaturedIds,
+    'Different seeds should produce different random slots in featured sets'
   );
 
   assert.equal(PAGE_LOAD_REFERENCE_FEED.featuredPosts.length, 4);
   assert.equal(PAGE_LOAD_REFERENCE_FEED.sidebarPosts.length, 5);
+  assert.ok(
+    PAGE_LOAD_REFERENCE_FEED.featuredPosts.some((p) => p.id === 'featured-2')
+  );
+  assert.ok(
+    PAGE_LOAD_REFERENCE_FEED.featuredPosts.some((p) => p.id === 'featured-1')
+  );
 });
 
 test('toggleArticleLike and addArticleComment update counts and persist in storage', () => {
@@ -806,5 +836,41 @@ test('editorial layouts and structured visual blocks cover all 5 styles while pr
       (b) => typeof b !== 'string' && b.type === 'processDiagram'
     )
   );
+});
+
+test('no image is duplicated across distinct articles', () => {
+  const imageOwnerMap = new Map<string, string[]>();
+
+  for (const post of ALL_REFERENCE_POSTS) {
+    const record = (src: string, location: string) => {
+      if (!imageOwnerMap.has(src)) {
+        imageOwnerMap.set(src, []);
+      }
+      imageOwnerMap.get(src)!.push(`${post.id} (${location})`);
+    };
+
+    record(post.imageSrc, 'hero');
+
+    post.bodyParagraphs.forEach((block, idx) => {
+      if (typeof block !== 'string') {
+        if (block.type === 'figure') {
+          record(block.src, `figure[${idx}]`);
+        } else if (block.type === 'carousel') {
+          block.slides.forEach((slide, sIdx) => {
+            record(slide.src, `carousel[${idx}][${sIdx}]`);
+          });
+        }
+      }
+    });
+  }
+
+  for (const [src, locations] of imageOwnerMap.entries()) {
+    const postIds = new Set(locations.map((loc) => loc.split(' ')[0]));
+    assert.equal(
+      postIds.size,
+      1,
+      `Image ${src} must be unique to one post, found in: ${locations.join(', ')}`
+    );
+  }
 });
 

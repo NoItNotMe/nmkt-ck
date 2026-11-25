@@ -215,9 +215,10 @@ const DELL_ASUS_POST: ReferencePost = {
   editorialBadge: 'Case Study Kinh Điển',
   title: 'Câu chuyện của Dell và Asus, thiết kế và gia công',
   sapo: 'Từ một nhà sản xuất gia công bo mạch giá rẻ, Asus đã từng bước tiếp quản toàn bộ chuỗi giá trị của Dell và vươn lên thành thương hiệu máy tính độc lập — bài học kinh điển về cái giá của việc thuê ngoài năng lực cốt lõi.',
-  imageLabel: 'Câu chuyện của Dell và Asus, thiết kế và gia công',
-  imageSrc: '/assets/aistudio/181_TSDH_TQImage_1715675275938_b30b1bdc.jpg',
-  imageAlt: 'Vi mạch điện tử và bo mạch phần cứng máy tính',
+  imageLabel: 'Logo hai thương hiệu máy tính Dell và Asus',
+  imageSrc: '/assets/aistudio/image_5636592d.png',
+  imageAlt: 'Logo hai thương hiệu máy tính Dell và Asus',
+  imageFit: 'contain',
   readTime: '3 phút đọc',
   sourceUrl:
     'https://scashwin.medium.com/the-case-of-dell-and-asus-acac9a35db56',
@@ -251,9 +252,9 @@ const GUI_DEBATE_POST: ReferencePost = {
   editorialBadge: 'Lịch Sử Công Nghệ',
   title: 'Cuộc tranh luận lịch sử về GUI: Steve Jobs, Bill Gates và phát minh "mượn" từ Xerox',
   sapo: 'Cuối thập niên 1970, một cuộc cách mạng công nghệ đã âm thầm diễn ra tại Trung tâm Nghiên cứu Palo Alto (PARC) của Xerox — mở ra màn cạnh tranh, vay mượn ý tưởng và những bài học kinh điển giữa Apple và Microsoft.',
-  imageLabel: 'Cuộc tranh luận lịch sử về GUI',
-  imageSrc: '/assets/aistudio/65_TSDH_Image_1691466014493_fa7a55dc.jpg',
-  imageAlt: 'Mạch điện tử và phần cứng máy tính',
+  imageLabel: 'Chân dung Steve Jobs và Bill Gates',
+  imageSrc: '/assets/aistudio/image_2531b496.png',
+  imageAlt: 'Chân dung Steve Jobs và Bill Gates trong cuộc tranh luận lịch sử về GUI',
   readTime: '5 phút đọc',
   sourceUrl:
     'https://medium.com/@davidsehyeonbaek/the-great-gui-debate-steve-jobs-bill-gates-and-the-borrowed-innovation-from-xerox-6402e7b654c8',
@@ -1802,13 +1803,7 @@ export const OTHER_REFERENCE_POSTS: readonly ReferencePost[] = [
       'Lập kế hoạch tốt tạo ra căn cứ để xử lý các thay đổi. Khi nhiệm vụ, thời lượng và trách nhiệm đã được xác định, người quản lý có thể nhìn thấy phần việc nào bị ảnh hưởng và cần phối hợp với ai. Kỹ năng thương lượng giúp các bên tìm được phương án có thể chấp nhận. Tư duy “win-win” hướng đến giải pháp trong đó các bên cùng đạt được lợi ích hợp lý, thay vì cố giành phần thắng bằng mọi giá theo cách “win-lose”.',
       '> Một quyết định quản lý tốt không chỉ giải quyết vấn đề trước mắt; nó còn phải tính đến tác động của quyết định đó lên toàn bộ dự án.',
       'Ví dụ, khi nhóm phát hiện một loại vật liệu rẻ hơn nhưng chưa được kiểm tra, việc lựa chọn ngay để tiết kiệm ngân sách có thể tạo ra rủi ro về chất lượng. Nhóm cần trao đổi về yêu cầu kỹ thuật, thời gian thử nghiệm và khoản chi có thể tiết kiệm. Nếu vật liệu thay thế đáp ứng yêu cầu sau khi thử, phương án mới có thể được cân nhắc. Nếu không, khoản tiết kiệm ban đầu có thể dẫn đến chi phí sửa chữa và chậm tiến độ về sau. Cách tiếp cận này cho thấy quyết định về chi phí không thể tách rời việc kiểm soát chất lượng và lịch trình.',
-      {
-        type: 'figure',
-        src: '/assets/aistudio/image_31fa7087.png',
-        alt: 'Nhóm kỹ sư thảo luận bản vẽ thiết kế và phương án thay thế quanh bàn làm việc trước màn hình kỹ thuật',
-        caption:
-          'Trao đổi cởi mở và dựa trên tiêu chí kỹ thuật giúp nhóm cân nhắc phương án thay thế mà không làm mất cân bằng chất lượng – tiến độ.',
-      },
+
       'Thành công của dự án vì thế không chỉ là việc hoàn tất một sản phẩm. Đó là kết quả của quá trình liên tục cân nhắc mục tiêu, kế hoạch, nguồn lực và sự phối hợp giữa con người. Để những tiêu chí ấy không dừng ở khẩu hiệu, nhóm phải biến chúng thành những công việc cụ thể và một lịch trình có thể theo dõi. Bước đầu tiên là lập kế hoạch.',
     ],
   },
@@ -2028,13 +2023,7 @@ export const OTHER_REFERENCE_POSTS: readonly ReferencePost[] = [
       'Theo định nghĩa được dẫn trong bài giảng, Katzenbach và Smith xem nhóm là một số người có các kỹ năng khác nhau, chia sẻ trách nhiệm, cam kết làm việc cùng nhau, bổ sung và hỗ trợ lẫn nhau để đạt mục tiêu chung. Lewis-McClear diễn đạt ngắn gọn hơn: nhóm là hai hay nhiều người làm việc với nhau để cùng hoàn thành một mục tiêu chung. Hai cách diễn đạt cùng nhấn mạnh ba yếu tố: có mục tiêu chung, có sự tương tác và có trách nhiệm được chia sẻ.',
       'Một nhóm vì thế không chỉ được xác định bằng việc các thành viên có tên trong cùng một danh sách. Nếu mỗi người làm phần việc của mình nhưng không quan tâm đến tiến độ, khó khăn hay kết quả của người khác, sự kết nối giữa họ còn rất lỏng lẻo. Trong một nhóm thực sự, thành viên phụ thuộc vào thông tin của nhau để hoàn thành công việc; quyết định của một người có thể ảnh hưởng đến phần việc của người khác. Nhóm cũng cần sự tương tác giữa các thành viên và với người điều phối để duy trì hướng đi chung.',
       'Có thể hình dung nhóm như một cỗ máy có nhiều bộ phận. Mỗi bộ phận có chức năng riêng, nhưng giá trị của toàn bộ hệ thống chỉ xuất hiện khi các bộ phận phối hợp đúng cách. Một thành viên có chuyên môn nổi bật không đương nhiên thay thế được toàn bộ nhóm; ngược lại, nhiều thành viên giỏi cũng chưa chắc tạo ra kết quả tốt nếu thiếu phối hợp.',
-      {
-        type: 'figure',
-        src: '/assets/aistudio/image_7161404f.png',
-        alt: 'Đàn kiến nối đuôi nhau phối hợp vượt qua khoảng trống trên thân cây',
-        caption:
-          'Hình ảnh đàn kiến trong slide gợi nhắc đến sự phối hợp và phân công trong một tập thể.',
-      },
+
       '---',
       '### Nhóm chính thức, nhóm không chính thức và lý do cần hợp tác',
       'Trong tổ chức, nhóm có thể được phân thành nhóm chính thức và nhóm không chính thức. Nhóm chính thức thường có tổ chức ổn định, phân công rõ ràng và được hình thành để thực hiện những công việc có tính liên tục hoặc những dự án, công trình cần phối hợp chuyên môn. Các thành viên có thể cùng ngành nghề hoặc sở hữu những kỹ năng bổ sung cho nhau. Vì có cơ cấu và mục tiêu tương đối rõ, nhóm chính thức thường cần quy tắc, quy trình, báo cáo và ghi chép tiến độ.',
@@ -2189,13 +2178,7 @@ export const OTHER_REFERENCE_POSTS: readonly ReferencePost[] = [
       'Trong một nhóm, các vai trò có thể được phân chia theo nhu cầu công việc. Nhà tài trợ hỗ trợ và trao quyền cho nhóm. Lãnh đạo hoặc người điều phối tổ chức hoạt động và giữ cho nhóm tập trung vào mục tiêu. Người hỗ trợ giúp các thành viên tháo gỡ khó khăn. Người đánh giá nhìn bức tranh toàn cảnh và xem xét kết quả. Người ghi chép chịu trách nhiệm về tài liệu, quyết định và thông tin của nhóm. Đội ngũ thành viên trực tiếp tham gia hoàn thành nhiệm vụ. Trong nhóm nhỏ, một người có thể đảm nhận nhiều vai trò; điều quan trọng là trách nhiệm không bị bỏ trống hoặc chồng lấn.',
       'Kỹ năng làm việc nhóm là khả năng tương tác giữa các thành viên để thúc đẩy hiệu quả công việc và phát triển tiềm năng của mỗi người. Nó bao gồm việc xây dựng vai trò chính trong nhóm, quản lý hội họp, phát triển quy trình làm việc, kích thích sáng tạo và xử lý các vấn đề nảy sinh. Bên cạnh kỹ năng tổ chức, mỗi thành viên cần rèn luyện bảy kỹ năng cá nhân: lắng nghe, chất vấn, thuyết phục, tôn trọng, trợ giúp, sẻ chia và chung sức.',
       'Lắng nghe giúp thành viên hiểu được thông tin và quan điểm trước khi phản hồi. Chất vấn không phải là bác bỏ người khác, mà là đặt câu hỏi để làm sáng tỏ giả định hoặc phát hiện điểm chưa hợp lý. Thuyết phục giúp trình bày lập luận và tạo sự đồng thuận. Tôn trọng giữ cho khác biệt không biến thành công kích. Trợ giúp và sẻ chia giúp kiến thức, kinh nghiệm được luân chuyển trong nhóm. Chung sức nhắc mỗi người đặt kết quả tập thể bên cạnh phần việc cá nhân. Khi một trong những kỹ năng này yếu, nhóm có thể gặp trở ngại: không lắng nghe dẫn đến hiểu sai, thiếu chất vấn khiến sai sót không được phát hiện, thiếu tôn trọng làm thành viên ngại đóng góp.',
-      {
-        type: 'figure',
-        src: '/assets/aistudio/image_729076e9.png',
-        alt: 'Nhóm thành viên trao đổi ý kiến và ghi nhận nội dung trên bảng trắng cùng máy tính',
-        caption:
-          'Lắng nghe, đặt câu hỏi làm rõ và ghi nhận ý kiến công khai giúp các vai trò trong nhóm phối hợp nhịp nhàng.',
-      },
+
       'Giải quyết vấn đề cũng là năng lực quan trọng. Quy trình được trình bày trong slide bắt đầu bằng việc xác định vấn đề, sau đó thu thập thông tin, đề xuất các giải pháp, phân tích và so sánh các phương án, đưa ra quyết định, lập kế hoạch rồi thực hiện. Trình tự này giúp nhóm tránh nhảy ngay đến giải pháp khi chưa hiểu rõ nguyên nhân. Một vấn đề được mô tả mơ hồ thường dẫn đến nhiều cuộc tranh luận không cùng trọng tâm; ngược lại, khi có thông tin và tiêu chí so sánh, nhóm có cơ sở để chọn phương án phù hợp hơn.',
       'Kết hợp các vai trò, nguyên tắc và kỹ năng trên sẽ tạo nên một nhóm có khả năng phối hợp. Tuy nhiên, kỹ năng không hình thành chỉ bằng cách đọc danh sách. Mỗi thành viên cần tự hoàn thiện trong quá trình làm việc, nhận phản hồi và điều chỉnh cách tương tác. Nhóm cũng cần tạo môi trường để mọi người có cơ hội tham gia thực chất, thay vì chỉ chờ một vài cá nhân giỏi đưa ra quyết định.',
     ],
@@ -3851,7 +3834,7 @@ export const OTHER_REFERENCE_POSTS: readonly ReferencePost[] = [
     title: 'Bài viết thuộc Chương 10 (Placeholder)',
     sapo: 'Sapo tóm tắt cho bài viết thuộc Chương 10 (đang chờ nội dung chi tiết).',
     imageLabel: 'Ảnh minh họa Chương 10',
-    imageSrc: '/assets/aistudio/181_TSDH_TQImage_1715675275938_b30b1bdc.jpg',
+    imageSrc: '/assets/aistudio/64_TSDH_TQImage_1691462323202_cb32d264.jpg',
     imageAlt: 'Chip bán dẫn và hệ thống kỹ thuật số',
     readTime: '4 phút đọc',
     initialLikes: 0,
@@ -3899,6 +3882,11 @@ export function shuffleReferencePosts<T>(
   return result;
 }
 
+export const MANDATORY_FEATURED_REFERENCE_IDS: readonly string[] = [
+  'featured-2', // Steve Jobs, Bill Gates & GUI Xerox (Chương 1)
+  'featured-1', // Dell & Asus (Chương 3)
+];
+
 export function createRandomizedReferenceFeed(
   posts: readonly ReferencePost[] = ALL_REFERENCE_POSTS,
   rng: () => number = Math.random
@@ -3907,14 +3895,30 @@ export function createRandomizedReferenceFeed(
   const placeholderPosts = posts.filter((post) =>
     isPlaceholderReferencePost(post)
   );
-  const shuffledReal = shuffleReferencePosts(realPosts, rng);
-  const featuredPosts = shuffledReal.slice(0, FEATURED_REFERENCE_LIMIT);
-  const sidebarPosts = shuffledReal.slice(
-    FEATURED_REFERENCE_LIMIT,
-    FEATURED_REFERENCE_LIMIT + SIDEBAR_REFERENCE_LIMIT
+
+  const anchorPosts = MANDATORY_FEATURED_REFERENCE_IDS
+    .map((id) => realPosts.find((p) => p.id === id))
+    .filter((p): p is ReferencePost => Boolean(p));
+
+  const anchorIdSet = new Set(anchorPosts.map((p) => p.id));
+  const otherRealPosts = realPosts.filter((post) => !anchorIdSet.has(post.id));
+  const shuffledOthers = shuffleReferencePosts(otherRealPosts, rng);
+
+  const remainingNeededForFeatured = Math.max(
+    0,
+    FEATURED_REFERENCE_LIMIT - anchorPosts.length
+  );
+  const randomFeatured = shuffledOthers.slice(0, remainingNeededForFeatured);
+
+  const featuredPosts = [...anchorPosts, ...randomFeatured];
+  const sidebarPosts = shuffledOthers.slice(
+    remainingNeededForFeatured,
+    remainingNeededForFeatured + SIDEBAR_REFERENCE_LIMIT
   );
   const gridPosts = [
-    ...shuffledReal.slice(FEATURED_REFERENCE_LIMIT + SIDEBAR_REFERENCE_LIMIT),
+    ...shuffledOthers.slice(
+      remainingNeededForFeatured + SIDEBAR_REFERENCE_LIMIT
+    ),
     ...placeholderPosts,
   ];
 
