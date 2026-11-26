@@ -1,5 +1,4 @@
 import { ArrowLeft, Heart, MessageCircle } from 'lucide-react';
-import { type UserAccount } from '../utils/auth';
 import { buildReferencePostHash } from '../utils/navigation';
 import {
   type EngagementMap,
@@ -7,12 +6,12 @@ import {
   getReferenceChapterInfo,
   getReferencePostsByChapter,
   type ReferencePost,
+  VISITOR_ENGAGEMENT_ID,
 } from '../utils/referencePosts';
 import { ChapterIndexButton } from './ChapterIndexButton';
 
 interface ReferenceChapterPageProps {
   chapterNumber: number;
-  user: UserAccount | null;
   engagementMap: EngagementMap;
   failedImages: Record<string, boolean>;
   onImageError: (postId: string) => void;
@@ -24,7 +23,6 @@ interface ReferenceChapterPageProps {
 
 export function ReferenceChapterPage({
   chapterNumber,
-  user,
   engagementMap,
   failedImages,
   onImageError,
@@ -80,7 +78,7 @@ export function ReferenceChapterPage({
             const stats = getEngagementForPost(
               engagementMap,
               post,
-              user?.email
+              VISITOR_ENGAGEMENT_ID
             );
 
             return (

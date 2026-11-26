@@ -63,6 +63,23 @@ test('HOME_SUBSECTIONS defines 4 alternating sections without "Phần" prefix', 
     '/assets/aistudio/181_TSDH_TQImage_1715675275938_b30b1bdc.jpg'
   );
 
+  assert.equal(
+    getSubsectionById('part-2')?.curriculumUrl,
+    'https://drive.google.com/file/d/1PDvmMvl22gf8nnv5yKRVgPe4e-k08lQX/view'
+  );
+  assert.equal(
+    getSubsectionById('part-3')?.curriculumUrl,
+    'https://drive.google.com/file/d/12O3wGmPDt_2ofDnEuPTOdvIwcKU4AsmI/view'
+  );
+  assert.equal(
+    getSubsectionById('part-4')?.curriculumUrl,
+    'https://drive.google.com/file/d/1eH_Qy-mf7c4fT0UEi7nhr17LiBqTgayL/view'
+  );
+  assert.equal(
+    getSubsectionById('part-5')?.curriculumUrl,
+    'https://drive.google.com/file/d/1nKW83RR3SWzR-yJe5JQpILm-wOprFCJ-/view'
+  );
+
   assert.equal(getSubsectionById('part-4')?.title, 'Điện Tử - Viễn Thông');
   assert.equal(getSubsectionById(null), undefined);
 });

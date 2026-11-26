@@ -1,11 +1,11 @@
 import { type FormEvent, useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowLeft, Heart, MessageCircle, Send } from 'lucide-react';
-import { type UserAccount } from '../utils/auth';
+import { ArrowLeft, Heart, MessageCircle } from 'lucide-react';
 import { groupArticleBodySegments } from '../utils/referenceArticleLayout';
 import {
   type ArticleContentBlock,
   type ReferenceComment,
   type ReferencePost,
+  validateArticleCommentInput,
 } from '../utils/referencePosts';
 import { ArticleBarChartFigure } from './ArticleBarChartFigure';
 import { ArticleCarouselFigure } from './ArticleCarouselFigure';
@@ -20,7 +20,6 @@ import { ArticleTeamEvaluationFigure } from './ArticleTeamEvaluationFigure';
 
 interface ReferenceArticlePageProps {
   post: ReferencePost;
-  user: UserAccount | null;
   likeCount: number;
   isLiked: boolean;
   comments: ReferenceComment[];
@@ -30,13 +29,11 @@ interface ReferenceArticlePageProps {
   onImageError: () => void;
   onBack: () => void;
   onToggleLike: () => void;
-  onSubmitComment: (text: string) => boolean;
-  onRequireAuth: () => void;
+  onSubmitComment: (authorName: string, text: string) => boolean;
 }
 
 export function ReferenceArticlePage({
   post,
-  user,
   likeCount,
   isLiked,
   comments,
@@ -47,11 +44,12 @@ export function ReferenceArticlePage({
   onBack,
   onToggleLike,
   onSubmitComment,
-  onRequireAuth,
 }: ReferenceArticlePageProps) {
+  const [authorInput, setAuthorInput] = useState('');
   const [commentInput, setCommentInput] = useState('');
+  const [commentError, setCommentError] = useState<string | null>(null);
   const commentSectionRef = useRef<HTMLDivElement>(null);
-  const commentInputRef = useRef<HTMLInputElement>(null);
+  const authorInputRef = useRef<HTMLInputElement>(null);
 
   const layoutVariant = post.layoutVariant ?? 'default';
   const isMagazine =
@@ -64,6 +62,7 @@ export function ReferenceArticlePage({
 
   useEffect(() => {
     setCommentInput('');
+    setCommentError(null);
   }, [post.id]);
 
   useEffect(() => {
@@ -75,20 +74,25 @@ export function ReferenceArticlePage({
         behavior: 'smooth',
         block: 'start',
       });
-      commentInputRef.current?.focus();
+      authorInputRef.current?.focus();
     }, 60);
     return () => window.clearTimeout(timer);
   }, [post.id, focusCommentsOnMount]);
 
   function handleFormSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!user) {
-      onRequireAuth();
+    const validationError = validateArticleCommentInput(
+      authorInput,
+      commentInput
+    );
+    if (validationError) {
+      setCommentError(validationError);
       return;
     }
-    const added = onSubmitComment(commentInput);
+    const added = onSubmitComment(authorInput, commentInput);
     if (added) {
       setCommentInput('');
+      setCommentError(null);
     }
   }
 
@@ -490,63 +494,108 @@ export function ReferenceArticlePage({
         </p>
       ) : null}
 
-      {/* Comments Section (Login Required to Like or Comment) */}
+      {/* Comments Section (Name + Comment without login) */}
       <div
         ref={commentSectionRef}
-        className="mt-8 border-t border-slate-100 pt-6"
+        className="mt-8 border-t border-slate-200 pt-6"
       >
-        <h2 className="text-sm font-semibold text-slate-900">
+        <h2 className="text-base font-semibold text-slate-900">
           Bình luận ({commentCount})
         </h2>
 
-        {user ? (
-          <form
-            onSubmit={handleFormSubmit}
-            className="mt-3 flex items-center gap-2"
-          >
+        <form
+          noValidate
+          onSubmit={handleFormSubmit}
+          className="mt-4 space-y-4 rounded-xl border border-slate-200 bg-slate-50/70 p-4 sm:p-5"
+        >
+          <div>
+            <label
+              htmlFor="article-comment-author"
+              className="block text-sm font-medium text-slate-800"
+            >
+              Tên{' '}
+              <span className="text-rose-600" aria-hidden="true">
+                *
+              </span>
+            </label>
             <input
-              ref={commentInputRef}
+              ref={authorInputRef}
+              id="article-comment-author"
+              name="authorName"
               type="text"
-              value={commentInput}
-              onChange={(event) => setCommentInput(event.target.value)}
-              placeholder={`Bình luận với tên ${user.name}...`}
-              aria-label="Nội dung bình luận"
-              className="flex-1 border-b border-slate-300 bg-transparent py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:outline-none"
+              required
+              value={authorInput}
+              onChange={(event) => {
+                setAuthorInput(event.target.value);
+                if (commentError) {
+                  setCommentError(null);
+                }
+              }}
+              placeholder="Nhập tên của bạn"
+              className="mt-1.5 block w-full max-w-sm rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900"
             />
+          </div>
+
+          <div>
+            <label
+              htmlFor="article-comment-body"
+              className="block text-sm font-medium text-slate-800"
+            >
+              Bình luận{' '}
+              <span className="text-rose-600" aria-hidden="true">
+                *
+              </span>
+            </label>
+            <textarea
+              id="article-comment-body"
+              name="commentBody"
+              rows={4}
+              required
+              value={commentInput}
+              onChange={(event) => {
+                setCommentInput(event.target.value);
+                if (commentError) {
+                  setCommentError(null);
+                }
+              }}
+              placeholder="Chia sẻ cảm nhận hoặc góp ý của bạn về bài viết..."
+              className="mt-1.5 block w-full rounded-md border border-slate-300 bg-white px-3 py-2.5 text-sm leading-relaxed text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900"
+            />
+          </div>
+
+          {commentError ? (
+            <p role="alert" className="text-xs font-medium text-rose-600">
+              {commentError}
+            </p>
+          ) : null}
+
+          <div>
             <button
               type="submit"
-              aria-label="Gửi bình luận"
-              className="inline-flex items-center gap-1.5 rounded-full bg-slate-900 px-4 py-1.5 text-xs font-medium text-white transition-colors hover:bg-slate-800"
+              className="inline-flex items-center justify-center rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-2"
             >
-              <Send className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>Gửi</span>
-            </button>
-          </form>
-        ) : (
-          <div className="mt-3 flex flex-wrap items-center justify-between gap-2 bg-slate-50 px-3.5 py-2.5 text-xs text-slate-600">
-            <span>Bạn cần đăng nhập để thích hoặc bình luận bài viết này.</span>
-            <button
-              type="button"
-              onClick={onRequireAuth}
-              className="font-semibold text-slate-900 underline underline-offset-4 hover:text-blue-700"
-            >
-              Đăng nhập ngay
+              Gửi bình luận
             </button>
           </div>
-        )}
+        </form>
 
-        <div className="mt-4 space-y-3">
+        <div className="mt-6 space-y-3.5">
           {comments.length === 0 ? (
             <p className="text-xs text-slate-400">
               Chưa có bình luận nào. Hãy là người đầu tiên bình luận.
             </p>
           ) : (
             comments.map((comment) => (
-              <div key={comment.id} className="text-sm">
+              <div
+                key={comment.id}
+                className="rounded-lg border border-slate-100 bg-white px-4 py-3 text-sm"
+              >
                 <span className="font-semibold text-slate-900">
                   {comment.authorName}
                 </span>
-                <p className="mt-0.5 text-slate-700">{comment.text}</p>
+                <p className="mt-1 whitespace-pre-line text-slate-700">
+                  {comment.text}
+                </p>
               </div>
             ))
           )}

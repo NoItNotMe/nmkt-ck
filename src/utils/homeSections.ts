@@ -22,6 +22,7 @@ export interface HomeSubsection {
   detailLead: string;
   detailHighlights: readonly DetailHighlight[];
   anchor: string;
+  curriculumUrl: string;
 }
 
 export interface ScrollStage {
@@ -68,6 +69,8 @@ export const HOME_SUBSECTIONS: readonly HomeSubsection[] = [
       },
     ],
     anchor: 'dieu-khien-va-tu-dong-hoa',
+    curriculumUrl:
+      'https://drive.google.com/file/d/1PDvmMvl22gf8nnv5yKRVgPe4e-k08lQX/view',
   },
   {
     id: 'part-3',
@@ -93,6 +96,8 @@ export const HOME_SUBSECTIONS: readonly HomeSubsection[] = [
       },
     ],
     anchor: 'ky-thuat-dien',
+    curriculumUrl:
+      'https://drive.google.com/file/d/12O3wGmPDt_2ofDnEuPTOdvIwcKU4AsmI/view',
   },
   {
     id: 'part-4',
@@ -118,6 +123,8 @@ export const HOME_SUBSECTIONS: readonly HomeSubsection[] = [
       },
     ],
     anchor: 'dien-tu-vien-thong',
+    curriculumUrl:
+      'https://drive.google.com/file/d/1eH_Qy-mf7c4fT0UEi7nhr17LiBqTgayL/view',
   },
   {
     id: 'part-5',
@@ -143,6 +150,8 @@ export const HOME_SUBSECTIONS: readonly HomeSubsection[] = [
       },
     ],
     anchor: 'thiet-ke-vi-mach',
+    curriculumUrl:
+      'https://drive.google.com/file/d/1nKW83RR3SWzR-yJe5JQpILm-wOprFCJ-/view',
   },
 ] as const;
 
@@ -173,3 +182,24 @@ export function getDetailStageIndexForId(id: SpecializationId): number {
   );
   return stage ? stage.index : 0;
 }
+
+export function getSubsectionByAnchor(
+  anchor: string | null
+): HomeSubsection | undefined {
+  if (!anchor) {
+    return undefined;
+  }
+  const normalized = anchor.trim().toLowerCase();
+  return HOME_SUBSECTIONS.find((item) => item.anchor === normalized);
+}
+
+export const MAJOR_KEY_TO_HOME_ANCHOR: Record<
+  'tdh' | 'ktd' | 'dtvt' | 'tkvm',
+  string
+> = {
+  tdh: 'dieu-khien-va-tu-dong-hoa',
+  ktd: 'ky-thuat-dien',
+  dtvt: 'dien-tu-vien-thong',
+  tkvm: 'thiet-ke-vi-mach',
+};
+

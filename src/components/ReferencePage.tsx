@@ -5,7 +5,6 @@ import {
   Heart,
   MessageCircle,
 } from 'lucide-react';
-import { type UserAccount } from '../utils/auth';
 import { buildReferencePostHash } from '../utils/navigation';
 import {
   addArticleComment,
@@ -19,29 +18,26 @@ import {
   saveEngagementMap,
   stepReferenceIndex,
   toggleArticleLike,
+  VISITOR_ENGAGEMENT_ID,
 } from '../utils/referencePosts';
 import { ChapterIndexButton } from './ChapterIndexButton';
 import { ReferenceArticlePage } from './ReferenceArticlePage';
 import { ReferenceChapterPage } from './ReferenceChapterPage';
 
 interface ReferencePageProps {
-  user: UserAccount | null;
   selectedPostId: string | null;
   selectedChapter: number | null;
   onOpenPost: (postId: string) => void;
   onOpenChapter: (chapterNumber: number) => void;
   onBackToList: () => void;
-  onRequireAuth: () => void;
 }
 
 export function ReferencePage({
-  user,
   selectedPostId,
   selectedChapter,
   onOpenPost,
   onOpenChapter,
   onBackToList,
-  onRequireAuth,
 }: ReferencePageProps) {
   const [activeFeaturedIndex, setActiveFeaturedIndex] = useState(0);
   const [focusCommentsOnOpen, setFocusCommentsOnOpen] = useState(false);
@@ -50,13 +46,6 @@ export function ReferencePage({
   const [engagementMap, setEngagementMap] = useState<EngagementMap>(() =>
     typeof window !== 'undefined' ? loadEngagementMap(window.localStorage) : {}
   );
-  const [authNotice, setAuthNotice] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (user) {
-      setAuthNotice(null);
-    }
-  }, [user]);
 
   useEffect(() => {
     if (!selectedPostId) {
@@ -73,7 +62,7 @@ export function ReferencePage({
   const featuredEngagement = getEngagementForPost(
     engagementMap,
     featuredPost,
-    user?.email
+    VISITOR_ENGAGEMENT_ID
   );
   const visibleGridPosts = isGridExpanded
     ? gridPosts
@@ -102,28 +91,22 @@ export function ReferencePage({
   }
 
   function handleToggleLike(post: ReferencePost) {
-    if (!user) {
-      setAuthNotice('Vui lòng đăng nhập để thích hoặc bình luận bài viết.');
-      onRequireAuth();
-      return;
-    }
     setEngagementMap((prev) => {
-      const next = toggleArticleLike(prev, post.id, user.email);
+      const next = toggleArticleLike(prev, post.id, VISITOR_ENGAGEMENT_ID);
       saveEngagementMap(window.localStorage, next);
       return next;
     });
   }
 
-  function handleSubmitComment(post: ReferencePost, rawText: string): boolean {
-    if (!user) {
-      setAuthNotice('Vui lòng đăng nhập để thích hoặc bình luận bài viết.');
-      onRequireAuth();
-      return false;
-    }
+  function handleSubmitComment(
+    post: ReferencePost,
+    authorName: string,
+    rawText: string
+  ): boolean {
     const result = addArticleComment(
       engagementMap,
       post.id,
-      user.name,
+      authorName,
       rawText
     );
     if (!result.added) {
@@ -138,13 +121,12 @@ export function ReferencePage({
     const activeEngagement = getEngagementForPost(
       engagementMap,
       activePost,
-      user?.email
+      VISITOR_ENGAGEMENT_ID
     );
 
     return (
       <ReferenceArticlePage
         post={activePost}
-        user={user}
         likeCount={activeEngagement.likeCount}
         isLiked={activeEngagement.isLiked}
         comments={activeEngagement.comments}
@@ -154,8 +136,9 @@ export function ReferencePage({
         onImageError={() => markImageFailed(activePost.id)}
         onBack={onBackToList}
         onToggleLike={() => handleToggleLike(activePost)}
-        onSubmitComment={(text) => handleSubmitComment(activePost, text)}
-        onRequireAuth={onRequireAuth}
+        onSubmitComment={(authorName, text) =>
+          handleSubmitComment(activePost, authorName, text)
+        }
       />
     );
   }
@@ -164,7 +147,6 @@ export function ReferencePage({
     return (
       <ReferenceChapterPage
         chapterNumber={selectedChapter}
-        user={user}
         engagementMap={engagementMap}
         failedImages={failedImages}
         onImageError={markImageFailed}
@@ -182,22 +164,6 @@ export function ReferencePage({
       className="mx-auto min-h-[calc(100svh_-_3.5rem)] w-full max-w-7xl px-4 py-8 sm:px-8 sm:py-10"
     >
       <h1 className="sr-only">Tham khảo</h1>
-
-      {authNotice ? (
-        <div
-          role="status"
-          className="mb-5 flex items-center justify-between text-xs text-slate-600"
-        >
-          <span>{authNotice}</span>
-          <button
-            type="button"
-            onClick={() => setAuthNotice(null)}
-            className="text-slate-400 hover:text-slate-800"
-          >
-            Ẩn
-          </button>
-        </div>
-      ) : null}
 
       <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-12 lg:gap-12">
         {/* Left/Center Column: 4 Main Featured Articles (< [ Image + 4 Dots ] >) */}
@@ -365,7 +331,11 @@ export function ReferencePage({
           className="flex flex-col gap-5 lg:col-span-5"
         >
           {sidebarPosts.map((post) => {
-            const stats = getEngagementForPost(engagementMap, post, user?.email);
+            const stats = getEngagementForPost(
+              engagementMap,
+              post,
+              VISITOR_ENGAGEMENT_ID
+            );
             return (
               <a
                 key={post.id}
@@ -447,7 +417,11 @@ export function ReferencePage({
         >
           <div className="grid grid-cols-1 gap-x-6 gap-y-9 sm:grid-cols-2 lg:grid-cols-4">
             {visibleGridPosts.map((post) => {
-              const stats = getEngagementForPost(engagementMap, post, user?.email);
+              const stats = getEngagementForPost(
+                engagementMap,
+                post,
+                VISITOR_ENGAGEMENT_ID
+              );
               return (
                 <a
                   key={post.id}

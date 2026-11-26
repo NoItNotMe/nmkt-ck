@@ -4,22 +4,20 @@
  */
 
 import { useEffect, useState } from 'react';
-import { AuthModal } from './components/AuthModal';
+import { GroupPage } from './components/GroupPage';
 import { HomePage } from './components/HomePage';
 import { ReferencePage } from './components/ReferencePage';
 import { TopBar } from './components/TopBar';
 import {
-  clearStoredUser,
-  loadStoredUser,
-  type AuthMode,
-  type UserAccount,
-} from './utils/auth';
-import {
+  buildGroupSubpageHash,
+  buildHomeAnchorHash,
   buildReferenceChapterHash,
   buildReferencePostHash,
   canNavigateBack,
   getNavItemById,
   normalizeAppHash,
+  parseGroupSubpageFromHash,
+  parseHomeAnchorFromHash,
   parseReferenceChapterFromHash,
   parseReferencePostIdFromHash,
   parseSectionFromHash,
@@ -28,12 +26,30 @@ import {
   syncRouteHistoryOnExternalNavigation,
   type NavSection,
 } from './utils/navigation';
+import {
+  getSubsectionByAnchor,
+  MAJOR_KEY_TO_HOME_ANCHOR,
+} from './utils/homeSections';
+import type { MajorKey } from './utils/quizData';
 
 export default function App() {
   const [activeSection, setActiveSection] = useState<NavSection>(() =>
     typeof window !== 'undefined'
       ? parseSectionFromHash(window.location.hash)
       : 'home'
+  );
+  const [selectedHomeAnchor, setSelectedHomeAnchor] = useState<string | null>(
+    () =>
+      typeof window !== 'undefined'
+        ? parseHomeAnchorFromHash(window.location.hash)
+        : null
+  );
+  const [selectedGroupSubpage, setSelectedGroupSubpage] = useState<
+    string | null
+  >(() =>
+    typeof window !== 'undefined'
+      ? parseGroupSubpageFromHash(window.location.hash)
+      : null
   );
   const [selectedReferencePostId, setSelectedReferencePostId] = useState<
     string | null
@@ -54,22 +70,28 @@ export default function App() {
       ? [normalizeAppHash(window.location.hash)]
       : ['#trang-chu']
   );
-  const [user, setUser] = useState<UserAccount | null>(() =>
-    typeof window !== 'undefined' ? loadStoredUser(window.localStorage) : null
-  );
-  const [authModalState, setAuthModalState] = useState<{
-    isOpen: boolean;
-    mode: AuthMode;
-  }>({
-    isOpen: false,
-    mode: 'login',
-  });
 
   function applyHashState(targetHash: string) {
     setActiveSection(parseSectionFromHash(targetHash));
+    setSelectedHomeAnchor(parseHomeAnchorFromHash(targetHash));
     setSelectedReferencePostId(parseReferencePostIdFromHash(targetHash));
     setSelectedReferenceChapter(parseReferenceChapterFromHash(targetHash));
+    setSelectedGroupSubpage(parseGroupSubpageFromHash(targetHash));
   }
+
+  useEffect(() => {
+    if (activeSection === 'groups' && selectedGroupSubpage === 'muc-1') {
+      document.title = 'Định hướng ngành · Khám phá thiên hướng kỹ thuật';
+    } else if (activeSection === 'groups' && selectedGroupSubpage) {
+      document.title = 'Công cụ · Trang web cá nhân';
+    } else if (activeSection === 'groups') {
+      document.title = 'Công cụ · Trang web cá nhân';
+    } else if (activeSection === 'reference') {
+      document.title = 'Tham khảo · Trang web cá nhân';
+    } else {
+      document.title = 'Trang web cá nhân';
+    }
+  }, [activeSection, selectedGroupSubpage]);
 
   useEffect(() => {
     function syncFromLocationHash() {
@@ -94,7 +116,9 @@ export default function App() {
     if (window.location.hash !== targetHash) {
       window.history.pushState(null, '', targetHash);
     }
-    window.scrollTo({ top: 0, behavior: 'auto' });
+    if (!parseHomeAnchorFromHash(targetHash)) {
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    }
   }
 
   function handleSelectSection(section: NavSection) {
@@ -113,6 +137,19 @@ export default function App() {
     navigateToHash(getNavItemById('reference').hash);
   }
 
+  function handleOpenGroupSubpage(subpageId: string) {
+    navigateToHash(buildGroupSubpageHash(subpageId));
+  }
+
+  function handleBackToGroupList() {
+    navigateToHash(getNavItemById('groups').hash);
+  }
+
+  function handleOpenHomeMajor(majorKey: MajorKey) {
+    const anchor = MAJOR_KEY_TO_HOME_ANCHOR[majorKey];
+    navigateToHash(buildHomeAnchorHash(anchor));
+  }
+
   function handleGoBack() {
     const { nextStack, targetHash } = resolvePreviousRoute(routeHistory);
     if (!targetHash) {
@@ -123,27 +160,17 @@ export default function App() {
     if (window.location.hash !== targetHash) {
       window.history.pushState(null, '', targetHash);
     }
-    window.scrollTo({ top: 0, behavior: 'auto' });
-  }
-
-  function handleOpenAuthModal(mode: AuthMode) {
-    setAuthModalState({ isOpen: true, mode });
-  }
-
-  function handleAuthSuccess(loggedInUser: UserAccount) {
-    setUser(loggedInUser);
-    setAuthModalState((prev) => ({ ...prev, isOpen: false }));
-  }
-
-  function handleSignOut() {
-    clearStoredUser(window.localStorage);
-    setUser(null);
+    if (!parseHomeAnchorFromHash(targetHash)) {
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    }
   }
 
   const currentItem = getNavItemById(activeSection);
   const currentHash =
     typeof window !== 'undefined' ? window.location.hash : '#trang-chu';
   const canGoBack = canNavigateBack(routeHistory, currentHash);
+  const targetSpecializationId =
+    getSubsectionByAnchor(selectedHomeAnchor)?.id ?? null;
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
@@ -152,9 +179,6 @@ export default function App() {
         onSelectSection={handleSelectSection}
         canGoBack={canGoBack}
         onGoBack={handleGoBack}
-        user={user}
-        onOpenAuthModal={handleOpenAuthModal}
-        onSignOut={handleSignOut}
       />
 
       <main
@@ -163,30 +187,24 @@ export default function App() {
         className="w-full"
       >
         {activeSection === 'home' ? (
-          <HomePage hasOpenOverlay={authModalState.isOpen} />
+          <HomePage targetSpecializationId={targetSpecializationId} />
         ) : activeSection === 'reference' ? (
           <ReferencePage
-            user={user}
             selectedPostId={selectedReferencePostId}
             selectedChapter={selectedReferenceChapter}
             onOpenPost={handleOpenReferencePost}
             onOpenChapter={handleOpenReferenceChapter}
             onBackToList={handleBackToReferenceList}
-            onRequireAuth={() => handleOpenAuthModal('login')}
           />
         ) : (
-          <div className="mx-auto min-h-[calc(100vh_-_3.5rem)] w-full max-w-6xl px-4 py-8 sm:px-6">
-            <h1 className="sr-only">{currentItem.label}</h1>
-          </div>
+          <GroupPage
+            selectedSubpage={selectedGroupSubpage}
+            onOpenSubpage={handleOpenGroupSubpage}
+            onBackToList={handleBackToGroupList}
+            onOpenHomeMajor={handleOpenHomeMajor}
+          />
         )}
       </main>
-
-      <AuthModal
-        isOpen={authModalState.isOpen}
-        initialMode={authModalState.mode}
-        onClose={() => setAuthModalState((prev) => ({ ...prev, isOpen: false }))}
-        onSuccess={handleAuthSuccess}
-      />
     </div>
   );
 }

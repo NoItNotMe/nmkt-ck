@@ -1,12 +1,16 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  buildGroupSubpageHash,
+  buildHomeAnchorHash,
   buildReferenceChapterHash,
   buildReferencePostHash,
   canNavigateBack,
   getNavItemById,
   NAV_ITEMS,
   normalizeAppHash,
+  parseGroupSubpageFromHash,
+  parseHomeAnchorFromHash,
   parseReferenceChapterFromHash,
   parseReferencePostIdFromHash,
   parseSectionFromHash,
@@ -18,7 +22,7 @@ import {
 test('NAV_ITEMS contains the three required Vietnamese sections in order', () => {
   assert.deepEqual(
     NAV_ITEMS.map((item) => item.label),
-    ['Trang chủ', 'Nhóm', 'Tham khảo']
+    ['Trang chủ', 'Công cụ', 'Tham khảo']
   );
 });
 
@@ -53,7 +57,7 @@ test('parseReferenceChapterFromHash and buildReferenceChapterHash handle Chươn
 });
 
 test('getNavItemById returns matching item', () => {
-  assert.equal(getNavItemById('groups').label, 'Nhóm');
+  assert.equal(getNavItemById('groups').label, 'Công cụ');
   assert.equal(getNavItemById('reference').hash, '#tham-khao');
 });
 
@@ -102,5 +106,46 @@ test('route history helpers track navigation stack and resolve previous routes',
     '#tham-khao'
   );
   assert.equal(resolvePreviousRoute(['#tham-khao']).targetHash, '#trang-chu');
+  assert.equal(resolvePreviousRoute(['#nhom/thanh-vien']).targetHash, '#nhom');
+  assert.equal(resolvePreviousRoute(['#nhom']).targetHash, '#trang-chu');
 });
+
+test('parseGroupSubpageFromHash and buildGroupSubpageHash handle group subpage routes', () => {
+  assert.equal(buildGroupSubpageHash('thanh-vien'), '#nhom/thanh-vien');
+  assert.equal(buildGroupSubpageHash('de-tai'), '#nhom/de-tai');
+  assert.equal(buildGroupSubpageHash('thanh-vien/vu-duy-manh'), '#nhom/thanh-vien/vu-duy-manh');
+  assert.equal(parseGroupSubpageFromHash('#nhom/thanh-vien'), 'thanh-vien');
+  assert.equal(parseGroupSubpageFromHash('#nhom/de-tai'), 'de-tai');
+  assert.equal(parseGroupSubpageFromHash('#nhom/thanh-vien/vu-duy-manh'), 'thanh-vien/vu-duy-manh');
+  assert.equal(parseGroupSubpageFromHash('#nhom'), null);
+  assert.equal(parseGroupSubpageFromHash('#nhom/'), null);
+  assert.equal(parseGroupSubpageFromHash('#trang-chu'), null);
+  assert.equal(parseGroupSubpageFromHash('#tham-khao/featured-1'), null);
+  assert.equal(parseSectionFromHash('#nhom/thanh-vien'), 'groups');
+  assert.equal(parseSectionFromHash('#nhom/de-tai'), 'groups');
+});
+
+test('parseHomeAnchorFromHash and buildHomeAnchorHash handle home specialization subroutes', () => {
+  assert.equal(
+    buildHomeAnchorHash('thiet-ke-vi-mach'),
+    '#trang-chu/thiet-ke-vi-mach'
+  );
+  assert.equal(
+    parseHomeAnchorFromHash('#trang-chu/thiet-ke-vi-mach'),
+    'thiet-ke-vi-mach'
+  );
+  assert.equal(
+    parseHomeAnchorFromHash('#trang-chu/dieu-khien-va-tu-dong-hoa'),
+    'dieu-khien-va-tu-dong-hoa'
+  );
+  assert.equal(parseHomeAnchorFromHash('#trang-chu'), null);
+  assert.equal(parseHomeAnchorFromHash('#trang-chu/'), null);
+  assert.equal(parseSectionFromHash('#trang-chu/thiet-ke-vi-mach'), 'home');
+  assert.equal(
+    normalizeAppHash('#trang-chu/thiet-ke-vi-mach'),
+    '#trang-chu/thiet-ke-vi-mach'
+  );
+});
+
+
 

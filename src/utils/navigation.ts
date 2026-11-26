@@ -8,12 +8,14 @@ export interface NavItem {
 
 export const NAV_ITEMS: readonly NavItem[] = [
   { id: 'home', label: 'Trang chủ', hash: '#trang-chu' },
-  { id: 'groups', label: 'Nhóm', hash: '#nhom' },
+  { id: 'groups', label: 'Công cụ', hash: '#nhom' },
   { id: 'reference', label: 'Tham khảo', hash: '#tham-khao' },
 ] as const;
 
+export const HOME_HASH_PREFIX = '#trang-chu/';
 export const REFERENCE_HASH_PREFIX = '#tham-khao/';
 export const REFERENCE_CHAPTER_HASH_PREFIX = '#tham-khao/chuong/';
+export const GROUPS_HASH_PREFIX = '#nhom/';
 
 export function parseSectionFromHash(hash: string): NavSection {
   const normalized = hash.trim().toLowerCase();
@@ -23,8 +25,34 @@ export function parseSectionFromHash(hash: string): NavSection {
   ) {
     return 'reference';
   }
+  if (
+    normalized === '#nhom' ||
+    normalized.startsWith(GROUPS_HASH_PREFIX)
+  ) {
+    return 'groups';
+  }
+  if (
+    normalized === '#trang-chu' ||
+    normalized.startsWith(HOME_HASH_PREFIX)
+  ) {
+    return 'home';
+  }
   const matched = NAV_ITEMS.find((item) => item.hash === normalized);
   return matched ? matched.id : 'home';
+}
+
+export function parseHomeAnchorFromHash(hash: string): string | null {
+  const trimmed = hash.trim();
+  const lower = trimmed.toLowerCase();
+  if (!lower.startsWith(HOME_HASH_PREFIX)) {
+    return null;
+  }
+  const anchor = trimmed.slice(HOME_HASH_PREFIX.length).trim();
+  return anchor ? decodeURIComponent(anchor) : null;
+}
+
+export function buildHomeAnchorHash(anchor: string): string {
+  return `${HOME_HASH_PREFIX}${encodeURIComponent(anchor)}`;
 }
 
 export function parseReferenceChapterFromHash(hash: string): number | null {
@@ -62,6 +90,31 @@ export function buildReferencePostHash(postId: string): string {
   return `${REFERENCE_HASH_PREFIX}${encodeURIComponent(postId)}`;
 }
 
+export function parseGroupSubpageFromHash(hash: string): string | null {
+  const trimmed = hash.trim();
+  const lower = trimmed.toLowerCase();
+  if (!lower.startsWith(GROUPS_HASH_PREFIX)) {
+    return null;
+  }
+  const raw = trimmed.slice(GROUPS_HASH_PREFIX.length).trim();
+  if (!raw) {
+    return null;
+  }
+  const decoded = raw
+    .split('/')
+    .map((segment) => decodeURIComponent(segment))
+    .join('/');
+  return decoded || null;
+}
+
+export function buildGroupSubpageHash(subpageId: string): string {
+  const sanitized = subpageId
+    .split('/')
+    .map((segment) => encodeURIComponent(segment))
+    .join('/');
+  return `${GROUPS_HASH_PREFIX}${sanitized}`;
+}
+
 export function getNavItemById(id: NavSection): NavItem {
   return NAV_ITEMS.find((item) => item.id === id) ?? NAV_ITEMS[0];
 }
@@ -75,6 +128,14 @@ export function normalizeAppHash(hash: string): string {
   const chapter = parseReferenceChapterFromHash(trimmed);
   if (chapter !== null) {
     return buildReferenceChapterHash(chapter);
+  }
+  const groupSubpage = parseGroupSubpageFromHash(trimmed);
+  if (groupSubpage) {
+    return buildGroupSubpageHash(groupSubpage);
+  }
+  const homeAnchor = parseHomeAnchorFromHash(trimmed);
+  if (homeAnchor) {
+    return buildHomeAnchorHash(homeAnchor);
   }
   const section = parseSectionFromHash(trimmed);
   return getNavItemById(section).hash;
@@ -125,6 +186,13 @@ export function resolvePreviousRoute(stack: readonly string[]): {
     return {
       nextStack: ['#tham-khao'],
       targetHash: '#tham-khao',
+    };
+  }
+
+  if (parseGroupSubpageFromHash(currentHash) !== null) {
+    return {
+      nextStack: ['#nhom'],
+      targetHash: '#nhom',
     };
   }
 

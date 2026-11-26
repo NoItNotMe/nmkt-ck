@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ArrowDownRight, Cpu } from 'lucide-react';
+import { ArrowDownRight, ArrowUpRight, Cpu } from 'lucide-react';
 import { LayoutGroup, MotionConfig, motion } from 'motion/react';
 import {
   formatMemberLine,
@@ -65,22 +65,29 @@ const SMOOTH_TRANSITION = {
 
 interface HomePageProps {
   hasOpenOverlay?: boolean;
+  targetSpecializationId?: SpecializationId | null;
 }
 
-export function HomePage({ hasOpenOverlay = false }: HomePageProps) {
+export function HomePage({
+  hasOpenOverlay = false,
+  targetSpecializationId = null,
+}: HomePageProps) {
+  const initialStep = targetSpecializationId
+    ? getDetailStageIndexForId(targetSpecializationId) + 1
+    : 0;
   // Step 0: Hero (Phần 1), Step 1: 4-row Overview, Steps 2..5: Specializations 2..5
-  const [activeStep, setActiveStep] = useState(0);
-  const [heroVisible, setHeroVisible] = useState(true);
+  const [activeStep, setActiveStep] = useState(initialStep);
+  const [heroVisible, setHeroVisible] = useState(initialStep === 0);
   const [visibleTitles, setVisibleTitles] = useState<
     Record<SpecializationId, boolean>
-  >({
-    'part-2': false,
-    'part-3': false,
-    'part-4': false,
-    'part-5': false,
-  });
+  >(() => ({
+    'part-2': initialStep <= 1 || targetSpecializationId === 'part-2',
+    'part-3': initialStep <= 1 || targetSpecializationId === 'part-3',
+    'part-4': initialStep <= 1 || targetSpecializationId === 'part-4',
+    'part-5': initialStep <= 1 || targetSpecializationId === 'part-5',
+  }));
 
-  const activeStepRef = useRef(0);
+  const activeStepRef = useRef(initialStep);
   const programmaticScrollUntilRef = useRef(0);
   const wheelGateRef = useRef(createInitialWheelGateState());
   const touchStartYRef = useRef<number | null>(null);
@@ -116,13 +123,13 @@ export function HomePage({ hasOpenOverlay = false }: HomePageProps) {
   }, []);
 
   const goToStep = useCallback(
-    (nextStep: number) => {
+    (nextStep: number, behavior: ScrollBehavior = 'smooth') => {
       const targetStep = clampHomeStep(nextStep, TOTAL_HOME_STEPS);
-      programmaticScrollUntilRef.current = Date.now() + 750;
+      programmaticScrollUntilRef.current = Date.now() + 800;
       applyStepState(targetStep);
 
       if (targetStep === 0) {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({ top: 0, behavior });
         return;
       }
 
@@ -131,11 +138,24 @@ export function HomePage({ hasOpenOverlay = false }: HomePageProps) {
         const headerOffset = 56;
         const targetTop =
           sentinel.getBoundingClientRect().top + window.scrollY - headerOffset;
-        window.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
+        window.scrollTo({ top: Math.max(0, targetTop), behavior });
       }
     },
     [applyStepState]
   );
+
+  // Sync scroll position when navigating directly to a specialization anchor
+  useEffect(() => {
+    if (!targetSpecializationId) {
+      return;
+    }
+    const targetStep = getDetailStageIndexForId(targetSpecializationId) + 1;
+    programmaticScrollUntilRef.current = Date.now() + 900;
+    const rafId = window.requestAnimationFrame(() => {
+      goToStep(targetStep, 'auto');
+    });
+    return () => window.cancelAnimationFrame(rafId);
+  }, [goToStep, targetSpecializationId]);
 
   // Observe Hero, Peek Titles, and Scroll Sentinels via Intersection Observer API
   useEffect(() => {
@@ -595,13 +615,28 @@ export function HomePage({ hasOpenOverlay = false }: HomePageProps) {
                               : 'lg:col-span-7 lg:col-start-1 lg:items-start lg:text-left'
                         }`}
                       >
-                        <motion.h2
-                          layoutId={`title-${expandedSection.id}`}
-                          transition={SMOOTH_TRANSITION}
-                          className="text-balance text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl lg:text-4xl"
-                        >
-                          {expandedSection.title}
-                        </motion.h2>
+                        <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+                          <motion.h2
+                            layoutId={`title-${expandedSection.id}`}
+                            transition={SMOOTH_TRANSITION}
+                            className="text-balance text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl lg:text-4xl"
+                          >
+                            {expandedSection.title}
+                          </motion.h2>
+
+                          <a
+                            href={expandedSection.curriculumUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300/70 bg-slate-100/75 px-3 py-1.5 text-xs font-medium text-slate-600 backdrop-blur-xs transition-colors hover:border-slate-400 hover:bg-slate-200/80 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 sm:text-sm"
+                          >
+                            <span>Xem chương trình đào tạo</span>
+                            <ArrowUpRight
+                              className="h-3.5 w-3.5 shrink-0"
+                              aria-hidden="true"
+                            />
+                          </a>
+                        </div>
 
                         <motion.div
                           initial={{ opacity: 0, y: 12 }}

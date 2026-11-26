@@ -4077,6 +4077,26 @@ export function toggleArticleLike(
   };
 }
 
+export const VISITOR_ENGAGEMENT_ID = 'visitor@local';
+
+export function validateArticleCommentInput(
+  authorName: string,
+  commentText: string
+): string | null {
+  const hasAuthor = authorName.trim().length > 0;
+  const hasComment = commentText.trim().length > 0;
+  if (!hasAuthor && !hasComment) {
+    return 'Vui lòng nhập tên và nội dung bình luận.';
+  }
+  if (!hasAuthor) {
+    return 'Vui lòng nhập tên của bạn.';
+  }
+  if (!hasComment) {
+    return 'Vui lòng nhập nội dung bình luận.';
+  }
+  return null;
+}
+
 export function addArticleComment(
   map: EngagementMap,
   postId: string,

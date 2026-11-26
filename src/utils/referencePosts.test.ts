@@ -25,6 +25,8 @@ import {
   SIDEBAR_REFERENCE_LIMIT,
   stepReferenceIndex,
   toggleArticleLike,
+  validateArticleCommentInput,
+  VISITOR_ENGAGEMENT_ID,
 } from './referencePosts';
 
 function createMemoryStorage(): Storage {
@@ -771,6 +773,31 @@ test('toggleArticleLike and addArticleComment update counts and persist in stora
   assert.equal(stats.commentCount, 1);
   assert.equal(stats.comments[0]?.text, 'Bài viết hay!');
   assert.equal(getReferencePostById('ch2-passion').id, 'ch2-passion');
+});
+
+test('visitor like toggle and name+comment validation work without authentication', () => {
+  const post = FEATURED_REFERENCE_POSTS[0];
+  let map = toggleArticleLike({}, post.id, VISITOR_ENGAGEMENT_ID);
+  assert.equal(getEngagementForPost(map, post, VISITOR_ENGAGEMENT_ID).isLiked, true);
+  assert.equal(getEngagementForPost(map, post, VISITOR_ENGAGEMENT_ID).likeCount, 1);
+
+  map = toggleArticleLike(map, post.id, VISITOR_ENGAGEMENT_ID);
+  assert.equal(getEngagementForPost(map, post, VISITOR_ENGAGEMENT_ID).isLiked, false);
+  assert.equal(getEngagementForPost(map, post, VISITOR_ENGAGEMENT_ID).likeCount, 0);
+
+  assert.equal(
+    validateArticleCommentInput('', '   '),
+    'Vui lòng nhập tên và nội dung bình luận.'
+  );
+  assert.equal(
+    validateArticleCommentInput('   ', 'Nội dung hay'),
+    'Vui lòng nhập tên của bạn.'
+  );
+  assert.equal(
+    validateArticleCommentInput('Minh Tuấn', '   '),
+    'Vui lòng nhập nội dung bình luận.'
+  );
+  assert.equal(validateArticleCommentInput('Minh Tuấn', 'Nội dung hay'), null);
 });
 
 test('editorial layouts and structured visual blocks cover all 5 styles while preserving default technical articles', () => {
