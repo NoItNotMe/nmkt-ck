@@ -90,6 +90,8 @@ export default function App() {
         'Một ngày của bạn · Chương 3: Quản lý thời gian hiệu quả';
     } else if (activeSection === 'groups' && selectedGroupSubpage === 'muc-4') {
       document.title = 'Lập biểu đồ Gantt · Chương 4: Quản lý dự án';
+    } else if (activeSection === 'groups' && selectedGroupSubpage === 'muc-5') {
+      document.title = 'Hỗ trợ phân công · Chương 5: Kỹ năng làm việc nhóm';
     } else if (activeSection === 'groups' && selectedGroupSubpage) {
       const currentItem = PLACEHOLDER_ITEMS.find(
         (item) => item.id === selectedGroupSubpage

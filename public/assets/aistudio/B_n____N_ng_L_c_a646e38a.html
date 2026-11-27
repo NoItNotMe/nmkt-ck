@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bản Đồ Năng Lực</title>
+<style>
+:root{--bg:#e4ebe9;--paper:#f8fbfa;--ink:#14231f;--mut:#58706a;--line:#c5d3cf;--acc:#0f8a6d;--hl:#ffd23f;--hlt:#3a2e00;--bad:#c2410c;--chip:#e9f0ee;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1815;--paper:#16251f;--ink:#e2efeb;--mut:#92aaa3;--line:#2b4039;--acc:#3ecfa6;--bad:#fb923c;--chip:#1f332c;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e1815;--paper:#16251f;--ink:#e2efeb;--mut:#92aaa3;--line:#2b4039;--acc:#3ecfa6;--bad:#fb923c;--chip:#1f332c;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:22px 16px 40px}
+h1{font-size:clamp(28px,6vw,44px);line-height:1.05;margin:0 0 8px;letter-spacing:-.02em;font-weight:800}
+h2{font-size:17px;margin:0 0 8px}
+.lead{max-width:60ch;color:var(--mut);margin:0 0 16px}
+.g2{display:grid;gap:16px;grid-template-columns:1fr}
+@media(min-width:860px){.g2{grid-template-columns:330px 1fr}}
+section{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:14px}
+input[type=text]{width:100%;font:inherit;padding:10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);margin-bottom:10px}
+button:focus-visible,input:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.sk{display:flex;width:100%;justify-content:space-between;align-items:center;gap:8px;text-align:left;font:inherit;font-size:15px;color:var(--ink);background:var(--chip);border:1px solid var(--line);border-radius:6px;padding:9px 11px;margin:4px 0;cursor:pointer}
+.sk b{font-size:12px;font-weight:700;padding:2px 8px;border-radius:3px;background:var(--paper);color:var(--mut);white-space:nowrap}
+.sk.s1{border-left:6px solid color-mix(in srgb,var(--acc) 50%,transparent)}
+.sk.s2{border-left:6px solid var(--acc);background:color-mix(in srgb,var(--acc) 18%,var(--chip))}
+.sk.s1 b{background:color-mix(in srgb,var(--acc) 35%,var(--paper));color:var(--ink)}
+.sk.s2 b{background:var(--acc);color:#fff}
+.sc{overflow-x:auto}
+table{border-collapse:separate;border-spacing:3px;width:100%;min-width:360px;font-size:14px}
+th{font-weight:600;color:var(--mut);font-size:12px;padding:2px 2px 6px;max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+td.r{white-space:nowrap;padding-right:8px;font-size:14px}
+td.c{height:30px;min-width:34px;border-radius:4px;background:var(--chip)}
+td.l1{background:color-mix(in srgb,var(--acc) 42%,var(--paper))}
+td.l2{background:var(--acc)}
+td.t{white-space:nowrap;font-size:12px;padding-left:6px}
+.gap{color:var(--bad);font-weight:700}
+.one{color:var(--hlt);background:var(--hl);padding:1px 7px;border-radius:3px;font-weight:700}
+.note{background:var(--chip);border-left:5px solid var(--acc);padding:10px 12px;border-radius:6px;margin:0 0 10px;font-size:15px}
+.note.w{border-color:var(--bad)}
+.mu{color:var(--mut);font-size:13px}
+#err{color:var(--bad);font-size:13px;min-height:1em}
+.lg{display:flex;gap:12px;font-size:12px;color:var(--mut);margin-top:10px;flex-wrap:wrap}
+.lg i{display:inline-block;width:14px;height:14px;border-radius:3px;vertical-align:-2px;margin-right:4px}
+</style></head><body>
+<div class="wrap">
+<h1>Bản Đồ Năng Lực</h1>
+<p class="lead">Mỗi người điền kỹ năng của mình trong một phút. Cả nhóm thấy ngay mình có lỗ hổng nào và đang phụ thuộc vào ai.</p>
+<div id="st" class="note w" hidden></div>
+<div class="g2">
+<section><h2>Của bạn</h2>
+<input type="text" id="nm" maxlength="24" placeholder="Tên của bạn" aria-label="Tên của bạn" autocomplete="off">
+<p class="mu" style="margin:0 0 6px">Bấm mỗi kỹ năng để đổi mức: chưa có, làm được, mạnh nhất.</p>
+<div id="mine"></div><div id="err"></div></section>
+<section><h2>Cả nhóm</h2><div id="sum"></div><div class="sc"><table id="tb"></table></div>
+<div class="lg"><span><i style="background:var(--chip)"></i>Chưa có</span><span><i style="background:color-mix(in srgb,var(--acc) 42%,var(--paper))"></i>Làm được</span><span><i style="background:var(--acc)"></i>Mạnh nhất</span></div></section>
+</div></div>
+<script>
+const S=["Chuyên môn kỹ thuật","Lập kế hoạch","Tổ chức, điều phối","Thuyết trình","Viết và làm tài liệu","Giao tiếp, đối thoại","Ý tưởng sáng tạo","Lắng nghe, hỗ trợ","Hòa giải bất đồng","Kiểm tra chất lượng"];
+const LV=["Chưa có","Làm được","Mạnh nhất"];
+const $=i=>document.getElementById(i);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let me={n:"",c:S.map(()=>0)},all={},uid=null,col=null,loaded=false,tm;
+
+function save(){
+ if(!col||!uid)return;
+ clearTimeout(tm);
+ tm=setTimeout(async()=>{
+  try{await col.doc(uid).set({n:me.n,c:me.c});$("err").textContent=""}
+  catch(e){$("err").textContent="Chưa lưu được vào bảng chung. Nhờ chủ trang cấp cho bạn quyền Contributor để ghi dữ liệu."}
+ },400);
+}
+function ppl(){
+ const k=uid||"_me",m=Object.assign({},all);m[k]=me;
+ return Object.entries(m).filter(([id,p])=>p&&((p.n&&p.n.trim())||(p.c||[]).some(x=>x)))
+  .sort((a,b)=>a[0]==k?-1:b[0]==k?1:0).map(([id,p])=>({id,me:id==k,n:(p.n||"").trim()||"Chưa đặt tên",c:S.map((_,i)=>+(p.c&&p.c[i])||0)}));
+}
+function renderMine(){
+ $("mine").innerHTML=S.map((s,i)=>`<button class="sk s${me.c[i]}" data-i="${i}"><span>${s}</span><b>${LV[me.c[i]]}</b></button>`).join("");
+}
+function renderGroup(){
+ const P=ppl();
+ if(!P.length){$("sum").innerHTML=`<p class="mu">Chưa có ai điền. Nhập tên và bấm vào vài kỹ năng bên trái.</p>`;$("tb").innerHTML="";return}
+ const tot=S.map((_,i)=>P.filter(p=>p.c[i]>0));
+ const gaps=S.filter((_,i)=>!tot[i].length),ones=S.map((s,i)=>[s,tot[i]]).filter(x=>x[1].length==1);
+ let h=`<div class="note">${P.length} người đã điền.</div>`;
+ h+=gaps.length?`<div class="note w"><b>Lỗ hổng của nhóm:</b> ${gaps.map(esc).join(", ")}. Chưa ai làm được những việc này, cần có người học hoặc tìm trợ giúp.</div>`:`<div class="note">Chưa có lỗ hổng: mọi kỹ năng đều có người làm được.</div>`;
+ if(ones.length)h+=`<div class="note w"><b>Chỉ dựa vào một người:</b> ${ones.map(x=>esc(x[0])+" ("+esc(x[1][0].n)+")").join("; ")}. Nếu người đó bận, nhóm sẽ kẹt.</div>`;
+ $("sum").innerHTML=h;
+ $("tb").innerHTML=`<thead><tr><th></th>${P.map(p=>`<th title="${esc(p.n)}">${esc(p.n)}${p.me?" (bạn)":""}</th>`).join("")}<th></th></tr></thead><tbody>`+
+  S.map((s,i)=>`<tr><td class="r">${s}</td>${P.map(p=>`<td class="c l${p.c[i]}" title="${esc(p.n)}: ${LV[p.c[i]]}"></td>`).join("")}<td class="t">${!tot[i].length?'<span class="gap">Lỗ hổng</span>':tot[i].length==1?'<span class="one">1 người</span>':""}</td></tr>`).join("")+"</tbody>";
+}
+function renderAll(){renderMine();renderGroup()}
+
+$("mine").addEventListener("click",e=>{
+ const b=e.target.closest(".sk");if(!b)return;
+ const i=+b.dataset.i;me.c[i]=(me.c[i]+1)%3;save();renderAll();
+});
+$("nm").addEventListener("input",e=>{me.n=e.target.value;save();renderGroup()});
+
+renderAll();
+(async()=>{
+ try{
+  if(!window.claude)return;
+  const [u,d]=await Promise.all([claude.use("user"),claude.use("db")]);
+  if(!u||!d||!(uid=await u.id())){uid=null;return}
+  col=d.collection("map");
+  const to=setTimeout(()=>{$("st").hidden=false;$("st").textContent="Chưa kết nối được bảng chung. Bạn đang dùng thử một mình."},10000);
+  col.onSnapshot(s=>{
+   clearTimeout(to);$("st").hidden=true;all={};
+   s.docs.forEach(x=>{if(x.exists)all[x.id]=x.data()});
+   const mine=all[uid];
+   if(mine&&!loaded){me={n:mine.n||"",c:S.map((_,i)=>+(mine.c&&mine.c[i])||0)};$("nm").value=me.n}
+   loaded=true;delete all[uid];renderAll();
+  },()=>{$("st").hidden=false;$("st").textContent="Không đọc được dữ liệu chung. Bạn đang dùng thử một mình."});
+ }catch(e){}
+})();
+</script></body></html>

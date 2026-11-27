@@ -37,7 +37,7 @@ test('Each placeholder item has a non-empty title and valid chapter subtitle', (
 
 test('Newly added items 5-9 have descriptive titles and subtitles', () => {
   assert.equal(PLACEHOLDER_ITEMS[4].id, 'muc-5');
-  assert.equal(PLACEHOLDER_ITEMS[4].title, 'Đánh giá kỹ năng làm việc nhóm');
+  assert.equal(PLACEHOLDER_ITEMS[4].title, 'Hỗ trợ phân công');
   assert.equal(PLACEHOLDER_ITEMS[4].subtitle, 'Chương 5: Kỹ năng làm việc nhóm');
 
   assert.equal(PLACEHOLDER_ITEMS[5].id, 'muc-6');

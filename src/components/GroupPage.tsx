@@ -4,6 +4,7 @@ import { DesignDecisionToolView } from './DesignDecisionToolView';
 import { EngineeringQuizView } from './EngineeringQuizView';
 import { GroupBarButton } from './GroupBarButton';
 import { GanttChartToolView } from './GanttChartToolView';
+import { TeamAssignmentToolView } from './TeamAssignmentToolView';
 import { TimeManagementToolView } from './TimeManagementToolView';
 
 import type { MajorKey } from '../utils/quizData';
@@ -39,6 +40,11 @@ export function GroupPage({
   // If muc-4 is selected, render the Chapter 4 Gantt chart planner
   if (selectedSubpage === 'muc-4') {
     return <GanttChartToolView />;
+  }
+
+  // If muc-5 is selected, render the Chapter 5 team assignment capability matrix
+  if (selectedSubpage === 'muc-5') {
+    return <TeamAssignmentToolView onBackToList={onBackToList} />;
   }
 
   // If another subpage is selected, render a clean empty/in-progress placeholder page

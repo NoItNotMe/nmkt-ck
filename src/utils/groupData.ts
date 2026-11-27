@@ -36,10 +36,10 @@ export const PLACEHOLDER_ITEMS: readonly PlaceholderItem[] = [
   },
   {
     id: 'muc-5',
-    title: 'Đánh giá kỹ năng làm việc nhóm',
+    title: 'Hỗ trợ phân công',
     subtitle: 'Chương 5: Kỹ năng làm việc nhóm',
     description:
-      'Khung xây dựng điều lệ nhóm, ma trận phân công vai trò và thang đo đánh giá hiệu quả phối hợp nhóm kỹ thuật.',
+      'Bản đồ năng lực kỹ thuật: xác định kỹ năng của từng thành viên, nhận diện ngay lỗ hổng năng lực và điểm nghẽn phụ thuộc để phân công nhiệm vụ tối ưu.',
   },
   {
     id: 'muc-6',
