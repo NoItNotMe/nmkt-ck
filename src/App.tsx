@@ -30,6 +30,7 @@ import {
   getSubsectionByAnchor,
   MAJOR_KEY_TO_HOME_ANCHOR,
 } from './utils/homeSections';
+import { PLACEHOLDER_ITEMS } from './utils/groupData';
 import type { MajorKey } from './utils/quizData';
 
 export default function App() {
@@ -82,8 +83,20 @@ export default function App() {
   useEffect(() => {
     if (activeSection === 'groups' && selectedGroupSubpage === 'muc-1') {
       document.title = 'Định hướng ngành · Khám phá thiên hướng kỹ thuật';
+    } else if (activeSection === 'groups' && selectedGroupSubpage === 'muc-2') {
+      document.title = 'Chọn phương án thiết kế · Chương 2: Thiết kế kỹ thuật';
+    } else if (activeSection === 'groups' && selectedGroupSubpage === 'muc-3') {
+      document.title =
+        'Một ngày của bạn · Chương 3: Quản lý thời gian hiệu quả';
+    } else if (activeSection === 'groups' && selectedGroupSubpage === 'muc-4') {
+      document.title = 'Lập biểu đồ Gantt · Chương 4: Quản lý dự án';
     } else if (activeSection === 'groups' && selectedGroupSubpage) {
-      document.title = 'Công cụ · Trang web cá nhân';
+      const currentItem = PLACEHOLDER_ITEMS.find(
+        (item) => item.id === selectedGroupSubpage
+      );
+      document.title = currentItem
+        ? `${currentItem.title} · ${currentItem.subtitle ?? 'Công cụ'}`
+        : 'Công cụ · Trang web cá nhân';
     } else if (activeSection === 'groups') {
       document.title = 'Công cụ · Trang web cá nhân';
     } else if (activeSection === 'reference') {

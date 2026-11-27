@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chương 3 · Một ngày của bạn thuộc nhóm nào?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f1f4f7;--card:#fff;--ink:#16202b;--mute:#5a6775;--line:#d5dce4;--q1:#c2410c;--q2:#15803d;--q3:#1d4ed8;--q4:#6b7280;--empty:#e4e9ee;--warn:#b45309;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#11161b;--card:#1a2129;--ink:#e8edf2;--mute:#97a4b1;--line:#2e3944;--empty:#27313b;--warn:#f0a95a}}
+:root[data-theme="dark"]{--bg:#11161b;--card:#1a2129;--ink:#e8edf2;--mute:#97a4b1;--line:#2e3944;--empty:#27313b;--warn:#f0a95a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 "Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:760px;margin:0 auto;padding:28px 16px 48px}
+h1{font-size:clamp(26px,6vw,38px);line-height:1.15;font-weight:800;margin:6px 0 10px;letter-spacing:-.02em}
+h2{font-size:15px;font-weight:700;margin:0 0 10px}
+.src{color:var(--mute);font-size:13px;margin:0}
+.lead{color:var(--mute);margin:0 0 22px;max-width:60ch}
+section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:16px}
+.pal{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+.act{display:flex;align-items:center;gap:10px;min-height:48px;padding:8px 12px;text-align:left;font:inherit;font-size:14px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;cursor:pointer}
+.act:hover{border-color:var(--mute)}
+.act:disabled{opacity:.45;cursor:not-allowed}
+.act .e,.r .e{font-size:20px}
+.act b{margin-left:auto;min-width:22px;height:22px;border-radius:11px;background:var(--ink);color:var(--card);font-size:12px;display:grid;place-items:center;padding:0 6px}
+:focus-visible{outline:3px solid var(--q3);outline-offset:2px}
+.strip{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;margin-bottom:12px}
+.strip i{height:14px;border-radius:4px;background:var(--empty)}
+.r{border-top:1px solid var(--line);padding:10px 0}
+.rt{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.nm{font-size:14px;font-weight:500;flex:1 1 160px}
+.tag{color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px}
+.st{display:flex;align-items:center;gap:4px;font-size:13px}
+.st button{width:36px;height:36px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;font:inherit;font-size:16px;cursor:pointer}
+.st button:disabled{opacity:.4;cursor:not-allowed}
+.st span{min-width:54px;text-align:center}
+.adv{margin:6px 0 0;font-size:13px;color:var(--mute)}
+.adv.warn{color:var(--warn);font-weight:500}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px;font-size:13px;color:var(--mute)}
+.link{font:inherit;font-size:13px;color:var(--ink);background:none;border:1px solid var(--line);border-radius:8px;padding:6px 12px;min-height:36px;cursor:pointer}
+.go{font:inherit;font-weight:700;font-size:14px;color:#fff;background:var(--q2);border:0;border-radius:10px;padding:10px 16px;min-height:44px;cursor:pointer}
+.bars{display:grid;gap:12px}
+.bl{font-size:13px;margin-bottom:4px;display:flex;justify-content:space-between;gap:8px}
+.bl span:last-child{color:var(--mute)}
+.bar{display:flex;height:34px;border-radius:8px;overflow:hidden;background:var(--empty)}
+.bar i{display:grid;place-items:center;color:#fff;font:700 12px/1 inherit;font-style:normal;transition:width .35s}
+.leg{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;margin-top:14px;color:var(--mute)}
+.leg span:before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;background:var(--c)}
+.verdict{display:none}
+.verdict.show{display:block}
+.verdict h3{font-size:20px;line-height:1.3;margin:0 0 8px}
+.verdict p{margin:0 0 10px}
+.big{font-size:34px;font-weight:800;letter-spacing:-.02em;line-height:1}
+.hint{color:var(--mute);font-size:14px}
+.plan{border:1px solid var(--line);border-radius:10px;padding:12px;margin-top:14px;background:var(--bg)}
+.plan p{margin:0 0 6px;font-size:14px}
+.plan ul{margin:0 0 12px;padding-left:20px;font-size:14px}
+@media (max-width:520px){.strip{grid-template-columns:repeat(12,1fr)}}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+</head>
+<body>
+<main>
+<p class="src">Nhập môn về kỹ thuật · Chương 3 · Quản lý thời gian hiệu quả</p>
+<h1>Một ngày của bạn thuộc nhóm nào?</h1>
+<p class="lead">Hôm nay bạn có 12 giờ tự do sau giờ học. Chạm vào hoạt động để thêm 1 giờ, rồi tăng giảm số giờ từng việc ở bên dưới. Công cụ phân loại, góp ý từng việc và đề xuất cách chỉnh ngày cho hợp lý.</p>
+
+<section>
+<h2>Chọn hoạt động</h2>
+<div class="pal" id="pal"></div>
+</section>
+
+<section>
+<h2>Ngày của bạn</h2>
+<div class="strip" id="strip" aria-hidden="true"></div>
+<div id="rows"></div>
+<div class="row"><span id="count">0 / 12 giờ</span><button class="link" id="reset" type="button">Xếp lại từ đầu</button></div>
+</section>
+
+<section>
+<h2>Thời gian của bạn so với hai nhóm</h2>
+<div class="bars" id="bars"></div>
+<div class="leg" id="leg"></div>
+</section>
+
+<section class="verdict" id="verdict" aria-live="polite">
+<h3 id="vt"></h3>
+<p id="vd"></p>
+<p><span class="big" id="vy"></span></p>
+<p id="vw"></p>
+<p class="hint" id="vh"></p>
+<div class="plan" id="plan"></div>
+</section>
+
+<p class="src">Dựa trên bảng xếp ưu tiên công việc (slide 95), tỷ lệ thời gian của học sinh trung bình và học sinh giỏi (slide 106 và 108), cách tính thời gian lãng phí (slide 94).</p>
+</main>
+<script>
+var Q={1:{n:"UT1",d:"Khẩn cấp, hướng mục tiêu",c:"var(--q1)"},2:{n:"UT2",d:"Không khẩn cấp, hướng mục tiêu",c:"var(--q2)"},3:{n:"UT3",d:"Khẩn cấp, không hướng mục tiêu",c:"var(--q3)"},4:{n:"UT4",d:"Không khẩn cấp, không hướng mục tiêu",c:"var(--q4)"}};
+var A=[
+{t:"Làm bài tập nộp ngày mai",e:"📝",q:1,tip:"Làm xong sớm sẽ không phải thức khuya."},
+{t:"Lướt mạng không mục đích",e:"📱",q:4,tip:"Đặt hẹn giờ 30 phút và xếp vào cuối ngày."},
+{t:"Đọc trước chương sắp học",e:"📖",q:2,tip:"Đọc trước giúp nghe giảng hiểu nhanh hơn."},
+{t:"Trả lời tin nhắn, email",e:"💬",q:3,tip:"Gộp vào 1 hoặc 2 khung giờ cố định trong ngày."},
+{t:"Ôn gấp bài kiểm tra ngày mai",e:"⏰",q:1,tip:"Ôn gấp cho điểm thấp hơn ôn sớm. Lần sau chia nhỏ từ tuần trước."},
+{t:"Tập thể dục",e:"🏃",q:2,tip:"Giữ đều mỗi sáng sẽ tỉnh táo hơn khi học."},
+{t:"Xem tivi, xem phim",e:"📺",q:3,tip:"Chỉ xem sau khi đã xong việc UT1 và UT2."},
+{t:"Đi chơi, ăn không ngồi rồi",e:"🛋️",q:4,tip:"Chỉ nên là phần thưởng cuối ngày."},
+{t:"Vẽ sơ đồ tư duy cho bài học",e:"🧠",q:2,tip:"Ghi chú bằng sơ đồ giúp nhớ lâu và ôn nhanh."},
+{t:"Chạy deadline báo cáo nhóm",e:"🔥",q:1,tip:"Chia việc từ đầu tuần để khỏi dồn vào giờ chót."},
+{t:"Việc đang làm bị gián đoạn",e:"🔔",q:3,tip:"Tắt thông báo khi làm việc chính."},
+{t:"Nói chuyện điện thoại",e:"📞",q:4,tip:"Báo trước giờ kết thúc để cuộc gọi không kéo dài."},
+{t:"Ôn thi sớm",e:"🗓️",q:2,tip:"Ôn sớm vài ngày cho điểm cao hơn ôn dồn."},
+{t:"Lập thời gian biểu cho tuần",e:"✏️",q:2,tip:"Lập vào Chủ nhật, viết bằng bút chì để dễ chỉnh."},
+{t:"Học nhóm với bạn cùng lớp",e:"👥",q:2,tip:"Học chung giúp bạn thấy chỗ mình còn bỏ sót."},
+{t:"Làm bài tập ngay khi được giao",e:"✅",q:2,tip:"Làm sớm biến việc gấp thành việc không gấp."},
+{t:"Soạn bài thuyết trình nộp gấp",e:"🎤",q:1,tip:"Chia nhỏ để làm dần, đừng dồn đến sát giờ."},
+{t:"Đi xem phim mới ra rạp",e:"🎬",q:3,tip:"Chỉ đi sau khi đã xong việc quan trọng."},
+{t:"Ngủ nướng, ngủ quá nhiều",e:"😴",q:4,tip:"Ngủ đủ giấc là cần, ngủ thừa là lãng phí."},
+{t:"Chơi game giải trí",e:"🎮",q:4,tip:"Đặt giới hạn thời gian trước khi bắt đầu chơi."}
+];
+var BENCH=[{l:"Học sinh trung bình",s:"hay bận mà kết quả kém",v:[50,5,30,15]},{l:"Học sinh giỏi",s:"đầu tư vào việc chưa gấp",v:[20,60,15,5]}];
+var MAX=12,hrs={},order=[],after=null;
+var $=function(i){return document.getElementById(i)};
+function total(){return order.reduce(function(s,i){return s+hrs[i]},0)}
+function qh(hr){var h=[0,0,0,0,0];Object.keys(hr).forEach(function(i){h[A[i].q]+=hr[i]});return h}
+function pct(hr){var h=qh(hr),n=h[1]+h[2]+h[3]+h[4];return [1,2,3,4].map(function(q){return n?h[q]/n*100:0})}
+function add(i,n){
+ if(n>0&&total()+n>MAX)return;
+ after=null;
+ if(!hrs[i]){if(n<0)return;hrs[i]=0;order.push(i)}
+ hrs[i]+=n;
+ if(hrs[i]<=0){delete hrs[i];order=order.filter(function(x){return x!=i})}
+}
+function adv(a,n){
+ if(a.q==1&&n>=3)return {w:1,t:"Dành "+n+" giờ chạy việc gấp là dấu hiệu dồn việc. Lần sau bắt đầu ngay khi được giao để nó thành việc UT2."};
+ if(a.q==2&&n==1)return {w:1,t:"Mới 1 giờ cho việc đáng đầu tư nhất. Thử tăng lên 2 giờ. "+a.tip};
+ if(a.q==3&&n>=2)return {w:1,t:"Giảm xuống 1 giờ và chỉ làm sau khi xong UT1, UT2. "+a.tip};
+ if(a.q==4&&n>=2)return {w:1,t:"Cắt còn 1 giờ, xem như phần thưởng sau khi xong việc. "+a.tip};
+ return {w:0,t:a.tip};
+}
+function bar(l,s,v,empty){
+ var segs=v.map(function(p,k){return p>0?'<i style="width:'+p+'%;background:'+Q[k+1].c+'">'+(p>=8?Math.round(p)+'%':'')+'</i>':''}).join('');
+ return '<div><div class="bl"><span>'+l+'</span><span>'+s+'</span></div><div class="bar">'+(empty?'':segs)+'</div></div>';
+}
+function plan(){
+ var h=qh(hrs),rm={},ad={},freed=0;
+ [[4,1],[3,2]].forEach(function(c){
+  var q=c[0],over=h[q]-c[1];if(over<=0)return;
+  var tmp={},ids=order.filter(function(i){return A[i].q==q});
+  ids.forEach(function(i){tmp[i]=hrs[i]});
+  while(over>0){
+   var j=ids.filter(function(i){return tmp[i]>0}).sort(function(a,b){return tmp[b]-tmp[a]})[0];
+   if(j==null)break;tmp[j]--;rm[j]=(rm[j]||0)+1;over--;freed++;
+  }
+ });
+ if(!freed)return null;
+ var u2=[],cur={};A.forEach(function(a,i){if(a.q==2){u2.push(i);cur[i]=hrs[i]||0}});
+ for(var k=0;k<freed;k++){
+  var cand=u2.filter(function(i){return cur[i]<3}),pool=cand.filter(function(i){return cur[i]>0});
+  var arr=(pool.length?pool:cand).sort(function(a,b){return cur[a]-cur[b]});
+  var j=arr.length?arr[0]:u2[0];cur[j]++;ad[j]=(ad[j]||0)+1;
+ }
+ return {rm:rm,ad:ad};
+}
+function strip(hr,ord){var st=[];ord.forEach(function(i){for(var k=0;k<(hr[i]||0);k++)st.push(A[i].q)});while(st.length<MAX)st.push(0);return '<div class="strip" aria-hidden="true" style="margin:10px 0 12px">'+st.map(function(q){return '<i'+(q?' style="background:'+Q[q].c+'"':'')+'></i>'}).join('')+'</div>'}
+function lines(o,sign){return Object.keys(o).map(function(i){return '<li>'+sign+' '+o[i]+' giờ '+A[i].e+' '+A[i].t+'</li>'}).join('')}
+function render(){
+ var full=total()>=MAX;
+ $("pal").innerHTML=A.map(function(a,i){return '<button type="button" class="act" data-i="'+i+'"'+(full?' disabled':'')+'><span class="e">'+a.e+'</span>'+a.t+(hrs[i]?'<b>'+hrs[i]+'</b>':'')+'</button>'}).join('');
+ var st=[];order.forEach(function(i){for(var k=0;k<hrs[i];k++)st.push(A[i].q)});
+ $("strip").innerHTML=[].concat(st,new Array(Math.max(0,MAX-st.length)).fill(0)).map(function(q){return '<i'+(q?' style="background:'+Q[q].c+'"':'')+'></i>'}).join('');
+ $("rows").innerHTML=order.length?order.map(function(i){
+  var a=A[i],n=hrs[i],d=adv(a,n);
+  return '<div class="r"><div class="rt"><span class="e">'+a.e+'</span><span class="nm">'+a.t+'</span><span class="tag" style="background:'+Q[a.q].c+'">'+Q[a.q].n+'</span><div class="st"><button type="button" data-a="-" data-i="'+i+'" aria-label="Giảm 1 giờ">−</button><span>'+n+' giờ</span><button type="button" data-a="+" data-i="'+i+'" aria-label="Tăng 1 giờ"'+(full?' disabled':'')+'>+</button><button type="button" data-a="x" data-i="'+i+'" aria-label="Bỏ hoạt động này">✕</button></div></div><p class="adv'+(d.w?' warn':'')+'">'+d.t+'</p></div>';
+ }).join(''):'<p class="hint">Chưa có giờ nào. Chạm vào một hoạt động ở trên để bắt đầu.</p>';
+ $("count").textContent=total()+" / "+MAX+" giờ";
+ var p=pct(hrs),n=total();
+ var html=bar("Bạn",n?"đã xếp "+n+" giờ":"chưa xếp giờ nào",p,!n);
+ 
+ BENCH.forEach(function(b){html+=bar(b.l,b.s,b.v)});
+ $("bars").innerHTML=html;
+ $("leg").innerHTML=[1,2,3,4].map(function(q){return '<span style="--c:'+Q[q].c+'">'+Q[q].n+': '+Q[q].d.toLowerCase()+'</span>'}).join('');
+ var v=$("verdict");
+ if(!full){v.className="verdict";return}
+ var h=qh(hrs),d=BENCH.map(function(b){return b.v.reduce(function(s,x,k){return s+Math.abs(x-p[k])},0)});
+ var t,desc;
+ var wp=p[2]+p[3],mid=function(){t="Bạn đang ở giữa hai nhóm";desc="Cách xếp ngày của bạn không nghiêng hẳn về nhóm nào. UT2 đang chiếm "+Math.round(p[1])+"%, trong khi học sinh giỏi khoảng 60%."};
+ if(wp>45){t="Ngày này lãng phí nhiều hơn cả học sinh trung bình";desc="UT3 và UT4 chiếm "+Math.round(wp)+"% ngày của bạn, trong khi học sinh trung bình khoảng 45% và học sinh giỏi khoảng 20%. Gợi ý bên dưới giúp chuyển bớt sang UT2."}
+ else if(d[0]<d[1]-10){t="Ngày này giống học sinh trung bình";desc="Học sinh trung bình dành khoảng một nửa thời gian cho việc gấp (UT1) và rất ít cho việc chuẩn bị sớm (UT2), nên luôn thấy bận mà kết quả vẫn kém."}
+ else if(d[1]<d[0]-10&&wp<=30){t="Ngày này giống học sinh giỏi";desc="Học sinh giỏi dành khoảng 60% thời gian cho việc quan trọng nhưng chưa gấp (UT2), nên việc gấp (UT1) tự nhiên giảm xuống."}
+ else mid();
+ $("vt").textContent=t;$("vd").textContent=desc;
+ var w=h[3]+h[4],y=String(Math.round(w/24*80*10)/10).replace(".",",");
+ $("vy").textContent=w?y+" năm":"0 năm";
+ $("vw").textContent=w?"Ngày này có "+w+" giờ cho việc không hướng đến mục tiêu (UT3 và UT4). Theo cách tính ở slide 94, nếu ngày nào cũng lãng phí "+w+" giờ thì trong 80 năm bạn mất khoảng "+y+" năm.":"Ngày này không có giờ nào lãng phí vào việc không hướng đến mục tiêu.";
+ $("vh").textContent=h[2]<7?"Học sinh giỏi dành khoảng 7 trong 12 giờ cho UT2. Bạn đang có "+h[2]+" giờ.":"Bạn đã dành đủ giờ cho UT2. Hãy giữ thói quen này mỗi ngày.";
+ var pl=plan(),ph="";
+ if(pl){ph='<p><b>Gợi ý chỉnh ngày:</b> cắt bớt việc không hướng mục tiêu và chuyển sang việc đáng đầu tư.</p><ul>'+lines(pl.rm,"−")+lines(pl.ad,"+")+'</ul>'+(after?bar("Sau khi chỉnh","nếu làm theo gợi ý",pct(after))+strip(after,order.concat(Object.keys(after).map(Number).filter(function(i){return order.indexOf(i)<0})))+'<button class="link" type="button" id="undo">Xóa sau khi chỉnh</button>':'<button class="go" type="button" id="apply">Áp dụng gợi ý</button>')}
+ 
+ else ph='<p>Không có giờ UT3 hay UT4 nào cần cắt. '+(h[2]<7?'Nếu muốn thêm giờ cho UT2, hãy giảm bớt giờ UT1 bằng cách làm bài sớm hơn trong những ngày tới.':'Ngày của bạn đã cân đối.')+'</p>';
+ 
+ $("plan").innerHTML=ph;
+ v.className="verdict show";
+ if(!v.dataset.s){v.dataset.s=1;setTimeout(function(){v.scrollIntoView({behavior:"smooth",block:"nearest"})},50)}
+}
+$("pal").addEventListener("click",function(e){var b=e.target.closest(".act");if(b){add(+b.dataset.i,1);render()}});
+$("rows").addEventListener("click",function(e){
+ var b=e.target.closest("button");if(!b)return;var i=+b.dataset.i;
+ if(b.dataset.a=="+")add(i,1);else if(b.dataset.a=="-")add(i,-1);else add(i,-hrs[i]);
+ render();
+});
+$("plan").addEventListener("click",function(e){
+ var id=e.target.id;
+ if(id=="apply"){var pl=plan();if(!pl)return;after=JSON.parse(JSON.stringify(hrs));
+  Object.keys(pl.rm).forEach(function(i){after[i]-=pl.rm[i];if(after[i]<=0)delete after[i]});
+  Object.keys(pl.ad).forEach(function(i){after[i]=(after[i]||0)+pl.ad[i]});render()}
+ if(id=="undo"){after=null;render()}
+});
+$("reset").addEventListener("click",function(){hrs={};order=[];after=null;$("verdict").dataset.s="";render()});
+render();
+</script>
+</body>
+</html>

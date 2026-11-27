@@ -1,7 +1,10 @@
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Sparkles, Wrench } from 'lucide-react';
 import { PLACEHOLDER_ITEMS } from '../utils/groupData';
+import { DesignDecisionToolView } from './DesignDecisionToolView';
 import { EngineeringQuizView } from './EngineeringQuizView';
 import { GroupBarButton } from './GroupBarButton';
+import { GanttChartToolView } from './GanttChartToolView';
+import { TimeManagementToolView } from './TimeManagementToolView';
 
 import type { MajorKey } from '../utils/quizData';
 
@@ -23,7 +26,22 @@ export function GroupPage({
     return <EngineeringQuizView onOpenHomeMajor={onOpenHomeMajor} />;
   }
 
-  // If another subpage is selected, render a clean empty page
+  // If muc-2 is selected, render the Chapter 2 design alternative selector
+  if (selectedSubpage === 'muc-2') {
+    return <DesignDecisionToolView />;
+  }
+
+  // If muc-3 is selected, render the Chapter 3 time management simulator
+  if (selectedSubpage === 'muc-3') {
+    return <TimeManagementToolView />;
+  }
+
+  // If muc-4 is selected, render the Chapter 4 Gantt chart planner
+  if (selectedSubpage === 'muc-4') {
+    return <GanttChartToolView />;
+  }
+
+  // If another subpage is selected, render a clean empty/in-progress placeholder page
   if (selectedSubpage) {
     const currentItem = PLACEHOLDER_ITEMS.find(
       (item) => item.id === selectedSubpage
@@ -40,18 +58,47 @@ export function GroupPage({
             className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 text-xs font-medium text-slate-700 transition-colors hover:border-slate-900 hover:bg-slate-50 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-            <span>Quay lại</span>
+            <span>Quay lại danh sách công cụ</span>
           </button>
         </div>
 
-        {/* Empty page canvas */}
-        <div className="flex min-h-[55vh] w-full items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 p-8 text-center">
-          <div>
-            <h1 className="text-xl font-medium text-slate-700">{pageTitle}</h1>
-            {pageSubtitle && (
-              <p className="mt-1 text-sm text-slate-500">{pageSubtitle}</p>
-            )}
+        {/* Empty page canvas / Placeholder tool */}
+        <div className="flex min-h-[55vh] w-full flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-50/70 p-8 text-center sm:p-12">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-200 bg-white text-blue-600 shadow-xs">
+            <Wrench className="h-7 w-7 stroke-[1.75]" />
+          </div>
+
+          <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-medium text-amber-800">
+            <Sparkles className="h-3.5 w-3.5 text-amber-600" />
+            <span>Mục đang chuẩn bị nội dung</span>
+          </div>
+
+          <h1 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
+            {pageTitle}
+          </h1>
+          {pageSubtitle && (
+            <p className="mt-1 text-sm font-medium text-blue-700">
+              {pageSubtitle}
+            </p>
+          )}
+
+          {currentItem?.description ? (
+            <p className="mx-auto mt-4 max-w-lg text-sm leading-relaxed text-slate-600">
+              {currentItem.description}
+            </p>
+          ) : (
             <p className="mt-2 text-xs text-slate-400">Trang trống</p>
+          )}
+
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <button
+              type="button"
+              onClick={onBackToList}
+              className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-5 py-2.5 text-xs font-semibold text-slate-800 shadow-xs transition-colors hover:border-slate-900 hover:bg-slate-50"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              <span>Xem các công cụ khác</span>
+            </button>
           </div>
         </div>
       </div>

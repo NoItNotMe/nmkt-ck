@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chương 2 · Chọn phương án thiết kế</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f1f4f7;--card:#fff;--ink:#16202b;--mute:#5a6775;--line:#d5dce4;--empty:#e4e9ee;--o1:#2563eb;--o2:#d97706;--o3:#059669;--ok:#15803d;--onok:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#11161b;--card:#1a2129;--ink:#e8edf2;--mute:#97a4b1;--line:#2e3944;--empty:#27313b;--o1:#60a5fa;--o2:#fbbf24;--o3:#34d399;--ok:#4ade80;--onok:#06210f}}
+:root[data-theme="dark"]{--bg:#11161b;--card:#1a2129;--ink:#e8edf2;--mute:#97a4b1;--line:#2e3944;--empty:#27313b;--o1:#60a5fa;--o2:#fbbf24;--o3:#34d399;--ok:#4ade80;--onok:#06210f}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 "Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:780px;margin:0 auto;padding:28px 16px 48px}
+h1{font-size:clamp(26px,6vw,38px);line-height:1.15;font-weight:800;margin:6px 0 10px;letter-spacing:-.02em}
+h2{font-size:15px;font-weight:700;margin:0 0 10px}
+.src{color:var(--mute);font-size:13px;margin:0}
+.lead{color:var(--mute);margin:0 0 22px;max-width:62ch}
+section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:16px}
+input[type=text]{font:inherit;font-size:15px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-height:40px;width:100%;min-width:0}
+.ir{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.dot{width:12px;height:12px;border-radius:50%;flex:none;display:inline-block}
+.x{flex:none;width:36px;height:36px;border:1px solid var(--line);background:var(--bg);color:var(--mute);border-radius:8px;cursor:pointer;font:inherit}
+.link{font:inherit;font-size:13px;color:var(--ink);background:none;border:1px solid var(--line);border-radius:8px;padding:6px 12px;min-height:36px;cursor:pointer}
+.link:disabled{opacity:.4;cursor:not-allowed}
+.go{font:inherit;font-weight:700;font-size:14px;color:var(--onok);background:var(--ok);border:0;border-radius:10px;padding:10px 16px;min-height:44px;cursor:pointer}
+.cr{border-top:1px solid var(--line);padding:12px 0}
+.sl{display:grid;grid-template-columns:minmax(90px,150px) 1fr 24px;gap:10px;align-items:center;font-size:13px;margin-top:6px}
+.sl b{text-align:right}
+.sl input{width:100%;height:28px}
+.sl.w{color:var(--mute);font-weight:500}
+.sl span{display:flex;align-items:center;gap:6px;min-width:0;overflow-wrap:anywhere}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+:focus-visible{outline:3px solid var(--o1);outline-offset:2px}
+svg.rd{display:block;width:100%;max-width:560px;margin:0 auto}
+.rk{display:grid;grid-template-columns:minmax(80px,140px) 1fr auto;gap:10px;align-items:center;font-size:14px;margin-top:10px}
+.rk .bar{height:22px;border-radius:6px;background:var(--empty);overflow:hidden}
+.rk .bar i{display:block;height:100%;border-radius:6px;transition:width .3s}
+.rk em{font-style:normal;font-size:12px;font-weight:700;color:var(--ok);margin-left:6px}
+.res h3{font-size:19px;line-height:1.35;margin:0 0 6px}
+.hint{color:var(--mute);font-size:14px;margin:6px 0 0}
+.sens{margin:12px 0 0;padding:12px;border-radius:10px;background:var(--bg);font-size:14px}
+.sens p{margin:0 0 6px}
+.sens p:last-child{margin:0}
+.leg{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;justify-content:center}
+.leg span{display:inline-flex;align-items:center;gap:6px}
+@media (prefers-reduced-motion:reduce){.rk .bar i{transition:none}}
+</style>
+</head>
+<body>
+<main>
+<p class="src">Nhập môn về kỹ thuật · Chương 2 · Thiết kế kỹ thuật</p>
+<h1>Chọn phương án thiết kế</h1>
+<p class="lead">Nhập 2–3 phương án và các tiêu chí của đồ án, kéo thanh điểm 1–5 cho từng ô, rồi kéo độ quan trọng của từng tiêu chí. Biểu đồ và thứ hạng thay đổi ngay khi bạn kéo. Công cụ cũng cho biết kết quả sẽ đảo chiều ở đâu.</p>
+
+<section>
+<h2>Đề tài và phương án</h2>
+<div class="ir"><input type="text" id="proj" aria-label="Tên đề tài" maxlength="60"></div>
+<div id="opts"></div>
+<div class="btns"><button class="link" id="addo" type="button">+ Thêm phương án</button></div>
+</section>
+
+<section>
+<h2>Tiêu chí và điểm (1 = kém, 5 = tốt nhất)</h2>
+<div id="crit"></div>
+<div class="btns"><button class="link" id="addc" type="button">+ Thêm tiêu chí</button><button class="link" id="demo" type="button">Về dữ liệu mẫu</button></div>
+<p class="hint">Với tiêu chí chi phí, hãy tính điểm theo hướng “càng rẻ càng cao”.</p>
+</section>
+
+<section class="res" id="res" aria-live="polite"></section>
+
+<section>
+<h2>Đưa vào báo cáo</h2>
+<p class="hint" style="margin:0 0 10px">Sao chép bảng đánh giá (theo mẫu bảng 2 ở slide 24, có thêm độ quan trọng) rồi dán vào Excel hoặc Word.</p>
+<button class="go" id="copy" type="button">Sao chép bảng</button> <span class="hint" id="cmsg"></span>
+</section>
+
+<p class="src">Dựa trên bảng đánh giá phương án điểm 1–5 (slide 24) và bốn loại sự cố cần phòng ngừa khi thiết kế: không đáp ứng nhu cầu, hư hỏng, hoạt động kém, chi phí cao (slide 12–13).</p>
+</main>
+<script>
+var COL=["var(--o1)","var(--o2)","var(--o3)"];
+var $=function(i){return document.getElementById(i)};
+var O,C,proj;
+function loadDemo(){
+ proj="Xe robot dò đường";
+ O=[{n:"Phương án A"},{n:"Phương án B"},{n:"Phương án C"}];
+ C=[{n:"Đáp ứng chức năng",w:5,s:[3,4,5]},{n:"Độ bền",w:4,s:[3,4,4]},{n:"Hiệu năng",w:3,s:[2,3,5]},{n:"Tiết kiệm chi phí",w:3,s:[5,4,1]},{n:"Dễ chế tạo",w:2,s:[5,4,2]}];
+ $("proj").value=proj;build();update();
+}
+function fmt(x){return x.toFixed(2).replace(".",",")}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;")}
+function score(cs,i){var a=0,b=0;cs.forEach(function(c){a+=c.w*c.s[i];b+=c.w});return b?a/b:0}
+function winnerOf(cs){
+ var v=O.map(function(o,i){return score(cs,i)}),m=Math.max.apply(null,v),w=[];
+ v.forEach(function(x,i){if(Math.abs(x-m)<1e-9)w.push(i)});
+ return w.length==1?w[0]:-1;
+}
+function build(){
+ $("opts").innerHTML=O.map(function(o,j){return '<div class="ir"><i class="dot" style="background:'+COL[j]+'"></i><input type="text" data-j="'+j+'" value="'+esc(o.n)+'" aria-label="Tên phương án '+(j+1)+'" maxlength="40"><button class="x" type="button" data-rmo="'+j+'" aria-label="Xóa phương án"'+(O.length<=2?' disabled':'')+'>✕</button></div>'}).join('');
+ $("addo").disabled=O.length>=3;
+ $("addc").disabled=C.length>=6;
+ $("crit").innerHTML=C.map(function(c,i){
+  var h='<div class="cr"><div class="ir"><input type="text" data-k="n" data-c="'+i+'" value="'+esc(c.n)+'" aria-label="Tên tiêu chí" maxlength="40"><button class="x" type="button" data-rmc="'+i+'" aria-label="Xóa tiêu chí"'+(C.length<=3?' disabled':'')+'>✕</button></div>';
+  h+='<label class="sl w"><span>Độ quan trọng</span><input type="range" min="1" max="5" step="1" value="'+c.w+'" data-k="w" data-c="'+i+'"><b>'+c.w+'</b></label>';
+  O.forEach(function(o,j){h+='<label class="sl"><span><i class="dot" style="background:'+COL[j]+'"></i><em class="on" data-j="'+j+'" style="font-style:normal">'+esc(o.n)+'</em></span><input type="range" min="1" max="5" step="1" value="'+c.s[j]+'" data-k="s" data-c="'+i+'" data-o="'+j+'" style="accent-color:'+COL[j]+'"><b>'+c.s[j]+'</b></label>'});
+  return h+'</div>';
+ }).join('');
+}
+function radar(hi){
+ var n=C.length,cx=260,cy=190,R=120,P=function(i,v){var a=-Math.PI/2+i*2*Math.PI/n;return [cx+R*v/5*Math.cos(a),cy+R*v/5*Math.sin(a)]};
+ var s='<svg class="rd" viewBox="0 0 520 380" role="img" aria-label="Biểu đồ radar so sánh các phương án">';
+ for(var r=1;r<=5;r++)s+='<polygon points="'+C.map(function(c,i){return P(i,r).join(",")}).join(" ")+'" fill="none" stroke="var(--line)" stroke-width="1"/>';
+ C.forEach(function(c,i){
+  var e=P(i,5),a=-Math.PI/2+i*2*Math.PI/n,lx=cx+(R+14)*Math.cos(a),ly=cy+(R+14)*Math.sin(a),co=Math.cos(a);
+  var t=c.n.length>16?c.n.slice(0,15)+"…":c.n;
+  s+='<line x1="'+cx+'" y1="'+cy+'" x2="'+e[0]+'" y2="'+e[1]+'" stroke="var(--line)"/><text x="'+lx+'" y="'+(ly+4)+'" font-size="12" fill="var(--ink)" text-anchor="'+(co>0.3?"start":co<-0.3?"end":"middle")+'">'+esc(t)+' ×'+c.w+'</text>';
+ });
+ O.forEach(function(o,j){
+  var w=hi.indexOf(j)>=0;
+  s+='<polygon points="'+C.map(function(c,i){return P(i,c.s[j]).join(",")}).join(" ")+'" fill="'+COL[j]+'" fill-opacity="'+(w?.28:.05)+'" stroke="'+COL[j]+'" stroke-width="'+(w?3.5:1.8)+'"'+(w?'':' stroke-dasharray="5 4"')+' stroke-linejoin="round"/>';
+ });
+ return s+'</svg><div class="leg">'+O.map(function(o,j){return '<span><i class="dot" style="background:'+COL[j]+'"></i>'+esc(o.n)+'</span>'}).join('')+'</div>';
+}
+function update(){
+ var sc=O.map(function(o,i){return {i:i,s:score(C,i)}}).sort(function(a,b){return b.s-a.s});
+ var hi=sc.filter(function(x){return Math.abs(x.s-sc[0].s)<1e-9}).map(function(x){return x.i});
+ var tie=hi.length>1,h;
+ if(tie)h='<h3>'+hi.map(function(i){return esc(O[i].n)}).join(" và ")+' đang hòa điểm ở đầu bảng</h3><p class="hint">Hãy thêm tiêu chí hoặc chỉnh độ quan trọng để phân biệt.</p>';
+ else h='<h3>'+esc(O[sc[0].i].n)+' có điểm cao nhất: '+fmt(sc[0].s)+' / 5, hơn '+esc(O[sc[1].i].n)+' '+fmt(sc[0].s-sc[1].s)+' điểm</h3><p class="hint">Điểm xếp hạng là trung bình có nhân độ quan trọng. Biểu đồ radar vẽ điểm gốc 1–5 của từng tiêu chí (số ×n cạnh tên là độ quan trọng).</p>';
+ h+=radar(hi);
+ h+=sc.map(function(x){return '<div class="rk"><span><i class="dot" style="background:'+COL[x.i]+'"></i> '+esc(O[x.i].n)+'</span><div class="bar"><i style="width:'+(x.s/5*100)+'%;background:'+COL[x.i]+'"></i></div><span>'+fmt(x.s)+(hi.indexOf(x.i)>=0?'<em>'+(tie?'Hòa':'Cao nhất')+'</em>':'')+'</span></div>'}).join('');
+ var base=winnerOf(C),msg=[];
+ C.forEach(function(c,ci){[1,-1].forEach(function(d){
+  var w2=c.w+d;if(w2<1||w2>5||msg.length>=3)return;
+  var cc=C.map(function(x,k){return k==ci?{n:x.n,w:w2,s:x.s}:x});
+  var wi=winnerOf(cc);
+  if(wi!==base&&wi>=0)msg.push('Nếu độ quan trọng của “'+esc(c.n)+'” '+(d>0?'tăng lên ':'giảm xuống ')+w2+', '+esc(O[wi].n)+' sẽ thắng.');
+ })});
+ h+='<div class="sens"><p><b>Kết quả có vững không?</b></p>'+(msg.length?msg.map(function(m){return '<p>'+m+'</p>'}).join('')+'<p class="hint">Vì vậy hãy chắc chắn độ quan trọng bạn chọn phản ánh đúng yêu cầu của đề tài.</p>':'<p>Đổi độ quan trọng của bất kỳ tiêu chí nào đi 1 bậc cũng không đổi người thắng. Lựa chọn này khá vững.</p>')+'</div>';
+ $("res").innerHTML=h;
+}
+function tsv(){
+ var r=[["Đề tài: "+proj],["Phương án"].concat(C.map(function(c){return c.n}),["Tổng cộng","Trung bình"]),["Độ quan trọng"].concat(C.map(function(c){return c.w}),["",""])];
+ O.forEach(function(o,i){var sum=0,tw=0;C.forEach(function(c){sum+=c.w*c.s[i];tw+=c.w});r.push([o.n].concat(C.map(function(c){return c.s[i]}),[sum,fmt(sum/tw)]))});
+ r.push(["Ghi chú: Tổng cộng và Trung bình đã nhân độ quan trọng của từng tiêu chí."]);
+ return r.map(function(x){return x.join("\t")}).join("\n");
+}
+function copied(ok){$("cmsg").textContent=ok?"Đã sao chép. Dán vào Excel hoặc Word.":"Không sao chép được, hãy thử lại."}
+$("copy").addEventListener("click",function(){
+ var t=tsv();
+ function fb(){try{var a=document.createElement("textarea");a.value=t;a.style.position="fixed";a.style.opacity="0";document.body.appendChild(a);a.select();var ok=document.execCommand("copy");document.body.removeChild(a);copied(ok)}catch(e){copied(false)}}
+ if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){copied(true)},fb)}else fb();
+});
+$("proj").addEventListener("input",function(e){proj=e.target.value});
+$("opts").addEventListener("input",function(e){
+ var j=e.target.dataset.j;if(j===undefined)return;
+ O[j].n=e.target.value;
+ var l=document.querySelectorAll('.on[data-j="'+j+'"]');for(var k=0;k<l.length;k++)l[k].textContent=e.target.value;
+ update();
+});
+$("opts").addEventListener("click",function(e){
+ var b=e.target.closest("[data-rmo]");if(!b||O.length<=2)return;
+ var j=+b.dataset.rmo;O.splice(j,1);C.forEach(function(c){c.s.splice(j,1)});build();update();
+});
+$("crit").addEventListener("input",function(e){
+ var t=e.target,k=t.dataset.k;if(!k)return;var c=C[+t.dataset.c];
+ if(k=="n")c.n=t.value;
+ else{var v=+t.value;if(k=="w")c.w=v;else c.s[+t.dataset.o]=v;t.parentNode.querySelector("b").textContent=v}
+ update();
+});
+$("crit").addEventListener("click",function(e){
+ var b=e.target.closest("[data-rmc]");if(!b||C.length<=3)return;
+ C.splice(+b.dataset.rmc,1);build();update();
+});
+$("addo").addEventListener("click",function(){if(O.length>=3)return;O.push({n:"Phương án "+"ABC".charAt(O.length)});C.forEach(function(c){c.s.push(3)});build();update()});
+$("addc").addEventListener("click",function(){if(C.length>=6)return;C.push({n:"Tiêu chí mới",w:3,s:O.map(function(){return 3})});build();update()});
+$("demo").addEventListener("click",loadDemo);
+loadDemo();
+</script>
+</body>
+</html>
