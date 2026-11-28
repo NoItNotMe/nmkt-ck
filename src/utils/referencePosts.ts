@@ -209,8 +209,8 @@ export const ENGAGEMENT_STORAGE_KEY = 'nkkt_reference_engagement_v2';
 
 const DELL_ASUS_POST: ReferencePost = {
   id: 'featured-1',
-  category: 'Chương 3',
-  detailCategory: 'Chương 3: Phương pháp học tập hiệu quả',
+  category: 'Chương 2',
+  detailCategory: 'Chương 2: Thiết kế kỹ thuật',
   layoutVariant: 'magazine-dropcap',
   editorialBadge: 'Case Study Kinh Điển',
   title: 'Câu chuyện của Dell và Asus, thiết kế và gia công',
@@ -2311,7 +2311,7 @@ export const OTHER_REFERENCE_POSTS: readonly ReferencePost[] = [
   {
     id: 'ch6-problem-identification',
     category: 'Chương 6',
-    detailCategory: 'Chương 6: Kỹ năng giải quyết vấn đề và sáng tạo',
+    detailCategory: 'Chương 6: Kỹ năng giải quyết vấn đề',
     title: 'Không phải vấn đề nào cũng có một đáp án',
     sapo: 'Nhận diện đúng tình huống là bước đầu tiên để không lãng phí công sức vào một lời giải sai.',
     imageLabel: 'Kỹ sư kiểm tra cụm ổ bi và trục máy có dấu hiệu rung bất thường',
@@ -2377,7 +2377,7 @@ export const OTHER_REFERENCE_POSTS: readonly ReferencePost[] = [
   {
     id: 'ch6-systematic-thinking',
     category: 'Chương 6',
-    detailCategory: 'Chương 6: Kỹ năng giải quyết vấn đề và sáng tạo',
+    detailCategory: 'Chương 6: Kỹ năng giải quyết vấn đề',
     title: 'Từ hiện tượng đến giải pháp: Tư duy có hệ thống trong kỹ thuật',
     sapo: 'Quy trình không thay thế tư duy, nhưng giúp tư duy không bỏ sót những bước quan trọng.',
     imageLabel: 'Hai kỹ sư phân tích bản vẽ và dữ liệu vận hành trên máy tính',
@@ -2474,7 +2474,7 @@ export const OTHER_REFERENCE_POSTS: readonly ReferencePost[] = [
   {
     id: 'ch6-six-thinking-hats',
     category: 'Chương 6',
-    detailCategory: 'Chương 6: Kỹ năng giải quyết vấn đề và sáng tạo',
+    detailCategory: 'Chương 6: Kỹ năng giải quyết vấn đề',
     title: 'Sáu chiếc mũ tư duy: Khi một vấn đề cần nhiều góc nhìn',
     sapo: 'Tách các kiểu suy nghĩ theo từng thời điểm giúp cuộc thảo luận bớt rối và quyết định cân bằng hơn.',
     imageLabel: 'Nhóm trao đổi ý tưởng với giấy ghi chú nhiều màu trên bảng kính',
@@ -2533,7 +2533,7 @@ export const OTHER_REFERENCE_POSTS: readonly ReferencePost[] = [
   {
     id: 'ch6-scamper-mindmap',
     category: 'Chương 6',
-    detailCategory: 'Chương 6: Kỹ năng giải quyết vấn đề và sáng tạo',
+    detailCategory: 'Chương 6: Kỹ năng giải quyết vấn đề',
     title: 'Sáng tạo không nhất thiết bắt đầu từ con số không',
     sapo: 'SCAMPER và bản đồ tư duy giúp mở rộng cách nhìn, tái tổ chức những gì ta đã biết và phát triển phương án mới.',
     imageLabel: 'Mô hình SCAMPER bảy hướng đặt câu hỏi cải tiến',
@@ -2622,7 +2622,7 @@ export const OTHER_REFERENCE_POSTS: readonly ReferencePost[] = [
   {
     id: 'ch6-root-cause-selection',
     category: 'Chương 6',
-    detailCategory: 'Chương 6: Kỹ năng giải quyết vấn đề và sáng tạo',
+    detailCategory: 'Chương 6: Kỹ năng giải quyết vấn đề',
     title: 'Tìm đúng nguyên nhân, chọn đúng phương án',
     sapo: 'Ishikawa, 5 Why, SWOT và ma trận lựa chọn giúp chuyển từ phỏng đoán sang đánh giá có căn cứ.',
     imageLabel: 'Biểu đồ xương cá (Ishikawa) phân tích nguyên nhân – hậu quả',
@@ -2900,7 +2900,7 @@ export const OTHER_REFERENCE_POSTS: readonly ReferencePost[] = [
     title: 'Người kỹ sư giỏi chuyên môn đã đủ chưa?',
     sapo: 'Trong kỹ thuật, một ý tưởng dù tốt đến đâu cũng khó trở thành sản phẩm hoàn chỉnh nếu người tạo ra nó không thể truyền đạt rõ ràng cho những người cùng thực hiện.',
     imageLabel: 'Nhóm kỹ sư trao đổi bản vẽ kỹ thuật tại bàn làm việc',
-    imageSrc: '/assets/aistudio/image_1eb80eae.png',
+    imageSrc: '/src/assets/images/ch8_comm_workbench_1795862048280.jpg',
     imageAlt:
       'Ba kỹ sư cùng trao đổi và chỉ rõ các chi tiết trên bản vẽ kỹ thuật cạnh mô hình chi tiết máy tại bàn làm việc',
     readTime: '6 phút đọc',
@@ -2917,7 +2917,7 @@ export const OTHER_REFERENCE_POSTS: readonly ReferencePost[] = [
       'Vì vậy, giao tiếp không đơn thuần là khả năng nói lưu loát. Điều quan trọng hơn là làm sao để người nhận hiểu đúng nội dung mà người gửi muốn truyền đạt.',
       {
         type: 'figure',
-        src: '/assets/aistudio/image_1eb80eae.png',
+        src: '/src/assets/images/ch8_comm_workbench_1795862048280.jpg',
         alt: 'Nhóm kỹ sư đang cùng trao đổi bản vẽ kỹ thuật trên bàn làm việc bên cạnh chi tiết mẫu',
         caption:
           'Trao đổi trực tiếp trên bản vẽ và mô hình giúp nhóm thiết kế và bộ phận thực hiện thống nhất yêu cầu kỹ thuật.',
@@ -2960,7 +2960,7 @@ export const OTHER_REFERENCE_POSTS: readonly ReferencePost[] = [
       },
       {
         type: 'figure',
-        src: '/assets/aistudio/image_5ccbcaeb.png',
+        src: '/assets/ch8/comm_5_steps.svg',
         alt: 'Sơ đồ 5 bước cơ bản của quá trình giao tiếp gồm: người gửi có ý tưởng, mã hóa ý tưởng, truyền qua các kênh, người nhận giải mã thông điệp, phản hồi cho người gửi và hồi đáp thêm',
         caption:
           'Hình 1. Năm bước cơ bản của quá trình giao tiếp kèm vòng phản hồi hai chiều.',
@@ -2971,7 +2971,7 @@ export const OTHER_REFERENCE_POSTS: readonly ReferencePost[] = [
       'Bên cạnh đó, mô hình giao tiếp còn cho thấy sự xuất hiện của yếu tố nhiễu. Tiếng ồn tại công trường, đường truyền điện thoại không ổn định, cách diễn đạt quá phức tạp hay sự thiếu tập trung đều có thể làm sai lệch thông điệp.',
       {
         type: 'figure',
-        src: '/assets/aistudio/image_fb645565.png',
+        src: '/assets/ch8/comm_noise_model.svg',
         alt: 'Sơ đồ mô hình giao tiếp tiếng Việt gồm Người gửi, Các kênh giao tiếp, Người nhận, Phản hồi và yếu tố Nhiễu',
         caption:
           'Hình 2. Mô hình người gửi, kênh giao tiếp, người nhận, phản hồi và tác động của yếu tố nhiễu.',
@@ -2979,7 +2979,7 @@ export const OTHER_REFERENCE_POSTS: readonly ReferencePost[] = [
       },
       {
         type: 'figure',
-        src: '/assets/aistudio/image_020df29a.png',
+        src: '/assets/ch8/comm_process_en.svg',
         alt: 'Sơ đồ The Communication Process gồm Sender, Encoding, Message, Channel, Decoding, Receiver, Feedback và Noise',
         caption:
           'Hình 3. Chu trình truyền tin (The Communication Process) với các khâu mã hóa (Encoding), giải mã (Decoding), nhiễu (Noise) và phản hồi (Feedback).',
@@ -2990,7 +2990,7 @@ export const OTHER_REFERENCE_POSTS: readonly ReferencePost[] = [
       'Có một hình minh họa khá thú vị thường được sử dụng để nói về thất bại trong giao tiếp của các dự án. Cùng một yêu cầu ban đầu về việc xây dựng một chiếc xích đu, nhưng khách hàng, người quản lý dự án, người phân tích, lập trình viên và bộ phận tư vấn lại hiểu, thiết kế hoặc thực hiện theo những cách khác nhau. Kết quả cuối cùng có thể rất xa so với thứ khách hàng thực sự cần.',
       {
         type: 'figure',
-        src: '/assets/aistudio/image_27a052db.png',
+        src: '/assets/ch8/tree_swing_mismatch.svg',
         alt: 'Bộ tranh minh họa 10 khung về chiếc xích đu qua các góc nhìn từ khách hàng, quản lý dự án, phân tích, lập trình, tư vấn cho đến thứ khách hàng thực sự cần',
         caption:
           'Hình 4. Minh họa kinh điển về sự sai lệch thông tin giữa các bộ phận trong cùng một dự án.',
@@ -3008,7 +3008,7 @@ export const OTHER_REFERENCE_POSTS: readonly ReferencePost[] = [
     title: 'Đằng sau một bài thuyết trình kỹ thuật thuyết phục',
     sapo: 'Một bài trình bày tốt không bắt đầu khi người nói đứng trước màn hình. Nó bắt đầu từ việc hiểu mình cần nói gì, nói với ai và muốn người nghe nhớ điều gì.',
     imageLabel: 'So sánh slide thuyết trình nhiều chữ và slide trực quan',
-    imageSrc: '/assets/aistudio/image_7e2e16b9.png',
+    imageSrc: '/assets/ch8/slide_dont_do.svg',
     imageAlt:
       'Bảng so sánh một slide PowerPoint dày đặc chữ (Don’t) với một slide trình bày cô đọng có bố cục trực quan và biểu tượng minh họa (Do)',
     imageFit: 'contain',
@@ -3037,7 +3037,7 @@ export const OTHER_REFERENCE_POSTS: readonly ReferencePost[] = [
       'Một slide nên tập trung vào một ý tưởng chính. Thay vì viết cả đoạn giải thích dài, người trình bày có thể sử dụng từ khóa, biểu đồ, sơ đồ, hình ảnh hoặc bảng số liệu để hỗ trợ cho phần diễn giải bằng lời.',
       {
         type: 'figure',
-        src: '/assets/aistudio/image_7e2e16b9.png',
+        src: '/assets/ch8/slide_dont_do.svg',
         alt: 'Minh họa so sánh giữa slide thiết kế quá nhiều văn bản dày đặc (Don’t) và slide chia khối trực quan kết hợp hình ảnh rõ ràng (Do)',
         caption:
           'So sánh cách trình bày slide nhiều đoạn chữ dàn trải (bên trái) và slide cô đọng ý chính kết hợp minh họa trực quan (bên phải).',
@@ -3095,7 +3095,7 @@ export const OTHER_REFERENCE_POSTS: readonly ReferencePost[] = [
     title: 'Khi đứng trước đám đông: Điều gì khiến người nghe tin tưởng bạn?',
     sapo: 'Kiến thức chuyên môn giúp người kỹ sư có điều để trình bày, nhưng phong thái và cách tương tác quyết định người nghe tiếp nhận phần trình bày ấy như thế nào.',
     imageLabel: 'Diễn giả thuyết trình bản vẽ kỹ thuật trước khán giả',
-    imageSrc: '/assets/aistudio/image_872d8937.png',
+    imageSrc: '/src/assets/images/ch8_public_speaking_1795862048234.jpg',
     imageAlt:
       'Kỹ sư đứng thuyết trình tự tin trước màn hình lớn hiển thị bản vẽ CAD kỹ thuật và tương tác với người nghe',
     readTime: '6 phút đọc',
@@ -3112,7 +3112,7 @@ export const OTHER_REFERENCE_POSTS: readonly ReferencePost[] = [
       'Tuy nhiên, cử chỉ chỉ có giá trị khi được sử dụng đúng lúc. Việc vung tay liên tục, khoanh tay, lắc lư cơ thể, nghịch bút hoặc gãi đầu quá nhiều có thể làm giảm sự tập trung của khán giả.',
       {
         type: 'figure',
-        src: '/assets/aistudio/image_872d8937.png',
+        src: '/src/assets/images/ch8_public_speaking_1795862048234.jpg',
         alt: 'Diễn giả giữ tư thế đứng vững vàng, ánh mắt hướng về người nghe bên cạnh màn hình trình chiếu bản vẽ kỹ thuật',
         caption:
           'Phong thái điềm tĩnh, ánh mắt giao tiếp với khán giả và cử chỉ tay tự nhiên giúp tăng độ tin cậy cho phần trình bày kỹ thuật.',
@@ -3169,7 +3169,7 @@ export const OTHER_REFERENCE_POSTS: readonly ReferencePost[] = [
     title: 'Một bản báo cáo kỹ thuật tốt không chỉ nằm ở những con số',
     sapo: 'Một kết quả thí nghiệm có thể rất chính xác, nhưng nếu được trình bày thiếu rõ ràng, người đọc vẫn khó đánh giá được giá trị thực sự của công việc.',
     imageLabel: 'Cấu trúc đề xuất cho một bản báo cáo kỹ thuật',
-    imageSrc: '/assets/aistudio/image_719860d5.png',
+    imageSrc: '/assets/ch8/report_structure.svg',
     imageAlt:
       'Sơ đồ cấu trúc chuẩn của một bản báo cáo kỹ thuật (Recommended Technical Report Structure) phân loại các mục bắt buộc, tùy trường hợp và theo yêu cầu',
     imageFit: 'contain',
@@ -3189,7 +3189,7 @@ export const OTHER_REFERENCE_POSTS: readonly ReferencePost[] = [
       'Một báo cáo kỹ thuật thông thường có thể bắt đầu bằng trang tiêu đề, tóm tắt và mục lục, sau đó là phần giới thiệu, cơ sở lý thuyết, phương pháp hoặc thiết bị thực nghiệm, kết quả, thảo luận, kết luận, tài liệu tham khảo và phụ lục.',
       {
         type: 'figure',
-        src: '/assets/aistudio/image_719860d5.png',
+        src: '/assets/ch8/report_structure.svg',
         alt: 'Sơ đồ cấu trúc Recommended Technical Report Structure gồm Cover page, Table of Contents, Objective/Abstract, Introduction, List of Equipment, Procedure, Results, Results Analysis and Discussion, Summary/Conclusion, Appendix và References',
         caption:
           'Sơ đồ cấu trúc đề xuất cho báo cáo kỹ thuật, phân biệt rõ các phần bắt buộc (Mandatory), cần thiết khi phù hợp (If Necessary) và phần theo yêu cầu (If Required).',
@@ -3232,7 +3232,7 @@ export const OTHER_REFERENCE_POSTS: readonly ReferencePost[] = [
     title: 'Lắng nghe – Kỹ năng ít được chú ý nhưng quyết định hiệu quả giao tiếp',
     sapo: 'Trong một cuộc trao đổi, ai cũng muốn ý kiến của mình được lắng nghe. Nhưng không phải ai cũng dành đủ sự tập trung để thực sự hiểu người khác đang nói gì.',
     imageLabel: 'Năm giai đoạn của quá trình lắng nghe chủ động',
-    imageSrc: '/assets/aistudio/image_a2fc9c17.png',
+    imageSrc: '/assets/ch8/listening_stages.svg',
     imageAlt:
       'Biểu đồ 5 giai đoạn của quá trình lắng nghe (Stages of Listening): Tiếp nhận, Hiểu, Ghi nhớ, Đánh giá và Phản hồi',
     imageFit: 'contain',
@@ -3248,7 +3248,7 @@ export const OTHER_REFERENCE_POSTS: readonly ReferencePost[] = [
       'Quá trình lắng nghe có thể được hình dung bắt đầu từ việc tiếp nhận âm thanh. Sóng âm tác động lên màng nhĩ và tín hiệu được hệ thần kinh truyền đến não. Tuy nhiên, để hiểu được thông điệp, người nghe còn phải chú ý đến nội dung, xác định ý chính và liên hệ với kiến thức của mình.',
       {
         type: 'figure',
-        src: '/assets/aistudio/image_a2fc9c17.png',
+        src: '/assets/ch8/listening_stages.svg',
         alt: 'Sơ đồ Stages of Listening gồm 5 giai đoạn nối tiếp: Receiving, Understanding, Remembering, Evaluating và Responding',
         caption:
           'Năm giai đoạn của quá trình lắng nghe: Tiếp nhận (Receiving), Hiểu (Understanding), Ghi nhớ (Remembering), Đánh giá (Evaluating) và Phản hồi (Responding).',
@@ -3282,7 +3282,7 @@ export const OTHER_REFERENCE_POSTS: readonly ReferencePost[] = [
       'Việc ghi chép cũng rất hữu ích, đặc biệt trong các cuộc họp có nhiều thông số, nhiệm vụ và thời hạn. Người nghe nên ghi lại ý chính, số liệu quan trọng và những nội dung cần kiểm tra sau cuộc trao đổi thay vì cố gắng chép lại mọi câu nói.',
       {
         type: 'figure',
-        src: '/assets/aistudio/image_0acabec6.png',
+        src: '/src/assets/images/ch8_active_listening_team_1795862048086.jpg',
         alt: 'Nhóm kỹ sư quây quanh bàn bản vẽ tại nhà máy, các thành viên chăm chú lắng nghe và ghi chép trong lúc đồng nghiệp chỉ vào chi tiết kỹ thuật',
         caption:
           'Lắng nghe tập trung kết hợp ghi chép các thông số và đầu việc quan trọng giúp cuộc trao đổi kỹ thuật đạt hiệu quả cao.',
@@ -3325,7 +3325,7 @@ export const OTHER_REFERENCE_POSTS: readonly ReferencePost[] = [
     title: 'Đặt câu hỏi đúng – Chìa khóa giải quyết vấn đề trong kỹ thuật',
     sapo: 'Một câu hỏi tốt không chỉ giúp tìm kiếm câu trả lời. Đôi khi, nó còn giúp phát hiện rằng vấn đề ban đầu đã được hiểu sai.',
     imageLabel: 'Nhóm kỹ sư thảo luận và đặt câu hỏi trước bảng trắng',
-    imageSrc: '/assets/aistudio/image_502c8c15.png',
+    imageSrc: '/src/assets/images/ch8_asking_questions_1795862049035.jpg',
     imageAlt:
       'Một kỹ sư đứng bên bảng trắng vẽ sơ đồ hệ thống, đặt câu hỏi trao đổi cùng các thành viên trong phòng họp',
     readTime: '6 phút đọc',
@@ -3343,7 +3343,7 @@ export const OTHER_REFERENCE_POSTS: readonly ReferencePost[] = [
       'Ngược lại, câu hỏi trực tiếp hướng đến một người hoặc một nhóm nhỏ. Trong cuộc họp, người điều phối có thể hỏi kỹ sư phụ trách: "Anh đã kiểm tra độ sai lệch của cảm biến chưa?". Cách hỏi này giúp thu được câu trả lời cụ thể và tạo cơ hội cho những người ít nói tham gia. Tuy nhiên, cần tránh đặt câu hỏi khiến người được hỏi cảm thấy bị dồn vào thế khó khi họ chưa có đủ thông tin.',
       {
         type: 'figure',
-        src: '/assets/aistudio/image_502c8c15.png',
+        src: '/src/assets/images/ch8_asking_questions_1795862049035.jpg',
         alt: 'Nhóm kỹ sư đang thảo luận trước bảng trắng có sơ đồ hệ thống để cùng phân tích và trả lời các câu hỏi kỹ thuật',
         caption:
           'Đặt đúng câu hỏi trước sơ đồ hệ thống giúp nhóm làm rõ giả định, thu hẹp phạm vi kiểm tra và phối hợp hiệu quả hơn.',
@@ -3376,7 +3376,7 @@ export const OTHER_REFERENCE_POSTS: readonly ReferencePost[] = [
     title: 'Email và thư tín – Những chi tiết nhỏ tạo nên sự chuyên nghiệp',
     sapo: 'Một email chỉ mất vài phút để soạn thảo, nhưng cách viết thiếu rõ ràng có thể khiến công việc bị chậm trễ, thông tin bị hiểu sai và người nhận phải mất thêm thời gian xác minh.',
     imageLabel: 'Soạn thảo email kỹ thuật tại bàn làm việc',
-    imageSrc: '/assets/aistudio/image_a221f4b4.png',
+    imageSrc: '/src/assets/images/ch8_email_laptop_1795862050256.jpg',
     imageAlt:
       'Góc nhìn qua vai người làm việc đang soạn email trên laptop tại bàn làm việc cùng sổ ghi chú và bút',
     readTime: '6 phút đọc',
@@ -3394,7 +3394,7 @@ export const OTHER_REFERENCE_POSTS: readonly ReferencePost[] = [
       'Ngôn ngữ cũng cần lịch sự, nhã nhặn và phù hợp với mối quan hệ giữa người gửi và người nhận. Một thông điệp chuyên nghiệp không nhất thiết phải sử dụng những câu từ cầu kỳ. Ngược lại, cách viết tự nhiên và đơn giản thường giúp người đọc nắm bắt thông tin nhanh hơn.',
       {
         type: 'figure',
-        src: '/assets/aistudio/image_a221f4b4.png',
+        src: '/src/assets/images/ch8_email_laptop_1795862050256.jpg',
         alt: 'Một người đang soạn thư điện tử tại bàn làm việc với laptop hiển thị giao diện email bên cạnh sổ ghi chú',
         caption:
           'Soạn thảo email công việc rõ ràng, kiểm tra đầy đủ thông tin và thời hạn trước khi gửi giúp quá trình phối hợp kỹ thuật thông suốt.',
@@ -3827,23 +3827,6 @@ export const OTHER_REFERENCE_POSTS: readonly ReferencePost[] = [
       'Đạo đức nghề nghiệp không chỉ được thử thách trong những thảm họa lớn hay các quyết định cấp cao. Nó xuất hiện ngay trong xưởng máy, tại hệ thống xử lý nước thải và trong cuộc trao đổi về một hợp đồng cung cấp vật liệu. Có khi, lựa chọn có trách nhiệm chỉ đơn giản là không bỏ qua một bước an toàn, không chấp nhận một kết quả vượt tiêu chuẩn và không giữ im lặng khi khách hàng cần được biết sự thật.',
     ],
   },
-  {
-    id: 'other-10',
-    category: 'Chương 10',
-    detailCategory: 'Chương 10: Nội dung đang cập nhật (Placeholder)',
-    title: 'Bài viết thuộc Chương 10 (Placeholder)',
-    sapo: 'Sapo tóm tắt cho bài viết thuộc Chương 10 (đang chờ nội dung chi tiết).',
-    imageLabel: 'Ảnh minh họa Chương 10',
-    imageSrc: '/assets/aistudio/64_TSDH_TQImage_1691462323202_cb32d264.jpg',
-    imageAlt: 'Chip bán dẫn và hệ thống kỹ thuật số',
-    readTime: '4 phút đọc',
-    initialLikes: 0,
-    initialComments: [],
-    bodyParagraphs: [
-      'Nội dung chi tiết placeholder cho bài viết thuộc Chương 10.',
-      'Sẽ cập nhật nội dung bài viết cụ thể ngay khi có dữ liệu.',
-    ],
-  },
 ] as const;
 
 export const ALL_REFERENCE_POSTS: readonly ReferencePost[] = Array.from(
@@ -3884,7 +3867,21 @@ export function shuffleReferencePosts<T>(
 
 export const MANDATORY_FEATURED_REFERENCE_IDS: readonly string[] = [
   'featured-2', // Steve Jobs, Bill Gates & GUI Xerox (Chương 1)
-  'featured-1', // Dell & Asus (Chương 3)
+  'featured-1', // Dell & Asus (Chương 2)
+  'ch3-active-reading', // Đọc hết một cuốn sách không có nghĩa là đã hiểu nó (Chương 3)
+  'ch7-si-measurement', // Đo lường và hệ SI: Nền tảng của ngôn ngữ kỹ thuật (Chương 7)
+];
+
+export const MANDATORY_ALWAYS_VISIBLE_REFERENCE_IDS: readonly string[] = [
+  'ch2-frdparrc', // Chương 2: Từ ý tưởng đến giải pháp: Vì sao kỹ sư cần một bản đồ để tổ chức tư duy?
+  'ch3-learn-how-to-learn', // Chương 3: Bước vào đại học, sinh viên phải học lại cách học
+  'ch3-smart-goals', // Chương 3: Mục tiêu học tập: từ một ước muốn đến kế hoạch có thể thực hiện
+  'ch4-project-balance', // Chương 4: Thành công của dự án là bài toán cân bằng
+  'ch4-pert-and-gantt', // Chương 4: PERT và Gantt: Khi tiến độ dự án được nhìn thấy
+  'ch5-communication-conflict', // Chương 5: Khi bất đồng trở thành rào cản: Nghệ thuật giao tiếp và giải quyết xung đột
+  'ch6-scamper-mindmap', // Chương 6: Sáng tạo không nhất thiết bắt đầu từ con số không
+  'ch6-root-cause-selection', // Chương 6: Tìm đúng nguyên nhân, chọn đúng phương án
+  'ch8-active-listening', // Chương 8: Lắng nghe – Kỹ năng ít được chú ý nhưng quyết định hiệu quả giao tiếp
 ];
 
 export function createRandomizedReferenceFeed(
@@ -3896,29 +3893,43 @@ export function createRandomizedReferenceFeed(
     isPlaceholderReferencePost(post)
   );
 
-  const anchorPosts = MANDATORY_FEATURED_REFERENCE_IDS
+  const anchorFeaturedPosts = MANDATORY_FEATURED_REFERENCE_IDS
+    .map((id) => realPosts.find((p) => p.id === id))
+    .filter((p): p is ReferencePost => Boolean(p))
+    .slice(0, FEATURED_REFERENCE_LIMIT);
+
+  const featuredIdSet = new Set(anchorFeaturedPosts.map((p) => p.id));
+
+  const alwaysVisiblePosts = MANDATORY_ALWAYS_VISIBLE_REFERENCE_IDS
+    .filter((id) => !featuredIdSet.has(id))
     .map((id) => realPosts.find((p) => p.id === id))
     .filter((p): p is ReferencePost => Boolean(p));
 
-  const anchorIdSet = new Set(anchorPosts.map((p) => p.id));
-  const otherRealPosts = realPosts.filter((post) => !anchorIdSet.has(post.id));
-  const shuffledOthers = shuffleReferencePosts(otherRealPosts, rng);
+  const alwaysVisibleIdSet = new Set(alwaysVisiblePosts.map((p) => p.id));
+
+  const remainingRealPosts = realPosts.filter(
+    (post) => !featuredIdSet.has(post.id) && !alwaysVisibleIdSet.has(post.id)
+  );
+  const shuffledRemaining = shuffleReferencePosts(remainingRealPosts, rng);
 
   const remainingNeededForFeatured = Math.max(
     0,
-    FEATURED_REFERENCE_LIMIT - anchorPosts.length
+    FEATURED_REFERENCE_LIMIT - anchorFeaturedPosts.length
   );
-  const randomFeatured = shuffledOthers.slice(0, remainingNeededForFeatured);
+  const featuredPosts = [
+    ...anchorFeaturedPosts,
+    ...shuffledRemaining.slice(0, remainingNeededForFeatured),
+  ];
 
-  const featuredPosts = [...anchorPosts, ...randomFeatured];
-  const sidebarPosts = shuffledOthers.slice(
-    remainingNeededForFeatured,
-    remainingNeededForFeatured + SIDEBAR_REFERENCE_LIMIT
-  );
+  const cursor = remainingNeededForFeatured;
+  const nonFeaturedQueue = [
+    ...alwaysVisiblePosts,
+    ...shuffledRemaining.slice(cursor),
+  ];
+
+  const sidebarPosts = nonFeaturedQueue.slice(0, SIDEBAR_REFERENCE_LIMIT);
   const gridPosts = [
-    ...shuffledOthers.slice(
-      remainingNeededForFeatured + SIDEBAR_REFERENCE_LIMIT
-    ),
+    ...nonFeaturedQueue.slice(SIDEBAR_REFERENCE_LIMIT),
     ...placeholderPosts,
   ];
 
@@ -3939,7 +3950,7 @@ export interface ReferenceChapterInfo {
 }
 
 export const REFERENCE_CHAPTERS: readonly ReferenceChapterInfo[] = Array.from(
-  { length: 10 },
+  { length: 9 },
   (_, index) => {
     const chapterNumber = index + 1;
     const label = `Chương ${chapterNumber}`;
@@ -3955,7 +3966,7 @@ export const REFERENCE_CHAPTERS: readonly ReferenceChapterInfo[] = Array.from(
     } else if (chapterNumber === 5) {
       detailLabel = 'Chương 5: Kỹ năng làm việc nhóm';
     } else if (chapterNumber === 6) {
-      detailLabel = 'Chương 6: Kỹ năng giải quyết vấn đề và sáng tạo';
+      detailLabel = 'Chương 6: Kỹ năng giải quyết vấn đề';
     } else if (chapterNumber === 7) {
       detailLabel = 'Chương 7: Cơ sở kỹ thuật';
     } else if (chapterNumber === 8) {

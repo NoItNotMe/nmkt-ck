@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600" role="img" aria-label="So sánh slide thuyết trình nhiều chữ (Don't) và slide trực quan (Do)">
+  <rect width="960" height="600" fill="#f8fafc" rx="16"/>
+
+  <!-- Left Card: Don't -->
+  <rect x="32" y="32" width="434" height="536" rx="14" fill="#ffffff" stroke="#fecaca" stroke-width="2.5"/>
+  <rect x="32" y="32" width="434" height="54" rx="14" fill="#fef2f2"/>
+  <rect x="32" y="70" width="434" height="16" fill="#fef2f2"/>
+  <circle cx="64" cy="59" r="14" fill="#dc2626"/>
+  <path d="M 59 54 L 69 64 M 69 54 L 59 64" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+  <text x="90" y="65" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="800" fill="#991b1b">KHÔNG NÊN (Don't)</text>
+
+  <!-- Bad Slide Frame -->
+  <rect x="54" y="106" width="390" height="310" rx="8" fill="#1e3a8a" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="249" y="135" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="700" fill="#fde047">Hệ thống tưới cây tự động (Chép nguyên đoạn)</text>
+  <rect x="70" y="152" width="358" height="10" rx="2" fill="#cbd5e1" opacity="0.85"/>
+  <rect x="70" y="170" width="348" height="10" rx="2" fill="#cbd5e1" opacity="0.85"/>
+  <rect x="70" y="188" width="356" height="10" rx="2" fill="#cbd5e1" opacity="0.85"/>
+  <rect x="70" y="206" width="340" height="10" rx="2" fill="#cbd5e1" opacity="0.85"/>
+  <rect x="70" y="224" width="354" height="10" rx="2" fill="#cbd5e1" opacity="0.85"/>
+  <rect x="70" y="242" width="350" height="10" rx="2" fill="#cbd5e1" opacity="0.85"/>
+  <rect x="70" y="260" width="332" height="10" rx="2" fill="#cbd5e1" opacity="0.85"/>
+  <rect x="70" y="278" width="356" height="10" rx="2" fill="#cbd5e1" opacity="0.85"/>
+  <rect x="70" y="296" width="342" height="10" rx="2" fill="#cbd5e1" opacity="0.85"/>
+  <rect x="70" y="314" width="350" height="10" rx="2" fill="#cbd5e1" opacity="0.85"/>
+  <rect x="70" y="332" width="320" height="10" rx="2" fill="#cbd5e1" opacity="0.85"/>
+  <rect x="70" y="350" width="354" height="10" rx="2" fill="#cbd5e1" opacity="0.85"/>
+  <rect x="70" y="368" width="290" height="10" rx="2" fill="#cbd5e1" opacity="0.85"/>
+  <rect x="70" y="388" width="220" height="8" rx="2" fill="#f472b6" opacity="0.9"/>
+
+  <text x="54" y="452" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" fill="#991b1b">• Tường chữ dày đặc</text>
+  <text x="54" y="478" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" fill="#475569">Người nghe phải đọc từng dòng thay vì nghe diễn giả.</text>
+  <text x="54" y="510" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" fill="#991b1b">• Thiếu điểm nhấn thị giác</text>
+  <text x="54" y="536" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" fill="#475569">Chữ nhỏ, nhiều màu chói, không có sơ đồ hay biểu đồ.</text>
+
+  <!-- Right Card: Do -->
+  <rect x="494" y="32" width="434" height="536" rx="14" fill="#ffffff" stroke="#a7f3d0" stroke-width="2.5"/>
+  <rect x="494" y="32" width="434" height="54" rx="14" fill="#ecfdf5"/>
+  <rect x="494" y="70" width="434" height="16" fill="#ecfdf5"/>
+  <circle cx="526" cy="59" r="14" fill="#059669"/>
+  <path d="M 520 59 L 525 64 L 533 54" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="552" y="65" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="800" fill="#065f46">NÊN LÀM (Do)</text>
+
+  <!-- Good Slide Frame -->
+  <rect x="516" y="106" width="390" height="310" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <rect x="516" y="106" width="390" height="44" rx="8" fill="#0f172a"/>
+  <rect x="516" y="138" width="390" height="12" fill="#0f172a"/>
+  <text x="536" y="134" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="800" fill="#ffffff">Hệ thống tưới cây tự động</text>
+
+  <!-- Left bullets (6x7 rule) -->
+  <circle cx="542" cy="186" r="4.5" fill="#2563eb"/>
+  <text x="556" y="191" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" fill="#0f172a">Đo độ ẩm đất liên tục</text>
+  <circle cx="542" cy="226" r="4.5" fill="#2563eb"/>
+  <text x="556" y="231" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" fill="#0f172a">So sánh ngưỡng cài đặt</text>
+  <circle cx="542" cy="266" r="4.5" fill="#2563eb"/>
+  <text x="556" y="271" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" fill="#0f172a">Tự động bật / tắt máy bơm</text>
+  <circle cx="542" cy="306" r="4.5" fill="#2563eb"/>
+  <text x="556" y="311" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" fill="#0f172a">Cảnh báo qua Wi-Fi 2,4 GHz</text>
+
+  <!-- Right mini chart on slide -->
+  <rect x="752" y="172" width="134" height="196" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="819" y="194" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11.5" font-weight="700" fill="#334155">Độ ẩm (%)</text>
+  <line x1="772" y1="332" x2="868" y2="332" stroke="#64748b" stroke-width="1.5"/>
+  <rect x="778" y="246" width="18" height="86" rx="3" fill="#3b82f6"/>
+  <rect x="802" y="276" width="18" height="56" rx="3" fill="#60a5fa"/>
+  <rect x="826" y="294" width="18" height="38" rx="3" fill="#f59e0b"/>
+  <rect x="850" y="256" width="18" height="76" rx="3" fill="#10b981"/>
+  <text x="787" y="348" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#64748b">6h</text>
+  <text x="811" y="348" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#64748b">9h</text>
+  <text x="835" y="348" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#64748b">12h</text>
+  <text x="859" y="348" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#64748b">15h</text>
+
+  <text x="536" y="396" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#64748b">Quy luật 6 × 7 · Nguồn 12 V · Bơm 2 A</text>
+
+  <text x="516" y="452" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" fill="#065f46">• Cô đọng theo quy luật 6 × 7</text>
+  <text x="516" y="478" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" fill="#475569">Mỗi slide tập trung 1 ý chính bằng từ khóa ngắn gọn.</text>
+  <text x="516" y="510" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" fill="#065f46">• Tương phản rõ &amp; Minh họa có mục đích</text>
+  <text x="516" y="536" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" fill="#475569">Biểu đồ gắn nhãn đầy đủ giúp người nghe dễ theo dõi.</text>
+</svg>

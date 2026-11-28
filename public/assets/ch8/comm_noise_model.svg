@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600" role="img" aria-label="Mô hình giao tiếp với Người gửi, Kênh giao tiếp, Người nhận, Phản hồi và Nhiễu">
+  <rect width="960" height="600" fill="#f8fafc" rx="16"/>
+  <rect x="24" y="24" width="912" height="552" fill="#ffffff" stroke="#e2e8f0" stroke-width="2" rx="12"/>
+
+  <text x="480" y="76" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="800" fill="#0f172a">MÔ HÌNH GIAO TIẾP &amp; YẾU TỐ NHIỄU</text>
+  <text x="480" y="106" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#64748b">Tương tác giữa Người gửi, Kênh truyền, Người nhận và tác động làm sai lệch thông điệp</text>
+
+  <!-- Noise Box Top -->
+  <rect x="310" y="138" width="340" height="84" rx="12" fill="#fef2f2" stroke="#fca5a5" stroke-width="2"/>
+  <text x="480" y="168" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="800" fill="#b91c1c">⚡ NHIỄU (NOISE)</text>
+  <text x="480" y="191" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" fill="#7f1d1d">Tiếng ồn công trường · Đường truyền kém</text>
+  <text x="480" y="209" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" fill="#7f1d1d">Thuật ngữ phức tạp · Thiếu tập trung</text>
+
+  <!-- Noise arrows down -->
+  <path d="M 480 226 L 480 278" stroke="#ef4444" stroke-width="2.5" stroke-dasharray="6 4"/>
+  <polygon points="474,274 480,286 486,274" fill="#ef4444"/>
+
+  <!-- Sender -->
+  <rect x="64" y="288" width="216" height="132" rx="14" fill="#eff6ff" stroke="#3b82f6" stroke-width="2.5"/>
+  <text x="172" y="330" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="19" font-weight="800" fill="#1e3a8a">NGƯỜI GỬI</text>
+  <text x="172" y="356" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#1e40af">Khởi tạo ý tưởng</text>
+  <text x="172" y="376" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#1e40af">Mã hóa thông điệp rõ ràng</text>
+  <text x="172" y="396" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#1e40af">Lựa chọn kênh phù hợp</text>
+
+  <!-- Arrow Sender -> Channel -->
+  <path d="M 284 354 L 336 354" stroke="#1e293b" stroke-width="3"/>
+  <polygon points="332,347 346,354 332,361" fill="#1e293b"/>
+
+  <!-- Channel -->
+  <rect x="348" y="288" width="264" height="132" rx="14" fill="#f8fafc" stroke="#475569" stroke-width="2.5"/>
+  <text x="480" y="328" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="800" fill="#0f172a">CÁC KÊNH GIAO TIẾP</text>
+  <rect x="372" y="344" width="102" height="28" rx="6" fill="#e2e8f0"/>
+  <text x="423" y="363" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" font-weight="600" fill="#1e293b">Trực tiếp</text>
+  <rect x="486" y="344" width="102" height="28" rx="6" fill="#e2e8f0"/>
+  <text x="537" y="363" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" font-weight="600" fill="#1e293b">Email / Thư</text>
+  <rect x="372" y="380" width="102" height="28" rx="6" fill="#e2e8f0"/>
+  <text x="423" y="399" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" font-weight="600" fill="#1e293b">Bản vẽ / Sơ đồ</text>
+  <rect x="486" y="380" width="102" height="28" rx="6" fill="#e2e8f0"/>
+  <text x="537" y="399" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" font-weight="600" fill="#1e293b">Báo cáo / Họp</text>
+
+  <!-- Arrow Channel -> Receiver -->
+  <path d="M 616 354 L 668 354" stroke="#1e293b" stroke-width="3"/>
+  <polygon points="664,347 678,354 664,361" fill="#1e293b"/>
+
+  <!-- Receiver -->
+  <rect x="680" y="288" width="216" height="132" rx="14" fill="#ecfdf5" stroke="#10b981" stroke-width="2.5"/>
+  <text x="788" y="330" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="19" font-weight="800" fill="#065f46">NGƯỜI NHẬN</text>
+  <text x="788" y="356" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#047857">Lắng nghe &amp; Tiếp nhận</text>
+  <text x="788" y="376" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#047857">Giải mã thông điệp</text>
+  <text x="788" y="396" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#047857">Xác nhận cách hiểu</text>
+
+  <!-- Feedback Loop -->
+  <path d="M 788 424 L 788 492 Q 788 510 770 510 L 190 510 Q 172 510 172 492 L 172 432" fill="none" stroke="#059669" stroke-width="3"/>
+  <polygon points="165,436 172,422 179,436" fill="#059669"/>
+  <rect x="330" y="486" width="300" height="44" rx="22" fill="#059669"/>
+  <text x="480" y="513" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="800" fill="#ffffff">PHẢN HỒI (FEEDBACK)</text>
+</svg>

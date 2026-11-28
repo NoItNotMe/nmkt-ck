@@ -46,12 +46,13 @@ test('parseReferencePostIdFromHash and buildReferencePostHash handle per-article
   assert.equal(parseReferencePostIdFromHash('#trang-chu'), null);
 });
 
-test('parseReferenceChapterFromHash and buildReferenceChapterHash handle Chương 1–10 routes', () => {
+test('parseReferenceChapterFromHash and buildReferenceChapterHash handle Chương 1–9 routes', () => {
   assert.equal(buildReferenceChapterHash(1), '#tham-khao/chuong/1');
-  assert.equal(buildReferenceChapterHash(10), '#tham-khao/chuong/10');
+  assert.equal(buildReferenceChapterHash(9), '#tham-khao/chuong/9');
   assert.equal(parseReferenceChapterFromHash('#tham-khao/chuong/1'), 1);
-  assert.equal(parseReferenceChapterFromHash('#tham-khao/chuong/10'), 10);
+  assert.equal(parseReferenceChapterFromHash('#tham-khao/chuong/9'), 9);
   assert.equal(parseReferenceChapterFromHash('#tham-khao/chuong/0'), null);
+  assert.equal(parseReferenceChapterFromHash('#tham-khao/chuong/10'), null);
   assert.equal(parseReferenceChapterFromHash('#tham-khao/chuong/11'), null);
   assert.equal(parseReferenceChapterFromHash('#tham-khao/featured-1'), null);
 });

@@ -25,8 +25,6 @@ interface ReferenceArticlePageProps {
   comments: ReferenceComment[];
   commentCount: number;
   focusCommentsOnMount: boolean;
-  hasFailedImage: boolean;
-  onImageError: () => void;
   onBack: () => void;
   onToggleLike: () => void;
   onSubmitComment: (authorName: string, text: string) => boolean;
@@ -39,8 +37,6 @@ export function ReferenceArticlePage({
   comments,
   commentCount,
   focusCommentsOnMount,
-  hasFailedImage,
-  onImageError,
   onBack,
   onToggleLike,
   onSubmitComment,
@@ -328,21 +324,14 @@ export function ReferenceArticlePage({
           : 'bg-slate-100'
       }`}
     >
-      {hasFailedImage ? (
-        <div className="flex aspect-[16/9] w-full items-center justify-center bg-slate-100 p-6 text-center text-sm text-slate-500">
-          {post.imageLabel}
-        </div>
-      ) : (
-        <img
-          src={post.imageSrc}
-          alt={post.imageAlt}
-          referrerPolicy="no-referrer"
-          onError={onImageError}
-          className={`aspect-[16/9] w-full ${
-            post.imageFit === 'contain' ? 'object-contain p-2' : 'object-cover'
-          }`}
-        />
-      )}
+      <img
+        src={post.imageSrc}
+        alt={post.imageAlt}
+        referrerPolicy="no-referrer"
+        className={`aspect-[16/9] w-full ${
+          post.imageFit === 'contain' ? 'object-contain p-2' : 'object-cover'
+        }`}
+      />
     </div>
   );
 

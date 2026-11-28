@@ -42,7 +42,6 @@ export function ReferencePage({
   const [activeFeaturedIndex, setActiveFeaturedIndex] = useState(0);
   const [focusCommentsOnOpen, setFocusCommentsOnOpen] = useState(false);
   const [isGridExpanded, setIsGridExpanded] = useState(false);
-  const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
   const [engagementMap, setEngagementMap] = useState<EngagementMap>(() =>
     typeof window !== 'undefined' ? loadEngagementMap(window.localStorage) : {}
   );
@@ -79,10 +78,6 @@ export function ReferencePage({
     setActiveFeaturedIndex((prev) =>
       stepReferenceIndex(prev, 1, featuredPosts.length)
     );
-  }
-
-  function markImageFailed(postId: string) {
-    setFailedImages((prev) => ({ ...prev, [postId]: true }));
   }
 
   function openArticlePage(post: ReferencePost, jumpToComments = false) {
@@ -132,8 +127,6 @@ export function ReferencePage({
         comments={activeEngagement.comments}
         commentCount={activeEngagement.commentCount}
         focusCommentsOnMount={focusCommentsOnOpen}
-        hasFailedImage={Boolean(failedImages[activePost.id])}
-        onImageError={() => markImageFailed(activePost.id)}
         onBack={onBackToList}
         onToggleLike={() => handleToggleLike(activePost)}
         onSubmitComment={(authorName, text) =>
@@ -148,8 +141,6 @@ export function ReferencePage({
       <ReferenceChapterPage
         chapterNumber={selectedChapter}
         engagementMap={engagementMap}
-        failedImages={failedImages}
-        onImageError={markImageFailed}
         onOpenPost={openArticlePage}
         onSelectChapter={onOpenChapter}
         onBackToList={onBackToList}
@@ -159,246 +150,188 @@ export function ReferencePage({
   }
 
   return (
-    <section
-      aria-label="Khu vực đọc bài viết tham khảo"
-      className="mx-auto min-h-[calc(100svh_-_3.5rem)] w-full max-w-7xl px-4 py-8 sm:px-8 sm:py-10"
-    >
-      <h1 className="sr-only">Tham khảo</h1>
-
-      <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-12 lg:gap-12">
-        {/* Left/Center Column: 4 Main Featured Articles (< [ Image + 4 Dots ] >) */}
-        <div className="lg:col-span-7">
-          <div className="flex items-center gap-2 sm:gap-3">
-            <button
-              type="button"
-              onClick={handlePrevFeatured}
-              aria-label="Bài báo chính trước"
-              className="flex h-10 w-7 shrink-0 items-center justify-center text-slate-400 transition-colors hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 sm:w-8"
-            >
-              <ChevronLeft className="h-5 w-5" aria-hidden="true" />
-            </button>
-
-            <div
-              className={`relative aspect-[16/10] w-full overflow-hidden ${
-                featuredPost.imageFit === 'contain'
-                  ? 'border border-slate-200/80 bg-white'
-                  : 'bg-slate-100'
-              }`}
-            >
-              <a
-                href={buildReferencePostHash(featuredPost.id)}
-                onClick={(event) => {
-                  event.preventDefault();
-                  openArticlePage(featuredPost, false);
-                }}
-                aria-label={`Đọc bài viết ${featuredPost.title}`}
-                className="group relative block h-full w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-700"
-              >
-                {failedImages[featuredPost.id] ? (
-                  <div className="flex h-full w-full items-center justify-center bg-slate-100 p-6 text-center text-sm text-slate-500">
-                    {featuredPost.imageLabel}
-                  </div>
-                ) : (
-                  <img
-                    src={featuredPost.imageSrc}
-                    alt={featuredPost.imageAlt}
-                    referrerPolicy="no-referrer"
-                    onError={() => markImageFailed(featuredPost.id)}
-                    className={`h-full w-full transition-transform duration-500 group-hover:scale-[1.02] ${
-                      featuredPost.imageFit === 'contain'
-                        ? 'object-contain p-3 pb-8'
-                        : 'object-cover'
-                    }`}
-                  />
-                )}
-                {featuredPost.imageFit === 'contain' ? null : (
-                  <span
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-black/30 to-transparent"
-                  />
-                )}
-              </a>
-
-              {/* 4 Minimal Pagination Dots inside bottom of image */}
-              <div
-                role="tablist"
-                aria-label="Chọn bài báo chính"
-                className="absolute bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-2"
-              >
-                {featuredPosts.map((post, index) => {
-                  const isActive = index === activeFeaturedIndex;
-                  const isLightBg = featuredPost.imageFit === 'contain';
-                  return (
-                    <button
-                      key={post.id}
-                      type="button"
-                      role="tab"
-                      aria-selected={isActive}
-                      aria-label={`Chuyển đến ${post.title}`}
-                      onClick={() => setActiveFeaturedIndex(index)}
-                      className={`h-2 w-2 rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 ${
-                        isLightBg
-                          ? `focus-visible:ring-blue-700 ${
-                              isActive
-                                ? 'scale-110 bg-slate-900'
-                                : 'bg-slate-400/75 hover:bg-slate-600'
-                            }`
-                          : `focus-visible:ring-white ${
-                              isActive
-                                ? 'scale-110 bg-white'
-                                : 'bg-white/55 hover:bg-white/85'
-                            }`
-                      }`}
-                    />
-                  );
-                })}
-              </div>
+    <div className="mx-auto min-h-[calc(100svh_-_3.5rem)] w-full max-w-7xl px-4 py-8 sm:px-8 sm:py-10">
+      {/* Top 2-Column Split: Spotlight Carousel (Left) + Sidebar Posts (Right) */}
+      <div className="grid grid-cols-1 items-stretch gap-8 lg:grid-cols-12">
+        {/* Left: Featured Spotlight Carousel (8 cols) */}
+        <section
+          aria-labelledby="featured-spotlight-heading"
+          className="flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-xs lg:col-span-8 sm:p-8"
+        >
+          <div>
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3">
+              <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                {featuredPost.detailCategory ?? featuredPost.category}
+              </span>
+              <span className="bg-slate-900 px-2 py-0.5 text-[11px] font-bold uppercase tracking-widest text-yellow-300">
+                Tiêu điểm
+              </span>
             </div>
 
-            <button
-              type="button"
-              onClick={handleNextFeatured}
-              aria-label="Bài báo chính tiếp theo"
-              className="flex h-10 w-7 shrink-0 items-center justify-center text-slate-400 transition-colors hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 sm:w-8"
+            <h2
+              id="featured-spotlight-heading"
+              className="mt-3 text-balance font-['Playfair_Display',Georgia,serif] text-2xl font-bold leading-tight tracking-tight text-slate-900 sm:text-3xl"
             >
-              <ChevronRight className="h-5 w-5" aria-hidden="true" />
-            </button>
+              {featuredPost.title}
+            </h2>
+
+            <p className="mt-2.5 text-sm leading-relaxed text-slate-600 sm:text-base">
+              {featuredPost.sapo}
+            </p>
           </div>
 
-          {/* Minimalist Text Block directly beneath Featured Image (with category, no borders, no author/date) */}
-          <div className="mt-4 px-9 sm:px-11">
-            <span className="mb-1.5 block text-xs font-medium text-slate-500">
-              {featuredPost.category}
-            </span>
-
+          <div className="mt-6 flex flex-col gap-6">
             <a
               href={buildReferencePostHash(featuredPost.id)}
               onClick={(event) => {
                 event.preventDefault();
                 openArticlePage(featuredPost, false);
               }}
-              className="block text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700"
+              aria-label={`Đọc bài viết ${featuredPost.title}`}
+              className="group relative block h-full w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-700"
             >
-              <h2 className="text-balance text-2xl font-bold leading-snug tracking-tight text-slate-900 transition-colors hover:text-blue-700 sm:text-3xl">
-                {featuredPost.title}
-              </h2>
+              <img
+                src={featuredPost.imageSrc}
+                alt={featuredPost.imageAlt}
+                referrerPolicy="no-referrer"
+                className={`h-full w-full transition-transform duration-500 group-hover:scale-[1.02] ${
+                  featuredPost.imageFit === 'contain'
+                    ? 'object-contain p-3 pb-8'
+                    : 'object-cover'
+                }`}
+              />
+              {featuredPost.imageFit === 'contain' ? null : (
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-black/30 to-transparent"
+                />
+              )}
             </a>
 
-            <p className="mt-2.5 text-sm leading-relaxed text-slate-600 sm:text-[15px]">
-              {featuredPost.sapo}
-            </p>
+            {/* 4 Minimal Pagination Dots inside bottom of image */}
+            <div
+              role="tablist"
+              aria-label="Chọn bài báo chính"
+              className="flex items-center justify-between border-t border-slate-100 pt-4"
+            >
+              <div className="flex items-center gap-1.5" role="tablist">
+                {featuredPosts.map((post, idx) => {
+                  const isActive = idx === activeFeaturedIndex;
+                  return (
+                    <button
+                      key={post.id}
+                      type="button"
+                      role="tab"
+                      aria-selected={isActive}
+                      aria-label={`Chuyển đến tiêu điểm ${idx + 1}`}
+                      onClick={() => setActiveFeaturedIndex(idx)}
+                      className={`h-2 rounded-full transition-all ${
+                        isActive
+                          ? 'w-8 bg-slate-900'
+                          : 'w-2 bg-slate-300 hover:bg-slate-400'
+                      }`}
+                    />
+                  );
+                })}
+              </div>
 
-            {/* Directly under Sapo: reading minutes + Like & Comment actions */}
-            <div className="mt-3 flex flex-wrap items-center gap-5 text-xs text-slate-500">
-              <span>{featuredPost.readTime}</span>
-
-              <button
-                type="button"
-                onClick={() => handleToggleLike(featuredPost)}
-                aria-pressed={featuredEngagement.isLiked}
-                aria-label={`Thích bài viết (${featuredEngagement.likeCount} lượt thích)`}
-                className={`inline-flex items-center gap-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 ${
-                  featuredEngagement.isLiked
-                    ? 'font-medium text-rose-600'
-                    : 'text-slate-500 hover:text-slate-900'
-                }`}
-              >
-                <Heart
-                  className={`h-3.5 w-3.5 ${
-                    featuredEngagement.isLiked ? 'fill-rose-600 text-rose-600' : ''
-                  }`}
-                  aria-hidden="true"
-                />
-                <span>{featuredEngagement.likeCount}</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => openArticlePage(featuredPost, true)}
-                aria-label={`Bình luận bài viết (${featuredEngagement.commentCount} bình luận)`}
-                className="inline-flex items-center gap-1.5 text-slate-500 transition-colors hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700"
-              >
-                <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" />
-                <span>{featuredEngagement.commentCount}</span>
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handlePrevFeatured}
+                  aria-label="Tiêu điểm trước"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-300 bg-white text-slate-700 transition-colors hover:border-slate-900 hover:bg-slate-50"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={handleNextFeatured}
+                  aria-label="Tiêu điểm tiếp theo"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-300 bg-white text-slate-700 transition-colors hover:border-slate-900 hover:bg-slate-50"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* Right Column: Exactly 5 Chapter Articles (Chương 1..5) */}
+        {/* Right: Sidebar Posts (4 cols) */}
         <aside
-          aria-label="Các bài báo khác"
-          className="flex flex-col gap-5 lg:col-span-5"
+          aria-label="Bài viết bên lề"
+          className="flex flex-col gap-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-xs lg:col-span-4"
         >
-          {sidebarPosts.map((post) => {
-            const stats = getEngagementForPost(
-              engagementMap,
-              post,
-              VISITOR_ENGAGEMENT_ID
-            );
-            return (
-              <a
-                key={post.id}
-                href={buildReferencePostHash(post.id)}
-                onClick={(event) => {
-                  event.preventDefault();
-                  openArticlePage(post, false);
-                }}
-                className="group flex w-full items-start gap-4 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700"
-              >
-                <div
-                  className={`aspect-[16/10] w-32 shrink-0 overflow-hidden sm:w-36 ${
-                    post.imageFit === 'contain'
-                      ? 'border border-slate-200/80 bg-white'
-                      : 'bg-slate-100'
-                  }`}
+          <div className="border-b border-slate-100 pb-3">
+            <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900">
+              Góc nhìn chuyên sâu
+            </h2>
+          </div>
+
+          <div className="flex flex-col divide-y divide-slate-100">
+            {sidebarPosts.map((post) => {
+              const stats = getEngagementForPost(
+                engagementMap,
+                post,
+                VISITOR_ENGAGEMENT_ID
+              );
+              return (
+                <a
+                  key={post.id}
+                  href={buildReferencePostHash(post.id)}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    openArticlePage(post, false);
+                  }}
+                  className="group flex w-full items-start gap-4 py-4 text-left first:pt-0 last:pb-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700"
                 >
-                  {failedImages[post.id] ? (
-                    <div className="flex h-full w-full items-center justify-center p-2 text-center text-[11px] text-slate-500">
-                      {post.imageLabel}
-                    </div>
-                  ) : (
+                  <div
+                    className={`aspect-[16/10] w-32 shrink-0 overflow-hidden sm:w-36 ${
+                      post.imageFit === 'contain'
+                        ? 'border border-slate-200/80 bg-white'
+                        : 'bg-slate-100'
+                    }`}
+                  >
                     <img
                       src={post.imageSrc}
                       alt={post.imageAlt}
                       referrerPolicy="no-referrer"
-                      onError={() => markImageFailed(post.id)}
                       className={`h-full w-full transition-transform duration-300 group-hover:scale-[1.03] ${
                         post.imageFit === 'contain'
                           ? 'object-contain p-1'
                           : 'object-cover'
                       }`}
                     />
-                  )}
-                </div>
-
-                <div className="min-w-0 flex-1">
-                  <span className="block text-[11px] font-medium text-slate-500">
-                    {post.category}
-                  </span>
-                  <h3 className="mt-1 line-clamp-2 text-sm font-bold leading-snug text-slate-900 transition-colors group-hover:text-blue-700 sm:text-[15px]">
-                    {post.title}
-                  </h3>
-                  <div className="mt-1.5 flex items-center gap-3 text-[11px] text-slate-400">
-                    <span>{post.readTime}</span>
-                    <span className="inline-flex items-center gap-1">
-                      <Heart
-                        className={`h-3 w-3 ${
-                          stats.isLiked ? 'fill-rose-600 text-rose-600' : ''
-                        }`}
-                        aria-hidden="true"
-                      />
-                      {stats.likeCount}
-                    </span>
-                    <span className="inline-flex items-center gap-1">
-                      <MessageCircle className="h-3 w-3" aria-hidden="true" />
-                      {stats.commentCount}
-                    </span>
                   </div>
-                </div>
-              </a>
-            );
-          })}
+
+                  <div className="min-w-0 flex-1">
+                    <span className="block text-[11px] font-medium text-slate-500">
+                      {post.category}
+                    </span>
+                    <h3 className="mt-1 line-clamp-2 text-sm font-bold leading-snug text-slate-900 transition-colors group-hover:text-blue-700 sm:text-[15px]">
+                      {post.title}
+                    </h3>
+                    <div className="mt-1.5 flex items-center gap-3 text-[11px] text-slate-400">
+                      <span>{post.readTime}</span>
+                      <span className="inline-flex items-center gap-1">
+                        <Heart
+                          className={`h-3 w-3 ${
+                            stats.isLiked ? 'fill-rose-600 text-rose-600' : ''
+                          }`}
+                          aria-hidden="true"
+                        />
+                        {stats.likeCount}
+                      </span>
+                      <span className="inline-flex items-center gap-1">
+                        <MessageCircle className="h-3 w-3" aria-hidden="true" />
+                        {stats.commentCount}
+                      </span>
+                    </div>
+                  </div>
+                </a>
+              );
+            })}
+          </div>
         </aside>
       </div>
 
@@ -439,23 +372,16 @@ export function ReferencePage({
                         : 'bg-slate-100'
                     }`}
                   >
-                    {failedImages[post.id] ? (
-                      <div className="flex h-full w-full items-center justify-center p-3 text-center text-xs text-slate-500">
-                        {post.imageLabel}
-                      </div>
-                    ) : (
-                      <img
-                        src={post.imageSrc}
-                        alt={post.imageAlt}
-                        referrerPolicy="no-referrer"
-                        onError={() => markImageFailed(post.id)}
-                        className={`h-full w-full transition-transform duration-300 group-hover:scale-[1.03] ${
-                          post.imageFit === 'contain'
-                            ? 'object-contain p-1.5'
-                            : 'object-cover'
-                        }`}
-                      />
-                    )}
+                    <img
+                      src={post.imageSrc}
+                      alt={post.imageAlt}
+                      referrerPolicy="no-referrer"
+                      className={`h-full w-full transition-transform duration-300 group-hover:scale-[1.03] ${
+                        post.imageFit === 'contain'
+                          ? 'object-contain p-1.5'
+                          : 'object-cover'
+                      }`}
+                    />
                   </div>
 
                   <span className="mt-3 block text-xs font-medium text-slate-500">
@@ -464,40 +390,45 @@ export function ReferencePage({
                   <h3 className="mt-1.5 line-clamp-3 text-base font-bold leading-snug text-slate-900 transition-colors group-hover:text-blue-700">
                     {post.title}
                   </h3>
-                  <div className="mt-2.5 flex items-center gap-3 text-xs text-slate-400">
+                  <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-slate-600">
+                    {post.sapo}
+                  </p>
+                  <div className="mt-3 flex items-center justify-between text-xs text-slate-400">
                     <span>{post.readTime}</span>
-                    <span className="inline-flex items-center gap-1">
-                      <Heart
-                        className={`h-3 w-3 ${
-                          stats.isLiked ? 'fill-rose-600 text-rose-600' : ''
-                        }`}
-                        aria-hidden="true"
-                      />
-                      {stats.likeCount}
-                    </span>
-                    <span className="inline-flex items-center gap-1">
-                      <MessageCircle className="h-3 w-3" aria-hidden="true" />
-                      {stats.commentCount}
-                    </span>
+                    <div className="flex items-center gap-3">
+                      <span className="inline-flex items-center gap-1">
+                        <Heart
+                          className={`h-3.5 w-3.5 ${
+                            stats.isLiked ? 'fill-rose-600 text-rose-600' : ''
+                          }`}
+                          aria-hidden="true"
+                        />
+                        {stats.likeCount}
+                      </span>
+                      <span className="inline-flex items-center gap-1">
+                        <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" />
+                        {stats.commentCount}
+                      </span>
+                    </div>
                   </div>
                 </a>
               );
             })}
           </div>
 
-          {hasMoreGridPosts ? (
-            <div className="mt-10 flex justify-center">
+          {hasMoreGridPosts && (
+            <div className="mt-10 text-center">
               <button
                 type="button"
                 onClick={() => setIsGridExpanded((prev) => !prev)}
-                className="border border-slate-900 bg-white px-5 py-2 text-xs font-medium text-slate-900 transition-colors hover:bg-slate-900 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700"
+                className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-6 py-2.5 text-xs font-semibold text-slate-800 transition-colors hover:border-slate-900 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700"
               >
-                {isGridExpanded ? 'Thu gọn' : 'Xem thêm'}
+                <span>{isGridExpanded ? 'Thu gọn bớt bài viết' : 'Xem thêm bài viết tham khảo'}</span>
               </button>
             </div>
-          ) : null}
+          )}
         </div>
       ) : null}
-    </section>
+    </div>
   );
 }

@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600" role="img" aria-label="Sơ đồ cấu trúc chuẩn của một bản báo cáo kỹ thuật (Recommended Technical Report Structure)">
+  <rect width="960" height="600" fill="#f8fafc" rx="16"/>
+  <rect x="24" y="24" width="912" height="552" fill="#ffffff" stroke="#e2e8f0" stroke-width="2" rx="12"/>
+
+  <text x="480" y="68" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="800" fill="#0f172a">RECOMMENDED TECHNICAL REPORT STRUCTURE</text>
+  <text x="480" y="94" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#64748b">Cấu trúc đề xuất cho báo cáo kỹ thuật: Bắt buộc · Khi cần thiết · Theo yêu cầu</text>
+
+  <!-- Column 1: Mandatory -->
+  <rect x="52" y="122" width="286" height="424" rx="12" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+  <rect x="52" y="122" width="286" height="48" rx="12" fill="#1d4ed8"/>
+  <rect x="52" y="156" width="286" height="14" fill="#1d4ed8"/>
+  <text x="195" y="152" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="800" fill="#ffffff">BẮT BUỘC (Mandatory)</text>
+
+  <rect x="72" y="186" width="246" height="38" rx="8" fill="#ffffff" stroke="#bfdbfe" stroke-width="1.5"/>
+  <text x="195" y="210" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="13.5" font-weight="700" fill="#1e3a8a">1. Cover Page (Trang bìa)</text>
+
+  <rect x="72" y="234" width="246" height="38" rx="8" fill="#ffffff" stroke="#bfdbfe" stroke-width="1.5"/>
+  <text x="195" y="258" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="13.5" font-weight="700" fill="#1e3a8a">2. Table of Contents (Mục lục)</text>
+
+  <rect x="72" y="282" width="246" height="44" rx="8" fill="#ffffff" stroke="#bfdbfe" stroke-width="1.5"/>
+  <text x="195" y="302" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="13.5" font-weight="700" fill="#1e3a8a">3. Objective / Abstract</text>
+  <text x="195" y="319" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11.5" fill="#475569">Tóm tắt mục tiêu &amp; kết quả (150–250 từ)</text>
+
+  <rect x="72" y="336" width="246" height="38" rx="8" fill="#ffffff" stroke="#bfdbfe" stroke-width="1.5"/>
+  <text x="195" y="360" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="13.5" font-weight="700" fill="#1e3a8a">4. Introduction (Giới thiệu)</text>
+
+  <rect x="72" y="384" width="246" height="44" rx="8" fill="#ffffff" stroke="#bfdbfe" stroke-width="1.5"/>
+  <text x="195" y="404" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="13.5" font-weight="700" fill="#1e3a8a">5. Results &amp; Discussion</text>
+  <text x="195" y="421" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11.5" fill="#475569">Số liệu, bảng biểu &amp; phân tích đối chiếu</text>
+
+  <rect x="72" y="438" width="246" height="38" rx="8" fill="#ffffff" stroke="#bfdbfe" stroke-width="1.5"/>
+  <text x="195" y="462" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="13.5" font-weight="700" fill="#1e3a8a">6. Summary / Conclusion</text>
+
+  <rect x="72" y="486" width="246" height="38" rx="8" fill="#ffffff" stroke="#bfdbfe" stroke-width="1.5"/>
+  <text x="195" y="510" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="13.5" font-weight="700" fill="#1e3a8a">7. References (Tài liệu tham khảo)</text>
+
+  <!-- Column 2: If Necessary -->
+  <rect x="362" y="122" width="268" height="276" rx="12" fill="#fffbeb" stroke="#f59e0b" stroke-width="2"/>
+  <rect x="362" y="122" width="268" height="48" rx="12" fill="#d97706"/>
+  <rect x="362" y="156" width="268" height="14" fill="#d97706"/>
+  <text x="496" y="152" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="800" fill="#ffffff">KHI CẦN (If Necessary)</text>
+
+  <rect x="382" y="190" width="228" height="80" rx="8" fill="#ffffff" stroke="#fde68a" stroke-width="1.5"/>
+  <text x="496" y="218" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" fill="#92400e">List of Equipment</text>
+  <text x="496" y="240" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#475569">Danh mục thiết bị, dụng cụ đo</text>
+  <text x="496" y="257" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#475569">&amp; độ chính xác / phạm vi đo</text>
+
+  <rect x="382" y="286" width="228" height="86" rx="8" fill="#ffffff" stroke="#fde68a" stroke-width="1.5"/>
+  <text x="496" y="314" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" fill="#92400e">Procedure / Theory</text>
+  <text x="496" y="336" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#475569">Cơ sở lý thuyết, giả định thiết kế</text>
+  <text x="496" y="353" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#475569">&amp; quy trình bố trí thí nghiệm</text>
+
+  <!-- Column 3: If Required -->
+  <rect x="654" y="122" width="254" height="276" rx="12" fill="#f8fafc" stroke="#64748b" stroke-width="2"/>
+  <rect x="654" y="122" width="254" height="48" rx="12" fill="#334155"/>
+  <rect x="654" y="156" width="254" height="14" fill="#334155"/>
+  <text x="781" y="152" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="800" fill="#ffffff">THEO YÊU CẦU (If Required)</text>
+
+  <rect x="674" y="190" width="214" height="182" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="781" y="226" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="800" fill="#0f172a">Appendix (Phụ lục)</text>
+  <text x="781" y="256" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" fill="#475569">• Bảng số liệu đo thô</text>
+  <text x="781" y="280" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" fill="#475569">• Tính toán chi tiết</text>
+  <text x="781" y="304" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" fill="#475569">• Bản vẽ kỹ thuật phụ trợ</text>
+  <text x="781" y="328" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" fill="#475569">• Thông số nhà sản xuất</text>
+
+  <!-- Note box below Col 2 & 3 -->
+  <rect x="362" y="420" width="546" height="126" rx="12" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="2"/>
+  <text x="386" y="452" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="800" fill="#065f46">NGUYÊN TẮC TRÌNH BÀY BÁO CÁO KỸ THUẬT</text>
+  <text x="386" y="480" font-family="system-ui, -apple-system, sans-serif" font-size="13.5" fill="#047857">1. Ngắn gọn, chính xác, tránh câu dài hoặc thuật ngữ rườm rà không cần thiết.</text>
+  <text x="386" y="504" font-family="system-ui, -apple-system, sans-serif" font-size="13.5" fill="#047857">2. Mọi bảng và biểu đồ đều phải đánh số thống nhất, có tiêu đề, nhãn trục &amp; đơn vị.</text>
+  <text x="386" y="528" font-family="system-ui, -apple-system, sans-serif" font-size="13.5" fill="#047857">3. Kết luận và kiến nghị phải xuất phát trực tiếp từ bằng chứng thực nghiệm.</text>
+</svg>

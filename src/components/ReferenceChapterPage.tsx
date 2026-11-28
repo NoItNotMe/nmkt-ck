@@ -13,8 +13,6 @@ import { ChapterIndexButton } from './ChapterIndexButton';
 interface ReferenceChapterPageProps {
   chapterNumber: number;
   engagementMap: EngagementMap;
-  failedImages: Record<string, boolean>;
-  onImageError: (postId: string) => void;
   onOpenPost: (post: ReferencePost, jumpToComments?: boolean) => void;
   onSelectChapter: (chapterNumber: number) => void;
   onBackToList: () => void;
@@ -24,8 +22,6 @@ interface ReferenceChapterPageProps {
 export function ReferenceChapterPage({
   chapterNumber,
   engagementMap,
-  failedImages,
-  onImageError,
   onOpenPost,
   onSelectChapter,
   onBackToList,
@@ -96,23 +92,16 @@ export function ReferenceChapterPage({
                       : 'bg-slate-100'
                   }`}
                 >
-                  {failedImages[post.id] ? (
-                    <div className="flex h-full w-full items-center justify-center p-3 text-center text-xs text-slate-500">
-                      {post.imageLabel}
-                    </div>
-                  ) : (
-                    <img
-                      src={post.imageSrc}
-                      alt={post.imageAlt}
-                      referrerPolicy="no-referrer"
-                      onError={() => onImageError(post.id)}
-                      className={`h-full w-full transition-transform duration-300 group-hover:scale-[1.03] ${
-                        post.imageFit === 'contain'
-                          ? 'object-contain p-1.5'
-                          : 'object-cover'
-                      }`}
-                    />
-                  )}
+                  <img
+                    src={post.imageSrc}
+                    alt={post.imageAlt}
+                    referrerPolicy="no-referrer"
+                    className={`h-full w-full transition-transform duration-300 group-hover:scale-[1.03] ${
+                      post.imageFit === 'contain'
+                        ? 'object-contain p-1.5'
+                        : 'object-cover'
+                    }`}
+                  />
                 </a>
 
                 <span className="mt-3 block text-xs font-medium text-slate-500">

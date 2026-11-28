@@ -6,6 +6,7 @@ import {
   canOutdentTask,
   computeDurationDays,
   computeEndDateFromDuration,
+  createBlankProjectState,
   createDefaultSettings,
   createEmptyProjectState,
   createSampleProjectState,
@@ -209,4 +210,12 @@ test('.gantt JSON and CSV roundtrip serialization preserves tasks', () => {
   assert.equal(parsedCsv.length, sample.tasks.length);
   assert.equal(parsedCsv[1].dependency, '2FS'.replace('2FS', '')); // task 2 has no dep
   assert.equal(parsedCsv[2].dependency, '2FS');
+});
+
+test('createBlankProjectState starts empty with 0 tasks and roundtrips cleanly', () => {
+  const blank = createBlankProjectState();
+  assert.equal(blank.tasks.length, 0);
+  assert.equal(blank.resources.length, 0);
+  const restored = parseGanttFile(serializeGanttFile(blank));
+  assert.equal(restored.tasks.length, 0);
 });

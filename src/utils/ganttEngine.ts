@@ -461,6 +461,18 @@ export function createEmptyProjectState(): GanttProjectState {
   };
 }
 
+export function createBlankProjectState(): GanttProjectState {
+  const settings = {
+    ...createDefaultSettings(),
+    projectName: 'Dự án mới',
+  };
+  return {
+    tasks: [],
+    resources: [],
+    settings,
+  };
+}
+
 export function hasTaskChildren(
   tasks: readonly GanttTask[],
   taskId: number

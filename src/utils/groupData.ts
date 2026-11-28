@@ -44,29 +44,29 @@ export const PLACEHOLDER_ITEMS: readonly PlaceholderItem[] = [
   {
     id: 'muc-6',
     title: 'Kỹ thuật sáng tạo SCAMPER & 5 Why',
-    subtitle: 'Chương 6: Kỹ năng giải quyết vấn đề và sáng tạo',
+    subtitle: 'Chương 6: Kỹ năng giải quyết vấn đề',
     description:
       'Công cụ kích thích ý tưởng theo 7 hướng SCAMPER, kết hợp bản đồ tư duy và biểu đồ xương cá xác định nguyên nhân gốc rễ.',
   },
   {
     id: 'muc-7',
-    title: 'Quy đổi đơn vị kỹ thuật & Hệ SI',
+    title: 'Quy đổi đơn vị về hệ SI',
     subtitle: 'Chương 7: Cơ sở kỹ thuật',
     description:
-      'Bảng tra cứu và chuyển đổi các đại lượng đo lường chuẩn SI, cùng các công thức tính toán cơ học và mạch điện nền tảng.',
+      'Công cụ tối giản quy đổi nhanh các đại lượng đo lường, biểu thức tích thương, tiền tố và đơn vị tiếng Việt về chuẩn hệ SI.',
   },
   {
     id: 'muc-8',
-    title: 'Chuẩn hóa báo cáo & Thuyết trình',
+    title: 'Chữa slide',
     subtitle: 'Chương 8: Giao tiếp trong kỹ thuật',
     description:
-      'Cấu trúc biểu mẫu chuẩn cho báo cáo kỹ thuật, tiêu chí trực quan hóa slide thuyết trình và quy chuẩn soạn thảo thư tín chuyên nghiệp.',
+      'Tìm và sửa các lỗi thường gặp trên slide thuyết trình kỹ thuật (chữ quá dày, tương phản kém, thiếu nhãn biểu đồ, bố cục rối) và xem quy tắc khắc phục.',
   },
   {
     id: 'muc-9',
-    title: 'Phân tích tình huống đạo đức kỹ sư',
+    title: 'Tình huống đạo đức',
     subtitle: 'Chương 9: Đạo đức nghề nghiệp',
     description:
-      'Bộ tình huống thực tế và câu hỏi phân tích đạo đức kỹ sư: trách nhiệm an toàn cộng đồng, xung đột lợi ích và tính chính trực.',
+      'Mô phỏng 33 tình huống đạo đức kỹ thuật thực tế: đưa ra quyết định và đối chiếu qua 5 phép thử đạo đức cùng quy trình 8 bước giải quyết vấn đề.',
   },
 ] as const;

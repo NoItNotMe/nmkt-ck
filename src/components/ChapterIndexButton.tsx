@@ -73,7 +73,7 @@ export function ChapterIndexButton({
         aria-label="Mục lục các chương"
         aria-expanded={isOpen}
         aria-haspopup="menu"
-        title="Mục lục Chương 1 – Chương 10"
+        title="Mục lục Chương 1 – Chương 9"
         onClick={() => setIsClickOpen((prev) => !prev)}
         className={`flex h-11 w-11 items-center justify-center border bg-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 ${
           isOpen
@@ -87,7 +87,7 @@ export function ChapterIndexButton({
       {isOpen ? (
         <div
           role="menu"
-          aria-label="Chọn chương từ Chương 1 đến Chương 10"
+          aria-label="Chọn chương từ Chương 1 đến Chương 9"
           className={`absolute top-full z-30 w-72 pt-2 sm:w-80 ${
             align === 'right' ? 'right-0' : 'left-1/2 -translate-x-1/2'
           }`}

@@ -76,6 +76,8 @@ async function startServer() {
     }
   });
 
+  app.use(express.static(path.resolve(process.cwd(), 'public')));
+
   if (!isProduction) {
     const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({

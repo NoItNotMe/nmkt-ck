@@ -63,7 +63,7 @@ export function parseReferenceChapterFromHash(hash: string): number | null {
   }
   const raw = trimmed.slice(REFERENCE_CHAPTER_HASH_PREFIX.length).trim();
   const num = Number(raw);
-  if (!Number.isInteger(num) || num < 1 || num > 10) {
+  if (!Number.isInteger(num) || num < 1 || num > 9) {
     return null;
   }
   return num;

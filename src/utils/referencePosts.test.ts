@@ -1,5 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
 import { computeSortedChartRows } from '../components/ArticleBarChartFigure';
 import { getCarouselTrackOffsetPercent } from '../components/ArticleCarouselFigure';
 import {
@@ -15,8 +17,10 @@ import {
   getReferencePostById,
   getReferencePostsByChapter,
   getSidebarReferencePosts,
+  INITIAL_GRID_VISIBLE_COUNT,
   isPlaceholderReferencePost,
   loadEngagementMap,
+  MANDATORY_ALWAYS_VISIBLE_REFERENCE_IDS,
   MANDATORY_FEATURED_REFERENCE_IDS,
   OTHER_REFERENCE_POSTS,
   PAGE_LOAD_REFERENCE_FEED,
@@ -53,13 +57,17 @@ function createMemoryStorage(): Storage {
   };
 }
 
-test('FEATURED_REFERENCE_POSTS has 2 main articles assigned to Chương 3 and Chương 1 and all posts start at 0', () => {
+test('FEATURED_REFERENCE_POSTS has 2 main articles assigned to Chương 2 and Chương 1 and all posts start at 0', () => {
   assert.equal(FEATURED_REFERENCE_POSTS.length, 2);
   assert.equal(
     FEATURED_REFERENCE_POSTS[0].title,
     'Câu chuyện của Dell và Asus, thiết kế và gia công'
   );
-  assert.equal(FEATURED_REFERENCE_POSTS[0].category, 'Chương 3');
+  assert.equal(FEATURED_REFERENCE_POSTS[0].category, 'Chương 2');
+  assert.equal(
+    FEATURED_REFERENCE_POSTS[0].detailCategory,
+    'Chương 2: Thiết kế kỹ thuật'
+  );
   assert.equal(
     FEATURED_REFERENCE_POSTS[0].sourceUrl,
     'https://scashwin.medium.com/the-case-of-dell-and-asus-acac9a35db56'
@@ -77,13 +85,13 @@ test('FEATURED_REFERENCE_POSTS has 2 main articles assigned to Chương 3 and Ch
     FEATURED_REFERENCE_POSTS[1].sourceUrl,
     'https://medium.com/@davidsehyeonbaek/the-great-gui-debate-steve-jobs-bill-gates-and-the-borrowed-innovation-from-xerox-6402e7b654c8'
   );
-  assert.equal(OTHER_REFERENCE_POSTS.length, 53);
+  assert.equal(OTHER_REFERENCE_POSTS.length, 52);
 
   const sidebarPosts = getSidebarReferencePosts();
   const gridPosts = getGridReferencePosts();
   assert.equal(sidebarPosts.length, SIDEBAR_REFERENCE_LIMIT);
   assert.equal(sidebarPosts.length, 5);
-  assert.equal(gridPosts.length, 48);
+  assert.equal(gridPosts.length, 47);
   assert.equal(sidebarPosts[0]?.id, 'other-1');
   assert.equal(sidebarPosts[1]?.id, 'other-inventions');
   assert.equal(sidebarPosts[2]?.id, 'other-minds');
@@ -95,7 +103,7 @@ test('FEATURED_REFERENCE_POSTS has 2 main articles assigned to Chương 3 and Ch
   assert.equal(gridPosts[3]?.id, 'ch2-passion');
   assert.equal(gridPosts[3]?.category, 'Chương 2');
   assert.equal(gridPosts[7]?.id, 'featured-1');
-  assert.equal(gridPosts[7]?.category, 'Chương 3');
+  assert.equal(gridPosts[7]?.category, 'Chương 2');
   assert.equal(gridPosts[8]?.id, 'ch3-learn-how-to-learn');
   assert.equal(gridPosts[15]?.id, 'ch3-exam-and-skills');
   assert.equal(gridPosts[16]?.id, 'ch4-project-management-intro');
@@ -116,9 +124,8 @@ test('FEATURED_REFERENCE_POSTS has 2 main articles assigned to Chương 3 and Ch
   assert.equal(gridPosts[42]?.id, 'ch9-engineering-ethics-intro');
   assert.equal(gridPosts[42]?.category, 'Chương 9');
   assert.equal(gridPosts[46]?.id, 'ch9-workshop-ethics-cases');
-  assert.equal(gridPosts[47]?.category, 'Chương 10');
 
-  assert.equal(REFERENCE_CHAPTERS.length, 10);
+  assert.equal(REFERENCE_CHAPTERS.length, 9);
   assert.equal(
     getReferenceChapterInfo(1).detailLabel,
     'Chương 1: Giới thiệu nhập môn kỹ thuật'
@@ -141,7 +148,7 @@ test('FEATURED_REFERENCE_POSTS has 2 main articles assigned to Chương 3 and Ch
   );
   assert.equal(
     getReferenceChapterInfo(6).detailLabel,
-    'Chương 6: Kỹ năng giải quyết vấn đề và sáng tạo'
+    'Chương 6: Kỹ năng giải quyết vấn đề'
   );
   assert.equal(
     getReferenceChapterInfo(7).detailLabel,
@@ -166,21 +173,26 @@ test('FEATURED_REFERENCE_POSTS has 2 main articles assigned to Chương 3 and Ch
   assert.ok(ch1Posts.some((p) => p.id === 'featured-2'));
 
   const ch2Posts = getReferencePostsByChapter(2);
-  assert.equal(ch2Posts.length, 4);
+  assert.equal(ch2Posts.length, 5);
   assert.deepEqual(
     ch2Posts.map((p) => p.id),
-    ['ch2-passion', 'ch2-system-thinking', 'ch2-frdparrc', 'ch2-ten-steps']
+    [
+      'featured-1',
+      'ch2-passion',
+      'ch2-system-thinking',
+      'ch2-frdparrc',
+      'ch2-ten-steps',
+    ]
   );
   for (const post of ch2Posts) {
     assert.equal(post.detailCategory, 'Chương 2: Thiết kế kỹ thuật');
   }
 
   const ch3Posts = getReferencePostsByChapter(3);
-  assert.equal(ch3Posts.length, 9);
+  assert.equal(ch3Posts.length, 8);
   assert.deepEqual(
     ch3Posts.map((p) => p.id),
     [
-      'featured-1',
       'ch3-learn-how-to-learn',
       'ch3-study-right',
       'ch3-active-reading',
@@ -250,7 +262,7 @@ test('FEATURED_REFERENCE_POSTS has 2 main articles assigned to Chương 3 and Ch
   for (const post of ch6Posts) {
     assert.equal(
       post.detailCategory,
-      'Chương 6: Kỹ năng giải quyết vấn đề và sáng tạo'
+      'Chương 6: Kỹ năng giải quyết vấn đề'
     );
     const tables = post.bodyParagraphs.filter(
       (b) => typeof b !== 'string' && b.type === 'table'
@@ -604,18 +616,18 @@ test('FEATURED_REFERENCE_POSTS has 2 main articles assigned to Chương 3 and Ch
       .map((f) => (typeof f !== 'string' && f.type === 'figure' ? f.src : ''))
   );
   assert.deepEqual(ch8FigureSrcs, [
-    '/assets/aistudio/image_1eb80eae.png',
-    '/assets/aistudio/image_5ccbcaeb.png',
-    '/assets/aistudio/image_fb645565.png',
-    '/assets/aistudio/image_020df29a.png',
-    '/assets/aistudio/image_27a052db.png',
-    '/assets/aistudio/image_7e2e16b9.png',
-    '/assets/aistudio/image_872d8937.png',
-    '/assets/aistudio/image_719860d5.png',
-    '/assets/aistudio/image_a2fc9c17.png',
-    '/assets/aistudio/image_0acabec6.png',
-    '/assets/aistudio/image_502c8c15.png',
-    '/assets/aistudio/image_a221f4b4.png',
+    '/src/assets/images/ch8_comm_workbench_1795862048280.jpg',
+    '/assets/ch8/comm_5_steps.svg',
+    '/assets/ch8/comm_noise_model.svg',
+    '/assets/ch8/comm_process_en.svg',
+    '/assets/ch8/tree_swing_mismatch.svg',
+    '/assets/ch8/slide_dont_do.svg',
+    '/src/assets/images/ch8_public_speaking_1795862048234.jpg',
+    '/assets/ch8/report_structure.svg',
+    '/assets/ch8/listening_stages.svg',
+    '/src/assets/images/ch8_active_listening_team_1795862048086.jpg',
+    '/src/assets/images/ch8_asking_questions_1795862049035.jpg',
+    '/src/assets/images/ch8_email_laptop_1795862050256.jpg',
   ]);
 
   const ch9FigureSrcs = ch9Posts.flatMap((post) =>
@@ -643,7 +655,8 @@ test('FEATURED_REFERENCE_POSTS has 2 main articles assigned to Chương 3 and Ch
   }
 
   assert.equal(findReferencePostById('featured-1')?.id, 'featured-1');
-  assert.equal(findReferencePostById('other-10')?.id, 'other-10');
+  assert.equal(findReferencePostById('other-10'), null);
+  assert.equal(getReferencePostsByChapter(10).length, 0);
   assert.equal(findReferencePostById('nonexistent'), null);
 });
 
@@ -664,7 +677,7 @@ test('stepReferenceIndex wraps smoothly across 4 featured articles', () => {
   assert.equal(stepReferenceIndex(2, -1, 4), 1);
 });
 
-test('createRandomizedReferenceFeed anchors Bill Gates & Steve Jobs (Chương 1) and Dell & Asus (Chương 3) with 2 randomized posts', () => {
+test('createRandomizedReferenceFeed anchors 4 Tiêu điểm articles, 9 always-displayed articles, and randomizes remaining articles in Xem thêm', () => {
   function makeLcg(seed: number) {
     let state = seed >>> 0;
     return () => {
@@ -676,6 +689,19 @@ test('createRandomizedReferenceFeed anchors Bill Gates & Steve Jobs (Chương 1)
   assert.deepEqual(MANDATORY_FEATURED_REFERENCE_IDS, [
     'featured-2',
     'featured-1',
+    'ch3-active-reading',
+    'ch7-si-measurement',
+  ]);
+  assert.deepEqual(MANDATORY_ALWAYS_VISIBLE_REFERENCE_IDS, [
+    'ch2-frdparrc',
+    'ch3-learn-how-to-learn',
+    'ch3-smart-goals',
+    'ch4-project-balance',
+    'ch4-pert-and-gantt',
+    'ch5-communication-conflict',
+    'ch6-scamper-mindmap',
+    'ch6-root-cause-selection',
+    'ch8-active-listening',
   ]);
 
   const feedA = createRandomizedReferenceFeed(ALL_REFERENCE_POSTS, makeLcg(11));
@@ -690,25 +716,27 @@ test('createRandomizedReferenceFeed anchors Bill Gates & Steve Jobs (Chương 1)
     ALL_REFERENCE_POSTS.length
   );
 
-  // Both feedA and feedB must always contain Steve Jobs & Bill Gates (featured-2) and Dell & Asus (featured-1)
-  const feedAFeaturedIds = feedA.featuredPosts.map((p) => p.id);
-  const feedBFeaturedIds = feedB.featuredPosts.map((p) => p.id);
-  assert.ok(
-    feedAFeaturedIds.includes('featured-2'),
-    'Featured posts must include Steve Jobs & Bill Gates'
+  // Tiêu điểm must always be the 4 main articles
+  assert.deepEqual(
+    feedA.featuredPosts.map((p) => p.id),
+    [...MANDATORY_FEATURED_REFERENCE_IDS]
   );
-  assert.ok(
-    feedAFeaturedIds.includes('featured-1'),
-    'Featured posts must include Dell & Asus'
+  assert.deepEqual(
+    feedB.featuredPosts.map((p) => p.id),
+    [...MANDATORY_FEATURED_REFERENCE_IDS]
   );
-  assert.ok(
-    feedBFeaturedIds.includes('featured-2'),
-    'Featured posts in feedB must include Steve Jobs & Bill Gates'
-  );
-  assert.ok(
-    feedBFeaturedIds.includes('featured-1'),
-    'Featured posts in feedB must include Dell & Asus'
-  );
+
+  // Sidebar (5) + initial visible grid (4) must always be the 9 specified articles
+  const initialAlwaysVisibleA = [
+    ...feedA.sidebarPosts,
+    ...feedA.gridPosts.slice(0, INITIAL_GRID_VISIBLE_COUNT),
+  ].map((p) => p.id);
+  const initialAlwaysVisibleB = [
+    ...feedB.sidebarPosts,
+    ...feedB.gridPosts.slice(0, INITIAL_GRID_VISIBLE_COUNT),
+  ].map((p) => p.id);
+  assert.deepEqual(initialAlwaysVisibleA, [...MANDATORY_ALWAYS_VISIBLE_REFERENCE_IDS]);
+  assert.deepEqual(initialAlwaysVisibleB, [...MANDATORY_ALWAYS_VISIBLE_REFERENCE_IDS]);
 
   for (const post of [...feedA.featuredPosts, ...feedA.sidebarPosts]) {
     assert.equal(
@@ -725,20 +753,32 @@ test('createRandomizedReferenceFeed anchors Bill Gates & Steve Jobs (Chương 1)
   ].map((p) => p.id);
   assert.equal(new Set(allIdsA).size, ALL_REFERENCE_POSTS.length);
 
-  // The remaining 2 posts in featured should vary across different seeds
+  // Remaining articles in Xem thêm (after initial 4 grid cards) should shuffle differently across seeds
+  const xemThemIdsA = feedA.gridPosts
+    .slice(INITIAL_GRID_VISIBLE_COUNT)
+    .map((p) => p.id);
+  const xemThemIdsB = feedB.gridPosts
+    .slice(INITIAL_GRID_VISIBLE_COUNT)
+    .map((p) => p.id);
+  assert.equal(xemThemIdsA.length, ALL_REFERENCE_POSTS.length - 13);
   assert.notDeepEqual(
-    feedAFeaturedIds,
-    feedBFeaturedIds,
-    'Different seeds should produce different random slots in featured sets'
+    xemThemIdsA,
+    xemThemIdsB,
+    'Different seeds should randomize remaining articles in Xem thêm'
   );
 
   assert.equal(PAGE_LOAD_REFERENCE_FEED.featuredPosts.length, 4);
   assert.equal(PAGE_LOAD_REFERENCE_FEED.sidebarPosts.length, 5);
-  assert.ok(
-    PAGE_LOAD_REFERENCE_FEED.featuredPosts.some((p) => p.id === 'featured-2')
+  assert.deepEqual(
+    PAGE_LOAD_REFERENCE_FEED.featuredPosts.map((p) => p.id),
+    [...MANDATORY_FEATURED_REFERENCE_IDS]
   );
-  assert.ok(
-    PAGE_LOAD_REFERENCE_FEED.featuredPosts.some((p) => p.id === 'featured-1')
+  assert.deepEqual(
+    [
+      ...PAGE_LOAD_REFERENCE_FEED.sidebarPosts,
+      ...PAGE_LOAD_REFERENCE_FEED.gridPosts.slice(0, INITIAL_GRID_VISIBLE_COUNT),
+    ].map((p) => p.id),
+    [...MANDATORY_ALWAYS_VISIBLE_REFERENCE_IDS]
   );
 });
 
@@ -898,6 +938,39 @@ test('no image is duplicated across distinct articles', () => {
       1,
       `Image ${src} must be unique to one post, found in: ${locations.join(', ')}`
     );
+  }
+});
+
+test('all reference post images exist on disk', () => {
+  const resolveAssetPath = (src: string): string => {
+    if (src.startsWith('/src/')) {
+      return path.resolve(process.cwd(), src.slice(1));
+    }
+    return path.resolve(process.cwd(), 'public', src.replace(/^\/+/, ''));
+  };
+
+  for (const post of ALL_REFERENCE_POSTS) {
+    assert.ok(
+      fs.existsSync(resolveAssetPath(post.imageSrc)),
+      `Missing hero image for ${post.id}: ${post.imageSrc}`
+    );
+    for (const block of post.bodyParagraphs) {
+      if (typeof block !== 'string') {
+        if (block.type === 'figure') {
+          assert.ok(
+            fs.existsSync(resolveAssetPath(block.src)),
+            `Missing figure image for ${post.id}: ${block.src}`
+          );
+        } else if (block.type === 'carousel') {
+          for (const slide of block.slides) {
+            assert.ok(
+              fs.existsSync(resolveAssetPath(slide.src)),
+              `Missing carousel image for ${post.id}: ${slide.src}`
+            );
+          }
+        }
+      }
+    }
   }
 });
 

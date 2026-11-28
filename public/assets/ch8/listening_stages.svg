@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600" role="img" aria-label="Biểu đồ 5 giai đoạn của quá trình lắng nghe (Stages of Listening)">
+  <rect width="960" height="600" fill="#f8fafc" rx="16"/>
+  <rect x="24" y="24" width="912" height="552" fill="#ffffff" stroke="#e2e8f0" stroke-width="2" rx="12"/>
+
+  <text x="480" y="76" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="800" fill="#0f172a">STAGES OF LISTENING · NĂM GIAI ĐOẠN LẮNG NGHE</text>
+  <text x="480" y="106" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#64748b">Lắng nghe chủ động là một quy trình 5 bước liên hoàn, không chỉ là tiếp nhận âm thanh</text>
+
+  <!-- Central Connecting Track -->
+  <line x1="126" y1="264" x2="834" y2="264" stroke="#cbd5e1" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- Stage 1 -->
+  <rect x="48" y="170" width="156" height="230" rx="14" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+  <circle cx="126" cy="212" r="24" fill="#2563eb"/>
+  <text x="126" y="219" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="800" fill="#ffffff">1</text>
+  <text x="126" y="264" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="800" fill="#1e3a8a">Receiving</text>
+  <text x="126" y="286" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" fill="#2563eb">Tiếp nhận</text>
+  <text x="126" y="324" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" fill="#475569">Tập trung đón nhận</text>
+  <text x="126" y="342" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" fill="#475569">trọn vẹn lời nói</text>
+  <text x="126" y="360" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" fill="#475569">&amp; tín hiệu phi ngôn ngữ</text>
+
+  <!-- Stage 2 -->
+  <rect x="224" y="170" width="156" height="230" rx="14" fill="#f0f9ff" stroke="#0ea5e9" stroke-width="2"/>
+  <circle cx="302" cy="212" r="24" fill="#0284c7"/>
+  <text x="302" y="219" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="800" fill="#ffffff">2</text>
+  <text x="302" y="264" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="800" fill="#0c4a6e">Understanding</text>
+  <text x="302" y="286" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" fill="#0284c7">Hiểu</text>
+  <text x="302" y="324" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" fill="#475569">Xác định ý chính</text>
+  <text x="302" y="342" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" fill="#475569">và liên hệ bối cảnh</text>
+  <text x="302" y="360" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" fill="#475569">kỹ thuật liên quan</text>
+
+  <!-- Stage 3 -->
+  <rect x="400" y="170" width="156" height="230" rx="14" fill="#fefce8" stroke="#eab308" stroke-width="2"/>
+  <circle cx="478" cy="212" r="24" fill="#ca8a04"/>
+  <text x="478" y="219" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="800" fill="#ffffff">3</text>
+  <text x="478" y="264" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="800" fill="#713f12">Remembering</text>
+  <text x="478" y="286" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" fill="#a16207">Ghi nhớ</text>
+  <text x="478" y="324" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" fill="#475569">Lưu giữ thông số,</text>
+  <text x="478" y="342" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" fill="#475569">ghi chú đầu việc</text>
+  <text x="478" y="360" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" fill="#475569">&amp; mốc thời hạn</text>
+
+  <!-- Stage 4 -->
+  <rect x="576" y="170" width="156" height="230" rx="14" fill="#fff7ed" stroke="#f97316" stroke-width="2"/>
+  <circle cx="654" cy="212" r="24" fill="#ea580c"/>
+  <text x="654" y="219" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="800" fill="#ffffff">4</text>
+  <text x="654" y="264" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="800" fill="#7c2d12">Evaluating</text>
+  <text x="654" y="286" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" fill="#ea580c">Đánh giá</text>
+  <text x="654" y="324" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" fill="#475569">Xem xét khách quan</text>
+  <text x="654" y="342" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" fill="#475569">bằng chứng &amp; giả định</text>
+  <text x="654" y="360" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" fill="#475569">trước khi kết luận</text>
+
+  <!-- Stage 5 -->
+  <rect x="752" y="170" width="160" height="230" rx="14" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+  <circle cx="832" cy="212" r="24" fill="#059669"/>
+  <text x="832" y="219" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="800" fill="#ffffff">5</text>
+  <text x="832" y="264" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="800" fill="#065f46">Responding</text>
+  <text x="832" y="286" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" fill="#059669">Phản hồi</text>
+  <text x="832" y="324" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" fill="#475569">Diễn giải lại bằng</text>
+  <text x="832" y="342" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" fill="#475569">lời của mình &amp; đặt</text>
+  <text x="832" y="360" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" fill="#475569">câu hỏi xác nhận</text>
+
+  <!-- Bottom summary bar -->
+  <rect x="48" y="438" width="864" height="96" rx="12" fill="#0f172a"/>
+  <text x="480" y="476" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="15.5" font-weight="700" fill="#fde047">Người nghe tốt không phải là người im lặng</text>
+  <text x="480" y="506" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="13.5" fill="#e2e8f0">Ngắt lời sớm dẫn đến hiểu sai; lắng nghe đủ 5 giai đoạn giúp đặt đúng câu hỏi và tiết kiệm thời gian sửa lỗi.</text>
+</svg>

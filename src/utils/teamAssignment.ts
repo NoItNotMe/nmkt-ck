@@ -1,14 +1,10 @@
 export const TEAM_SKILLS: readonly string[] = [
+  'Viết là làm tài liệu',
   'Chuyên môn kỹ thuật',
-  'Lập kế hoạch',
-  'Tổ chức, điều phối',
   'Thuyết trình',
-  'Viết và làm tài liệu',
-  'Giao tiếp, đối thoại',
-  'Ý tưởng sáng tạo',
-  'Lắng nghe, hỗ trợ',
-  'Hòa giải bất đồng',
-  'Kiểm tra chất lượng',
+  'Tổng hợp, thống nhất tài liệu',
+  'Kiểm tra, đánh giá đúng sai',
+  'Tạo báo cáo, slide',
 ] as const;
 
 export type SkillLevel = 0 | 1 | 2;
@@ -233,28 +229,28 @@ export function findWellCoveredSkills(
 export function createDefaultDemoTeam(): TeamMember[] {
   return [
     {
-      id: 'member-me',
-      name: 'Bạn',
+      id: 'member-1',
+      name: 'Vũ Duy Mạnh',
       isMe: true,
-      skills: [2, 1, 0, 0, 2, 1, 2, 1, 0, 1],
+      skills: [2, 2, 1, 1, 0, 1],
     },
     {
       id: 'member-2',
-      name: 'Nguyễn Văn An',
+      name: 'Nguyễn Quang Tiến',
       isMe: false,
-      skills: [1, 2, 2, 1, 1, 2, 0, 1, 2, 0],
+      skills: [1, 2, 2, 1, 2, 0],
     },
     {
       id: 'member-3',
-      name: 'Lê Thị Bích',
+      name: 'Hoàng Ngọc Minh',
       isMe: false,
-      skills: [0, 1, 1, 2, 1, 2, 1, 2, 1, 0],
+      skills: [2, 0, 2, 2, 1, 2],
     },
     {
       id: 'member-4',
-      name: 'Phạm Đức Cường',
+      name: 'Nguyễn Minh Tân',
       isMe: false,
-      skills: [2, 0, 0, 0, 0, 0, 1, 0, 0, 2],
+      skills: [1, 2, 0, 1, 2, 2],
     },
   ];
 }
@@ -267,43 +263,43 @@ export function getRoleRecommendations(
   const roles = [
     {
       roleTitle: 'Trưởng nhóm / Điều phối',
-      roleBadge: 'Lãnh đạo & Tổ chức',
+      roleBadge: 'Tổng hợp & Điều phối',
       roleDescription:
-        'Chịu trách nhiệm phân công nhiệm vụ, theo dõi tiến độ chung và giữ vững sự đồng thuận trong nhóm.',
-      keySkills: ['Tổ chức, điều phối', 'Lập kế hoạch', 'Hòa giải bất đồng'],
-      skillIndices: [2, 1, 8],
+        'Chịu trách nhiệm tổng hợp, thống nhất tài liệu, kiểm tra tiến độ và điều phối chung.',
+      keySkills: ['Tổng hợp, thống nhất tài liệu', 'Kiểm tra, đánh giá đúng sai', 'Thuyết trình'],
+      skillIndices: [3, 4, 2],
     },
     {
       roleTitle: 'Trưởng Kỹ thuật / Nghiên cứu',
       roleBadge: 'Chuyên môn cốt lõi',
       roleDescription:
-        'Phụ trách giải pháp kỹ thuật, kiểm định tính khả thi và kiểm soát chất lượng kỹ thuật của sản phẩm.',
-      keySkills: ['Chuyên môn kỹ thuật', 'Kiểm tra chất lượng', 'Ý tưởng sáng tạo'],
-      skillIndices: [0, 9, 6],
+        'Phụ trách giải pháp kỹ thuật, kiểm định tính khả thi và đánh giá đúng sai về mặt chuyên môn.',
+      keySkills: ['Chuyên môn kỹ thuật', 'Kiểm tra, đánh giá đúng sai', 'Viết là làm tài liệu'],
+      skillIndices: [1, 4, 0],
     },
     {
-      roleTitle: 'Thư ký / Quản lý Hồ sơ & Báo cáo',
-      roleBadge: 'Tài liệu & Tiến độ',
+      roleTitle: 'Thư ký / Quản lý Hồ sơ & Tài liệu',
+      roleBadge: 'Tài liệu & Tổng hợp',
       roleDescription:
-        'Tổng hợp biên bản họp, soạn thảo báo cáo kỹ thuật và kiểm tra chuẩn hóa các biểu mẫu nộp đồ án.',
-      keySkills: ['Viết và làm tài liệu', 'Lập kế hoạch', 'Kiểm tra chất lượng'],
-      skillIndices: [4, 1, 9],
+        'Biên soạn tài liệu, tổng hợp thống nhất nội dung giữa các thành viên và chuẩn hóa báo cáo.',
+      keySkills: ['Viết là làm tài liệu', 'Tổng hợp, thống nhất tài liệu', 'Tạo báo cáo, slide'],
+      skillIndices: [0, 3, 5],
     },
     {
-      roleTitle: 'Đại diện Thuyết trình & Đối ngoại',
-      roleBadge: 'Giao tiếp & Bảo vệ đồ án',
+      roleTitle: 'Đại diện Thuyết trình & Trình chiếu',
+      roleBadge: 'Trình bày & Bảo vệ đồ án',
       roleDescription:
-        'Thiết kế bài trình chiếu, bảo vệ đồ án trước hội đồng và kết nối thông tin với giảng viên hướng dẫn.',
-      keySkills: ['Thuyết trình', 'Giao tiếp, đối thoại', 'Viết và làm tài liệu'],
-      skillIndices: [3, 5, 4],
+        'Thiết kế slide, hoàn thiện báo cáo và đại diện nhóm thuyết trình trước hội đồng.',
+      keySkills: ['Thuyết trình', 'Tạo báo cáo, slide', 'Tổng hợp, thống nhất tài liệu'],
+      skillIndices: [2, 5, 3],
     },
     {
-      roleTitle: 'Hỗ trợ Gắn kết & Ý tưởng',
-      roleBadge: 'Sáng tạo & Hỗ trợ',
+      roleTitle: 'Kiểm định & Đảm bảo chất lượng',
+      roleBadge: 'Rà soát & Phản biện',
       roleDescription:
-        'Đóng góp ý tưởng giải pháp đột phá, lắng nghe phản hồi của các thành viên và hỗ trợ khi có quá tải.',
-      keySkills: ['Ý tưởng sáng tạo', 'Lắng nghe, hỗ trợ', 'Hòa giải bất đồng'],
-      skillIndices: [6, 7, 8],
+        'Kiểm tra, đánh giá đúng sai nội dung kỹ thuật và rà soát tài liệu trước khi nộp.',
+      keySkills: ['Kiểm tra, đánh giá đúng sai', 'Chuyên môn kỹ thuật', 'Viết là làm tài liệu'],
+      skillIndices: [4, 1, 0],
     },
   ];
 

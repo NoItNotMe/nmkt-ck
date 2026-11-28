@@ -2,8 +2,11 @@ import { ArrowLeft, Sparkles, Wrench } from 'lucide-react';
 import { PLACEHOLDER_ITEMS } from '../utils/groupData';
 import { DesignDecisionToolView } from './DesignDecisionToolView';
 import { EngineeringQuizView } from './EngineeringQuizView';
+import { EthicsSimulationToolView } from './EthicsSimulationToolView';
 import { GroupBarButton } from './GroupBarButton';
 import { GanttChartToolView } from './GanttChartToolView';
+import { SiConverterToolView } from './SiConverterToolView';
+import { SlideFixerToolView } from './SlideFixerToolView';
 import { TeamAssignmentToolView } from './TeamAssignmentToolView';
 import { TimeManagementToolView } from './TimeManagementToolView';
 
@@ -45,6 +48,21 @@ export function GroupPage({
   // If muc-5 is selected, render the Chapter 5 team assignment capability matrix
   if (selectedSubpage === 'muc-5') {
     return <TeamAssignmentToolView onBackToList={onBackToList} />;
+  }
+
+  // If muc-7 is selected, render the Chapter 7 minimalist SI unit converter
+  if (selectedSubpage === 'muc-7') {
+    return <SiConverterToolView onBackToList={onBackToList} />;
+  }
+
+  // If muc-8 is selected, render the Chapter 8 Chữa slide tool
+  if (selectedSubpage === 'muc-8') {
+    return <SlideFixerToolView onBackToList={onBackToList} />;
+  }
+
+  // If muc-9 is selected, render the Chapter 9 Tình huống đạo đức simulator
+  if (selectedSubpage === 'muc-9') {
+    return <EthicsSimulationToolView onBackToList={onBackToList} />;
   }
 
   // If another subpage is selected, render a clean empty/in-progress placeholder page

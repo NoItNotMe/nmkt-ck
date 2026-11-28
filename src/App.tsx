@@ -92,6 +92,8 @@ export default function App() {
       document.title = 'Lập biểu đồ Gantt · Chương 4: Quản lý dự án';
     } else if (activeSection === 'groups' && selectedGroupSubpage === 'muc-5') {
       document.title = 'Hỗ trợ phân công · Chương 5: Kỹ năng làm việc nhóm';
+    } else if (activeSection === 'groups' && selectedGroupSubpage === 'muc-8') {
+      document.title = 'Chữa slide · Chương 8: Giao tiếp trong kỹ thuật';
     } else if (activeSection === 'groups' && selectedGroupSubpage) {
       const currentItem = PLACEHOLDER_ITEMS.find(
         (item) => item.id === selectedGroupSubpage

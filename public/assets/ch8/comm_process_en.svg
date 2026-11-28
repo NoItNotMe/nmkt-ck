@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600" role="img" aria-label="The Communication Process: Sender, Encoding, Message, Channel, Decoding, Receiver, Feedback and Noise">
+  <rect width="960" height="600" fill="#0f172a" rx="16"/>
+  <rect x="24" y="24" width="912" height="552" fill="#1e293b" stroke="#334155" stroke-width="2" rx="12"/>
+
+  <text x="480" y="76" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="800" fill="#f8fafc">THE COMMUNICATION PROCESS</text>
+  <text x="480" y="104" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#94a3b8">Sender · Encoding · Message · Channel · Decoding · Receiver · Noise · Feedback</text>
+
+  <!-- Main horizontal pipeline -->
+  <!-- Sender -->
+  <rect x="50" y="220" width="124" height="106" rx="12" fill="#1d4ed8" stroke="#60a5fa" stroke-width="2"/>
+  <text x="112" y="266" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="800" fill="#ffffff">Sender</text>
+  <text x="112" y="290" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#dbeafe">Người gửi</text>
+
+  <path d="M 176 273 L 196 273" stroke="#94a3b8" stroke-width="2.5"/>
+  <polygon points="194,267 204,273 194,279" fill="#94a3b8"/>
+
+  <!-- Encoding -->
+  <rect x="204" y="220" width="124" height="106" rx="12" fill="#0f172a" stroke="#475569" stroke-width="2"/>
+  <text x="266" y="266" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="700" fill="#f8fafc">Encoding</text>
+  <text x="266" y="290" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#94a3b8">Mã hóa</text>
+
+  <path d="M 330 273 L 350 273" stroke="#94a3b8" stroke-width="2.5"/>
+  <polygon points="348,267 358,273 348,279" fill="#94a3b8"/>
+
+  <!-- Message + Channel -->
+  <rect x="358" y="206" width="244" height="134" rx="14" fill="#334155" stroke="#eab308" stroke-width="2"/>
+  <rect x="382" y="222" width="196" height="44" rx="8" fill="#fef08a"/>
+  <text x="480" y="249" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="800" fill="#0f172a">MESSAGE (Thông điệp)</text>
+  <rect x="382" y="280" width="196" height="44" rx="8" fill="#0f172a" stroke="#64748b" stroke-width="1.5"/>
+  <text x="480" y="307" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="700" fill="#f8fafc">CHANNEL (Kênh truyền)</text>
+
+  <!-- Noise Pill above Channel -->
+  <rect x="370" y="132" width="220" height="42" rx="21" fill="#7f1d1d" stroke="#f87171" stroke-width="2"/>
+  <text x="480" y="158" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="800" fill="#fecaca">NOISE (Nhiễu)</text>
+  <path d="M 480 176 L 480 198" stroke="#f87171" stroke-width="2.5" stroke-dasharray="4 3"/>
+  <polygon points="474,195 480,205 486,195" fill="#f87171"/>
+
+  <path d="M 604 273 L 624 273" stroke="#94a3b8" stroke-width="2.5"/>
+  <polygon points="622,267 632,273 622,279" fill="#94a3b8"/>
+
+  <!-- Decoding -->
+  <rect x="632" y="220" width="124" height="106" rx="12" fill="#0f172a" stroke="#475569" stroke-width="2"/>
+  <text x="694" y="266" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="700" fill="#f8fafc">Decoding</text>
+  <text x="694" y="290" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#94a3b8">Giải mã</text>
+
+  <path d="M 758 273 L 778 273" stroke="#94a3b8" stroke-width="2.5"/>
+  <polygon points="776,267 786,273 776,279" fill="#94a3b8"/>
+
+  <!-- Receiver -->
+  <rect x="786" y="220" width="124" height="106" rx="12" fill="#047857" stroke="#34d399" stroke-width="2"/>
+  <text x="848" y="266" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="800" fill="#ffffff">Receiver</text>
+  <text x="848" y="290" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#d1fae5">Người nhận</text>
+
+  <!-- Feedback Loop -->
+  <path d="M 848 332 L 848 446 Q 848 468 826 468 L 134 468 Q 112 468 112 446 L 112 338" fill="none" stroke="#34d399" stroke-width="3"/>
+  <polygon points="105,342 112,328 119,342" fill="#34d399"/>
+
+  <rect x="330" y="444" width="300" height="48" rx="24" fill="#065f46" stroke="#34d399" stroke-width="2"/>
+  <text x="480" y="473" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="800" fill="#ffffff">FEEDBACK (Phản hồi)</text>
+
+  <text x="480" y="538" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#cbd5e1">Quá trình mã hóa – truyền tải – giải mã chỉ khép kín khi có phản hồi xác nhận từ người nhận.</text>
+</svg>

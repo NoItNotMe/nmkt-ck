@@ -7,6 +7,7 @@ import {
   ChevronsDownUp,
   ChevronsUpDown,
   Download,
+  Eye,
   FilePlus2,
   FolderOpen,
   Image as ImageIcon,
@@ -30,7 +31,7 @@ import {
   canOutdentTask,
   computeDurationDays,
   computeEndDateFromDuration,
-  createEmptyProjectState,
+  createBlankProjectState,
   createSampleProjectState,
   deleteTaskAndDescendants,
   diffCalendarDays,
@@ -73,20 +74,20 @@ import {
   GanttTimelinePane,
 } from './gantt/GanttTimelinePane';
 
-const STORAGE_KEY = 'hcmut-gantt-project-v2';
+const STORAGE_KEY = 'hcmut-gantt-project-v3';
 
 function loadInitialProjectState(): GanttProjectState {
   if (typeof window === 'undefined') {
-    return createSampleProjectState();
+    return createBlankProjectState();
   }
   try {
     const saved = window.localStorage.getItem(STORAGE_KEY);
     if (!saved) {
-      return createSampleProjectState();
+      return createBlankProjectState();
     }
     return parseGanttFile(saved);
   } catch {
-    return createSampleProjectState();
+    return createBlankProjectState();
   }
 }
 
@@ -609,13 +610,20 @@ export function GanttChartToolView() {
         'Thao tác này sẽ thay thế bảng tiến độ hiện tại bằng một dự án mới trống. Bạn có thể lưu tệp .gantt trước nếu cần giữ lại.',
       confirmLabel: 'Tạo dự án mới',
       onConfirm: () => {
-        const fresh = createEmptyProjectState();
+        const fresh = createBlankProjectState();
         setProject(fresh);
-        setSelectedTaskId(fresh.tasks[0]?.id ?? null);
+        setSelectedTaskId(null);
         setConfirmModal(null);
-        setStatusNotice('Đã tạo dự án mới.');
+        setStatusNotice('Đã tạo dự án mới trống.');
       },
     });
+  }
+
+  function handleLoadSampleProject() {
+    const sample = createSampleProjectState();
+    setProject(sample);
+    setSelectedTaskId(sample.tasks[1]?.id ?? sample.tasks[0]?.id ?? null);
+    setStatusNotice('Đang hiển thị dữ liệu mẫu.');
   }
 
   function handleViewSelectChange(val: string) {
@@ -832,19 +840,25 @@ export function GanttChartToolView() {
                   role="menuitem"
                   onClick={() => {
                     setImportExportOpen(false);
-                    const sample = createSampleProjectState();
-                    setProject(sample);
-                    setSelectedTaskId(sample.tasks[1]?.id ?? null);
-                    setStatusNotice('Đã khôi phục dự án mẫu.');
+                    handleLoadSampleProject();
                   }}
                   className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs text-slate-700 hover:bg-slate-50 hover:text-slate-950"
                 >
                   <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
-                  <span>Tải lại dữ liệu mẫu</span>
+                  <span>Xem dữ liệu mẫu</span>
                 </button>
               </div>
             )}
           </div>
+
+          <button
+            type="button"
+            onClick={handleLoadSampleProject}
+            className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 text-xs font-semibold whitespace-nowrap shrink-0 text-slate-800 transition-colors hover:border-slate-900 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700"
+          >
+            <Eye className="h-3.5 w-3.5 text-blue-700" aria-hidden="true" />
+            <span>Xem dữ liệu mẫu</span>
+          </button>
         </div>
 
         {/* Right Controls: Today + Filter + View Switcher */}
@@ -1093,11 +1107,36 @@ export function GanttChartToolView() {
                 <tbody>
                   {visibleProjectRows.length === 0 ? (
                     <tr>
-                      <td
-                        colSpan={9}
-                        className="px-4 py-10 text-center text-xs text-slate-500"
-                      >
-                        Không có công việc nào khớp bộ lọc hiện tại.
+                      <td colSpan={9} className="p-0">
+                        <div className="sticky left-0 flex w-full max-w-[440px] flex-col items-center justify-center px-5 py-12 text-center text-xs text-slate-500">
+                          {project.tasks.length === 0 ? (
+                            <div className="flex flex-col items-center gap-3">
+                              <p className="text-sm font-medium text-slate-700">
+                                Chưa có công việc nào.
+                              </p>
+                              <div className="flex flex-wrap items-center justify-center gap-2">
+                                <button
+                                  type="button"
+                                  onClick={handleAddClick}
+                                  className="inline-flex h-8 items-center gap-1.5 rounded-lg bg-slate-900 px-3 text-xs font-semibold text-white transition-colors hover:bg-slate-800"
+                                >
+                                  <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+                                  <span>Thêm công việc</span>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={handleLoadSampleProject}
+                                  className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 text-xs font-semibold text-slate-800 transition-colors hover:border-slate-900 hover:bg-slate-50"
+                                >
+                                  <Eye className="h-3.5 w-3.5 text-blue-700" aria-hidden="true" />
+                                  <span>Xem dữ liệu mẫu</span>
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            'Không có công việc nào khớp bộ lọc hiện tại.'
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ) : (
@@ -1376,15 +1415,26 @@ export function GanttChartToolView() {
                   </tr>
                 </thead>
                 <tbody>
-                  {resourceGroups.map((grp) => (
-                    <FragmentResourceRows
-                      key={grp.resourceName}
-                      group={grp}
-                      selectedTaskId={selectedTaskId}
-                      onSelectTask={setSelectedTaskId}
-                      onEditTask={handleEditClick}
-                    />
-                  ))}
+                  {resourceGroups.length === 0 ? (
+                    <tr>
+                      <td
+                        colSpan={4}
+                        className="px-4 py-12 text-center text-xs text-slate-500"
+                      >
+                        Chưa có công việc hoặc nhân sự nào.
+                      </td>
+                    </tr>
+                  ) : (
+                    resourceGroups.map((grp) => (
+                      <FragmentResourceRows
+                        key={grp.resourceName}
+                        group={grp}
+                        selectedTaskId={selectedTaskId}
+                        onSelectTask={setSelectedTaskId}
+                        onEditTask={handleEditClick}
+                      />
+                    ))
+                  )}
                 </tbody>
               </table>
             )}

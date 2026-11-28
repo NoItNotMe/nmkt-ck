@@ -1,33 +1,31 @@
 import { useEffect, useId, useState } from 'react';
 import {
-  AlertTriangle,
   ArrowLeft,
-  Award,
   Check,
   Copy,
   Plus,
-  RefreshCw,
-  Sparkles,
-  Trash2,
+  Send,
+  Share2,
   User,
   Users,
+  Wrench,
+  X,
 } from 'lucide-react';
 import {
-  buildTeamMatrixTsv,
-  buildTeamSummaryReport,
   createDefaultDemoTeam,
+  createEmptySkills,
   cycleSkillLevel,
-  findSingleDependencies,
-  findSkillGaps,
-  findWellCoveredSkills,
-  getRoleRecommendations,
+  normalizeGroupCode,
   SKILL_LEVEL_LABELS,
   TEAM_SKILLS,
   type SkillLevel,
+  type TeamGroup,
   type TeamMember,
 } from '../utils/teamAssignment';
 
-const STORAGE_KEY = 'team_assignment_skill_matrix_v1';
+const STORAGE_GROUP_KEY = 'when2meet_team_active_group_code_v1';
+const STORAGE_MY_NAME_KEY = 'when2meet_team_my_name_v1';
+const STORAGE_MY_SKILLS_KEY = 'when2meet_team_my_skills_v1';
 
 interface TeamAssignmentToolViewProps {
   onBackToList?: () => void;
@@ -36,158 +34,462 @@ interface TeamAssignmentToolViewProps {
 export function TeamAssignmentToolView({
   onBackToList,
 }: TeamAssignmentToolViewProps) {
-  const [members, setMembers] = useState<TeamMember[]>(() => {
+  // Group state
+  const [currentGroup, setCurrentGroup] = useState<TeamGroup | null>(() => {
+    // If we have demo mode or saved group code
     if (typeof window !== 'undefined') {
       try {
-        const saved = localStorage.getItem(STORAGE_KEY);
+        const savedCode = localStorage.getItem(STORAGE_GROUP_KEY);
+        if (savedCode === 'DEMO') {
+          return {
+            code: 'DEMO',
+            name: 'Đồ án Nhập môn Kỹ thuật - Nhóm mẫu',
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            members: createDefaultDemoTeam(),
+          };
+        }
+      } catch {
+        // ignore
+      }
+    }
+    return null;
+  });
+
+  // Landing input states
+  const [joinCodeInput, setJoinCodeInput] = useState('');
+  const [landingError, setLandingError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // My member editing state inside the group
+  const [myName, setMyName] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem(STORAGE_MY_NAME_KEY) || '';
+    }
+    return '';
+  });
+
+  const [mySkills, setMySkills] = useState<SkillLevel[]>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem(STORAGE_MY_SKILLS_KEY);
         if (saved) {
-          const parsed = JSON.parse(saved) as TeamMember[];
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            return parsed;
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length === TEAM_SKILLS.length) {
+            return parsed as SkillLevel[];
           }
         }
       } catch {
-        // Fallback to demo team
+        // ignore
       }
     }
-    return createDefaultDemoTeam();
+    return createEmptySkills();
   });
 
-  const [activeMemberId, setActiveMemberId] = useState<string>(() => {
-    return members[0]?.id ?? 'member-me';
-  });
-
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saved' | 'error'>('idle');
   const [copyStatus, setCopyStatus] = useState<
-    'idle' | 'copied-report' | 'copied-tsv' | 'error'
+    'idle' | 'copied-code' | 'copied-link' | 'copied-report' | 'copied-tsv' | 'error'
   >('idle');
 
-  const nameInputId = useId();
+  const joinCodeInputId = useId();
+  const myNameInputId = useId();
 
-  // Save changes to localStorage
+  // Poll group updates when inside a live group
   useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(members));
-    } catch {
-      // Storage quota or private browsing
-    }
-  }, [members]);
+    if (!currentGroup || currentGroup.code === 'DEMO') return;
 
-  const activeMember =
-    members.find((m) => m.id === activeMemberId) ?? members[0];
-
-  function handleSkillToggle(memberId: string, skillIndex: number) {
-    setMembers((prev) =>
-      prev.map((member) => {
-        if (member.id !== memberId) return member;
-        const nextSkills = [...member.skills];
-        nextSkills[skillIndex] = cycleSkillLevel(
-          (nextSkills[skillIndex] ?? 0) as SkillLevel
-        );
-        return { ...member, skills: nextSkills };
-      })
-    );
-    setCopyStatus('idle');
-  }
-
-  function handleNameChange(newName: string) {
-    setMembers((prev) =>
-      prev.map((m) =>
-        m.id === activeMemberId ? { ...m, name: newName } : m
-      )
-    );
-    setCopyStatus('idle');
-  }
-
-  function handleAddMember() {
-    const newId = `member-${Date.now()}`;
-    const newMemberNumber = members.length + 1;
-    const newMember: TeamMember = {
-      id: newId,
-      name: `Thành viên ${newMemberNumber}`,
-      isMe: false,
-      skills: Array(TEAM_SKILLS.length).fill(0) as SkillLevel[],
-    };
-    setMembers((prev) => [...prev, newMember]);
-    setActiveMemberId(newId);
-    setCopyStatus('idle');
-  }
-
-  function handleDeleteMember(memberId: string) {
-    if (members.length <= 1) return;
-    setMembers((prev) => {
-      const next = prev.filter((m) => m.id !== memberId);
-      if (activeMemberId === memberId && next[0]) {
-        setActiveMemberId(next[0].id);
+    let isMounted = true;
+    async function fetchGroup() {
+      try {
+        const res = await fetch(`/api/assignment-groups/${currentGroup?.code}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.group && isMounted) {
+            setCurrentGroup(data.group);
+          }
+        }
+      } catch {
+        // Network offline or server unreachable
       }
+    }
+
+    const timer = setInterval(fetchGroup, 4000);
+    return () => {
+      isMounted = false;
+      clearInterval(timer);
+    };
+  }, [currentGroup?.code]);
+
+  // Save active group code to localStorage
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      if (currentGroup) {
+        localStorage.setItem(STORAGE_GROUP_KEY, currentGroup.code);
+      } else {
+        localStorage.removeItem(STORAGE_GROUP_KEY);
+      }
+    } catch {
+      // ignore
+    }
+  }, [currentGroup?.code]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (currentGroup?.code === 'DEMO') return;
+    try {
+      localStorage.setItem(STORAGE_MY_NAME_KEY, myName);
+      localStorage.setItem(STORAGE_MY_SKILLS_KEY, JSON.stringify(mySkills));
+    } catch {
+      // ignore
+    }
+  }, [myName, mySkills, currentGroup?.code]);
+
+  // If we have a saved group code on mount and it's not demo, fetch it
+  useEffect(() => {
+    if (currentGroup || typeof window === 'undefined') return;
+    const savedCode = localStorage.getItem(STORAGE_GROUP_KEY);
+    if (!savedCode) return;
+    if (savedCode === 'DEMO') {
+      setCurrentGroup({
+        code: 'DEMO',
+        name: 'Đồ án Nhập môn Kỹ thuật - Nhóm mẫu',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        members: createDefaultDemoTeam(),
+      });
+      setMyName('Vũ Duy Mạnh');
+      setMySkills([2, 2, 1, 1, 0, 1]);
+      return;
+    }
+
+    async function loadSavedGroup() {
+      try {
+        const res = await fetch(`/api/assignment-groups/${savedCode}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.group) {
+            setCurrentGroup(data.group);
+          }
+        }
+      } catch {
+        // ignore
+      }
+    }
+    loadSavedGroup();
+  }, [currentGroup]);
+
+  async function handleCreateGroup(rawCodeInput?: string) {
+    setLandingError(null);
+    setIsSubmitting(true);
+    const trimmedCode = (rawCodeInput ?? '').trim();
+    const normalizedCode = normalizeGroupCode(trimmedCode);
+    const groupName = normalizedCode ? `Nhóm ${normalizedCode}` : 'Nhóm mới';
+    try {
+      const res = await fetch('/api/assignment-groups', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: groupName,
+          code: trimmedCode,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Không thể tạo nhóm mới.');
+      }
+      setMySkills(createEmptySkills());
+      setSaveStatus('idle');
+      setCurrentGroup(data.group);
+    } catch (err) {
+      setLandingError(
+        err instanceof Error ? err.message : 'Lỗi kết nối máy chủ.'
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
+  async function handleJoinGroup(e: React.FormEvent) {
+    e.preventDefault();
+    setLandingError(null);
+    const code = normalizeGroupCode(joinCodeInput);
+    if (!code) {
+      setLandingError('Vui lòng nhập mã nhóm hợp lệ.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const res = await fetch(`/api/assignment-groups/${code}`);
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Không tìm thấy nhóm với mã này.');
+      }
+      setMySkills(createEmptySkills());
+      setSaveStatus('idle');
+      setCurrentGroup(data.group);
+    } catch (err) {
+      setLandingError(
+        err instanceof Error ? err.message : 'Không tìm thấy nhóm.'
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
+  function handleLoadDemo() {
+    setCurrentGroup({
+      code: 'DEMO',
+      name: 'Đồ án Nhập môn Kỹ thuật - Nhóm mẫu',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      members: createDefaultDemoTeam(),
+    });
+    setMyName('Vũ Duy Mạnh');
+    setMySkills([2, 2, 1, 1, 0, 1]);
+    setLandingError(null);
+  }
+
+  function handleCycleMySkill(index: number) {
+    setMySkills((prev) => {
+      const next = [...prev];
+      next[index] = cycleSkillLevel(next[index] ?? 0);
       return next;
     });
-    setCopyStatus('idle');
+    setSaveStatus('idle');
   }
 
-  function handleResetDemo() {
-    const demo = createDefaultDemoTeam();
-    setMembers(demo);
-    setActiveMemberId(demo[0].id);
-    setCopyStatus('idle');
-  }
+  async function handleSaveMySkills(e: React.FormEvent) {
+    e.preventDefault();
+    if (!myName.trim()) {
+      alert('Vui lòng nhập tên của bạn trước khi gửi.');
+      return;
+    }
 
-  function handleClearAll() {
-    const blank: TeamMember[] = [
-      {
-        id: 'member-me',
-        name: 'Bạn',
-        isMe: true,
-        skills: Array(TEAM_SKILLS.length).fill(0) as SkillLevel[],
-      },
-    ];
-    setMembers(blank);
-    setActiveMemberId('member-me');
-    setCopyStatus('idle');
-  }
+    if (!currentGroup) return;
 
-  async function handleCopyReport() {
-    const text = buildTeamSummaryReport(members);
+    if (currentGroup.code === 'DEMO') {
+      // Local demo update
+      const cleanName = myName.trim();
+      const existingIdx = currentGroup.members.findIndex(
+        (m) => m.name.trim().toLowerCase() === cleanName.toLowerCase()
+      );
+      let updatedMembers = [...currentGroup.members];
+      if (existingIdx >= 0) {
+        updatedMembers[existingIdx] = {
+          ...updatedMembers[existingIdx],
+          name: cleanName,
+          skills: mySkills,
+        };
+      } else {
+        updatedMembers.push({
+          id: `demo_${Date.now()}`,
+          name: cleanName,
+          skills: mySkills,
+        });
+      }
+      setCurrentGroup({
+        ...currentGroup,
+        members: updatedMembers,
+      });
+      setSaveStatus('saved');
+      return;
+    }
+
+    setIsSubmitting(true);
     try {
-      if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(text);
-        setCopyStatus('copied-report');
-        return;
+      const res = await fetch(`/api/assignment-groups/${currentGroup.code}/member`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: myName,
+          skills: mySkills,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Không thể lưu kỹ năng.');
+      }
+      setCurrentGroup(data.group);
+      setSaveStatus('saved');
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Không thể lưu kỹ năng.');
+      setSaveStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
+  async function handleDeleteMember(memberId: string) {
+    if (!currentGroup) return;
+    if (currentGroup.code === 'DEMO') {
+      setCurrentGroup({
+        ...currentGroup,
+        members: currentGroup.members.filter((m) => m.id !== memberId),
+      });
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        `/api/assignment-groups/${currentGroup.code}/member/${memberId}`,
+        { method: 'DELETE' }
+      );
+      if (res.ok) {
+        const data = await res.json();
+        setCurrentGroup(data.group);
       }
     } catch {
-      // fallback
+      alert('Không thể xóa thành viên.');
     }
-    setCopyStatus('error');
   }
 
-  async function handleCopyTsv() {
-    const tsv = buildTeamMatrixTsv(members);
+  async function handleCopyCode() {
+    if (!currentGroup) return;
     try {
-      if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(tsv);
-        setCopyStatus('copied-tsv');
-        return;
-      }
+      await navigator.clipboard.writeText(currentGroup.code);
+      setCopyStatus('copied-code');
+      setTimeout(() => setCopyStatus('idle'), 2500);
     } catch {
-      // fallback
+      setCopyStatus('error');
     }
-    setCopyStatus('error');
   }
 
-  const gaps = findSkillGaps(members);
-  const singleDeps = findSingleDependencies(members);
-  const wellCovered = findWellCoveredSkills(members);
-  const roleRecommendations = getRoleRecommendations(members);
+  async function handleCopyLink() {
+    if (!currentGroup) return;
+    const url = `${window.location.origin}${window.location.pathname}#nhom/muc-5?code=${currentGroup.code}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopyStatus('copied-link');
+      setTimeout(() => setCopyStatus('idle'), 2500);
+    } catch {
+      setCopyStatus('error');
+    }
+  }
 
+  // --- RENDER 1: WHEN2MEET LANDING (CREATE / JOIN GROUP) ---
+  if (!currentGroup) {
+    return (
+      <div className="mx-auto min-h-[calc(100svh_-_3.5rem)] w-full max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
+        {onBackToList && (
+          <div className="mb-6">
+            <button
+              type="button"
+              onClick={onBackToList}
+              className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 text-xs font-medium text-slate-700 transition-colors hover:border-slate-900 hover:bg-slate-50 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700"
+            >
+              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+              <span>Quay lại danh sách công cụ</span>
+            </button>
+          </div>
+        )}
+
+        <header className="border-b border-slate-200 pb-6">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-medium text-slate-500 sm:text-sm">
+            <span className="font-semibold text-blue-700">
+              Chương 5: Kỹ năng làm việc nhóm
+            </span>
+            <span aria-hidden="true">·</span>
+            <span>Hỗ trợ phân công</span>
+          </div>
+
+          <h1 className="mt-2 text-balance text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+            Tạo nhóm hoặc Tham gia bằng 1 mã
+          </h1>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-600">
+            Chủ nhóm tạo một phòng với một mã duy nhất và chia
+            sẻ cho các thành viên. Mỗi thành viên nhập mã để tham gia, điền tên và chọn
+            mức độ 6 kỹ năng của mình để cả nhóm thấy ngay bản đồ năng lực.
+          </p>
+        </header>
+
+        {landingError && (
+          <div className="mt-6 rounded-xl border border-red-200 bg-red-50 p-4 text-xs font-medium text-red-800">
+            {landingError}
+          </div>
+        )}
+
+        <div className="mt-8 max-w-xl mx-auto">
+          {/* Card 2: Join Group by Code */}
+          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
+            <div className="flex items-center gap-2.5 border-b border-slate-100 pb-3">
+              <Users className="h-5 w-5 text-blue-600" />
+              <h2 className="text-base font-bold text-slate-900">
+                Tham gia hoặc Tạo nhóm bằng mã
+              </h2>
+            </div>
+
+            <form onSubmit={handleJoinGroup} className="mt-4 space-y-4">
+              <div>
+                <label
+                  htmlFor={joinCodeInputId}
+                  className="block text-xs font-semibold text-slate-700"
+                >
+                  Nhập mã nhóm hoặc tạo mã mới
+                </label>
+                <input
+                  id={joinCodeInputId}
+                  type="text"
+                  maxLength={12}
+                  value={joinCodeInput}
+                  onChange={(e) => setJoinCodeInput(e.target.value)}
+                  placeholder="Ví dụ: A7K9M2 hoặc NHOM3"
+                  className="mt-1.5 uppercase tracking-widest font-mono text-center font-bold text-lg w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-slate-900 focus:border-blue-600 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600/20"
+                />
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-blue-700 px-5 py-3 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-blue-600 disabled:opacity-50"
+                >
+                  <Share2 className="h-4 w-4" />
+                  <span>Vào nhóm</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => void handleCreateGroup(joinCodeInput)}
+                  disabled={isSubmitting}
+                  className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-slate-800 disabled:opacity-50"
+                >
+                  <Plus className="h-4 w-4" />
+                  <span>Tạo nhóm mới với mã này</span>
+                </button>
+              </div>
+            </form>
+
+            <div className="mt-6 pt-5 border-t border-slate-100 text-center">
+              <p className="text-xs text-slate-500 mb-3">
+                Hoặc trải nghiệm nhanh với dữ liệu mẫu có sẵn:
+              </p>
+              <button
+                type="button"
+                onClick={handleLoadDemo}
+                className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2 text-xs font-semibold text-slate-700 hover:border-slate-900 hover:bg-slate-50"
+              >
+                <Wrench className="h-3.5 w-3.5 text-slate-500" />
+                <span>Xem nhóm mẫu 4 thành viên</span>
+              </button>
+            </div>
+          </section>
+        </div>
+      </div>
+    );
+  }
+
+  // --- RENDER 2: ACTIVE GROUP WORKSPACE ---
   return (
     <div className="mx-auto min-h-[calc(100svh_-_3.5rem)] w-full max-w-6xl px-4 py-8 sm:px-8 sm:py-10">
-      {/* Editorial Header */}
+      {/* Header bar with group code & actions */}
       <header className="border-b border-slate-200 pb-6 sm:pb-8">
         {onBackToList && (
           <div className="mb-4">
             <button
               type="button"
               onClick={onBackToList}
-              className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:border-slate-900 hover:bg-slate-50 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700"
+              className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:border-slate-900 hover:bg-slate-50 hover:text-slate-950"
             >
               <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
               <span>Quay lại danh sách công cụ</span>
@@ -195,293 +497,194 @@ export function TeamAssignmentToolView({
           </div>
         )}
 
-        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-medium text-slate-500 sm:text-sm">
-          <span className="font-semibold text-blue-700">
-            Chương 5: Kỹ năng làm việc nhóm
-          </span>
-          <span aria-hidden="true">·</span>
-          <span>Bản đồ năng lực kỹ thuật</span>
-        </div>
-
-        <div className="mt-2.5 flex flex-wrap items-start justify-between gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h1 className="text-balance text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl lg:text-[2.25rem]">
-              Hỗ trợ phân công
+            <div className="flex flex-wrap items-center gap-2 text-xs font-medium text-slate-500">
+              <span className="font-semibold text-blue-700">
+                Chương 5: Kỹ năng làm việc nhóm
+              </span>
+              <span>·</span>
+              <span>Mã nhóm:</span>
+              <span className="rounded-md bg-slate-900 px-2 py-0.5 font-mono font-bold text-white tracking-wider">
+                {currentGroup.code}
+              </span>
+            </div>
+
+            <h1 className="mt-2 text-balance text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+              {currentGroup.name}
             </h1>
-            <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-600 sm:text-[15px]">
-              Mỗi người tự đánh giá kỹ năng trong 1 phút. Cả nhóm thấy ngay mình
-              có những lỗ hổng năng lực nào và đang quá phụ thuộc vào ai để phân
-              công vai trò dự án cân bằng nhất.
-            </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
-              onClick={handleResetDemo}
-              title="Khôi phục nhóm mẫu 4 thành viên"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-2xs transition-colors hover:border-slate-900 hover:bg-slate-50 hover:text-slate-950"
+              onClick={handleCopyCode}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 hover:border-slate-900 hover:bg-slate-50"
             >
-              <RefreshCw className="h-3.5 w-3.5 text-slate-500" />
-              <span>Dữ liệu mẫu</span>
-            </button>
-            <button
-              type="button"
-              onClick={handleCopyReport}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-2xs transition-colors hover:border-slate-900 hover:bg-slate-50 hover:text-slate-950"
-            >
-              {copyStatus === 'copied-report' ? (
+              {copyStatus === 'copied-code' ? (
                 <>
                   <Check className="h-3.5 w-3.5 text-emerald-600" />
-                  <span className="text-emerald-700">Đã chép báo cáo</span>
+                  <span className="text-emerald-700">Đã chép mã</span>
                 </>
               ) : (
                 <>
                   <Copy className="h-3.5 w-3.5 text-slate-500" />
-                  <span>Sao chép báo cáo</span>
+                  <span>Sao chép mã nhóm</span>
                 </>
               )}
             </button>
+
             <button
               type="button"
-              onClick={handleCopyTsv}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-2xs transition-colors hover:border-slate-900 hover:bg-slate-50 hover:text-slate-950"
+              onClick={handleCopyLink}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 hover:border-slate-900 hover:bg-slate-50"
             >
-              {copyStatus === 'copied-tsv' ? (
+              {copyStatus === 'copied-link' ? (
                 <>
                   <Check className="h-3.5 w-3.5 text-emerald-600" />
-                  <span className="text-emerald-700">Đã chép TSV</span>
+                  <span className="text-emerald-700">Đã chép liên kết</span>
                 </>
               ) : (
                 <>
-                  <Copy className="h-3.5 w-3.5 text-slate-500" />
-                  <span>Xuất bảng Sheets</span>
+                  <Share2 className="h-3.5 w-3.5 text-slate-500" />
+                  <span>Chép link mời</span>
                 </>
               )}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                if (currentGroup.code === 'DEMO') {
+                  setMyName(
+                    typeof window !== 'undefined'
+                      ? localStorage.getItem(STORAGE_MY_NAME_KEY) || ''
+                      : ''
+                  );
+                }
+                setMySkills(createEmptySkills());
+                setSaveStatus('idle');
+                setCurrentGroup(null);
+              }}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-slate-100 px-3.5 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-200"
+            >
+              <span>Đổi nhóm / Tạo mới</span>
             </button>
           </div>
         </div>
       </header>
 
-      {/* Main Two-Zone Workspace */}
+      {/* Two-Zone Workspace */}
       <div className="mt-7 grid grid-cols-1 items-start gap-7 lg:mt-8 lg:grid-cols-12 lg:gap-8">
-        {/* Left Column (5 cols): Member Profile & Skill Evaluator */}
+        {/* Left Column (5 cols): Enter my name and select my skills When2Meet style */}
         <div className="flex flex-col gap-6 lg:col-span-5">
-          {/* Member selector section */}
           <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs sm:p-6">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div className="flex items-center gap-2">
-                <Users className="h-4 w-4 text-emerald-700" />
+                <User className="h-4 w-4 text-emerald-700" />
                 <h2 className="text-base font-bold text-slate-900">
-                  Thành viên nhóm
+                  Kỹ năng của bạn trong nhóm
                 </h2>
               </div>
-              <span className="text-xs font-semibold tabular-nums text-slate-500">
-                {members.length} thành viên
-              </span>
+              {saveStatus === 'saved' && (
+                <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700">
+                  <Check className="h-3.5 w-3.5" /> Đã lưu
+                </span>
+              )}
             </div>
 
-            {/* Member tabs */}
-            <div className="mt-3.5 flex flex-wrap gap-2">
-              {members.map((member) => {
-                const isActive = member.id === activeMemberId;
-                return (
-                  <button
-                    key={member.id}
-                    type="button"
-                    onClick={() => setActiveMemberId(member.id)}
-                    className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all ${
-                      isActive
-                        ? 'border border-emerald-700 bg-emerald-700 text-white shadow-xs'
-                        : 'border border-slate-200 bg-slate-50 text-slate-700 hover:border-slate-300 hover:bg-slate-100'
-                    }`}
-                  >
-                    <User className="h-3 w-3" />
-                    <span>{member.name}</span>
-                    {member.isMe && (
-                      <span
-                        className={`text-[10px] uppercase font-bold tracking-wider ${
-                          isActive ? 'text-emerald-200' : 'text-slate-500'
+            <form onSubmit={handleSaveMySkills} className="mt-4 space-y-4">
+              <div>
+                <label
+                  htmlFor={myNameInputId}
+                  className="block text-xs font-semibold text-slate-700"
+                >
+                  Họ và tên của bạn
+                </label>
+                <input
+                  id={myNameInputId}
+                  type="text"
+                  maxLength={32}
+                  value={myName}
+                  onChange={(e) => {
+                    setMyName(e.target.value);
+                    setSaveStatus('idle');
+                  }}
+                  placeholder="Nhập tên của bạn (vd: Trần Văn Nam)"
+                  className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm font-semibold text-slate-900 focus:border-emerald-600 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-600/20"
+                />
+              </div>
+
+              <div>
+                <p className="text-xs font-medium text-slate-500 mb-2">
+                  Bấm vào từng kỹ năng để chọn mức độ (Chưa có → Làm được → Mạnh nhất):
+                </p>
+
+                <div className="space-y-2">
+                  {TEAM_SKILLS.map((skill, index) => {
+                    const level = mySkills[index] ?? 0;
+                    const isStrong = level === 2;
+                    const isCapable = level === 1;
+
+                    return (
+                      <button
+                        key={skill}
+                        type="button"
+                        onClick={() => handleCycleMySkill(index)}
+                        className={`group flex w-full items-center justify-between gap-3 rounded-xl border p-2.5 text-left transition-all ${
+                          isStrong
+                            ? 'border-emerald-600 bg-emerald-50/70 border-l-[6px] border-l-emerald-600 shadow-2xs'
+                            : isCapable
+                            ? 'border-emerald-300 bg-emerald-50/30 border-l-[6px] border-l-emerald-400'
+                            : 'border-slate-200 bg-slate-50/60 border-l-[6px] border-l-slate-300 hover:bg-slate-100'
                         }`}
                       >
-                        (Bạn)
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
+                        <span className="text-xs sm:text-sm font-semibold text-slate-900">
+                          {skill}
+                        </span>
+                        <span
+                          className={`inline-flex shrink-0 items-center rounded-md px-2 py-0.5 text-xs font-bold transition-all ${
+                            isStrong
+                              ? 'bg-emerald-600 text-white shadow-2xs'
+                              : isCapable
+                              ? 'bg-emerald-200 text-emerald-900'
+                              : 'bg-white text-slate-500 border border-slate-200'
+                          }`}
+                        >
+                          {SKILL_LEVEL_LABELS[level]}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
 
               <button
-                type="button"
-                onClick={handleAddMember}
-                className="inline-flex items-center gap-1 rounded-full border border-dashed border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-blue-700 transition-colors hover:border-blue-700 hover:bg-blue-50"
+                type="submit"
+                disabled={isSubmitting}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-700 px-5 py-3 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-emerald-600 disabled:opacity-50"
               >
-                <Plus className="h-3.5 w-3.5" />
-                <span>Thêm thành viên</span>
+                <Send className="h-4 w-4" />
+                <span>Gửi / Cập nhật kỹ năng của tôi lên nhóm</span>
               </button>
-            </div>
-
-            {/* Active member name input */}
-            {activeMember && (
-              <div className="mt-4 flex items-center gap-2 pt-3 border-t border-slate-100">
-                <div className="flex-1">
-                  <label
-                    htmlFor={nameInputId}
-                    className="block text-xs font-medium text-slate-500"
-                  >
-                    Họ và tên hoặc Biệt danh
-                  </label>
-                  <input
-                    id={nameInputId}
-                    type="text"
-                    maxLength={24}
-                    value={activeMember.name}
-                    onChange={(e) => handleNameChange(e.target.value)}
-                    placeholder="Nhập tên thành viên..."
-                    className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-2 text-sm font-semibold text-slate-900 transition-colors placeholder:text-slate-400 focus:border-emerald-600 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-600/20"
-                  />
-                </div>
-
-                {members.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => handleDeleteMember(activeMember.id)}
-                    title="Xóa thành viên này"
-                    className="mt-5 inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 text-slate-400 transition-colors hover:border-red-300 hover:bg-red-50 hover:text-red-600"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-                )}
-              </div>
-            )}
-          </section>
-
-          {/* Skill assessment panel for active member */}
-          <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs sm:p-6">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <div>
-                <h2 className="text-base font-bold text-slate-900">
-                  Kỹ năng của {activeMember?.name || 'thành viên'}
-                </h2>
-                <p className="mt-0.5 text-xs text-slate-500">
-                  Chạm vào từng kỹ năng để xoay vòng: Chưa có → Làm được → Mạnh nhất.
-                </p>
-              </div>
-            </div>
-
-            {/* List of 10 skills matching the attachment */}
-            <div className="mt-3.5 space-y-2">
-              {TEAM_SKILLS.map((skill, index) => {
-                const level = (activeMember?.skills[index] ?? 0) as SkillLevel;
-                const isStrong = level === 2;
-                const isCapable = level === 1;
-
-                return (
-                  <button
-                    key={skill}
-                    type="button"
-                    onClick={() =>
-                      activeMember && handleSkillToggle(activeMember.id, index)
-                    }
-                    className={`group flex w-full items-center justify-between gap-3 rounded-xl border p-2.5 sm:px-3.5 sm:py-3 text-left transition-all ${
-                      isStrong
-                        ? 'border-emerald-600/60 bg-emerald-50/70 border-l-[6px] border-l-emerald-600 shadow-2xs'
-                        : isCapable
-                        ? 'border-emerald-200/80 bg-emerald-50/30 border-l-[6px] border-l-emerald-400'
-                        : 'border-slate-200 bg-slate-50/60 border-l-[6px] border-l-slate-300 hover:bg-slate-100/70'
-                    }`}
-                  >
-                    <span className="text-sm font-semibold text-slate-900">
-                      {skill}
-                    </span>
-
-                    <span
-                      className={`inline-flex shrink-0 items-center rounded-md px-2.5 py-1 text-xs font-bold transition-all ${
-                        isStrong
-                          ? 'bg-emerald-600 text-white shadow-2xs'
-                          : isCapable
-                          ? 'bg-emerald-200/80 text-emerald-900'
-                          : 'bg-white text-slate-500 border border-slate-200'
-                      }`}
-                    >
-                      {SKILL_LEVEL_LABELS[level]}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
+            </form>
           </section>
         </div>
 
-        {/* Right Column (7 cols): Team Matrix Table & Insights */}
+        {/* Right Column (7 cols): Team Matrix */}
         <div className="flex flex-col gap-6 lg:col-span-7">
-          {/* Analysis Notification Cards matching the HTML attachment */}
-          <section className="space-y-3">
-            {/* Header info */}
-            <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-xs sm:p-5">
-              <div className="flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-blue-600" />
-                <h2 className="text-base font-bold text-slate-900">
-                  Phân tích thực trạng nhóm ({members.length} người)
-                </h2>
-              </div>
-
-              {/* Gaps alert */}
-              {gaps.length > 0 ? (
-                <div className="mt-3.5 rounded-xl border-l-4 border-l-amber-600 border border-amber-200 bg-amber-50/80 p-3.5 text-xs text-amber-950 sm:text-sm">
-                  <div className="flex items-start gap-2">
-                    <AlertTriangle className="h-4 w-4 shrink-0 text-amber-700 mt-0.5" />
-                    <div>
-                      <span className="font-bold">Lỗ hổng của nhóm: </span>
-                      {gaps.map((g) => g.skillName).join(', ')}. Chưa ai làm
-                      được những việc này, cần có người tự học, chia nhau bổ
-                      sung hoặc nhờ cố vấn hướng dẫn.
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="mt-3.5 rounded-xl border-l-4 border-l-emerald-600 border border-emerald-200 bg-emerald-50/80 p-3.5 text-xs text-emerald-950 sm:text-sm">
-                  <div className="flex items-center gap-2">
-                    <Check className="h-4 w-4 shrink-0 text-emerald-700" />
-                    <span>
-                      <strong className="font-bold">Chưa có lỗ hổng:</strong> Mọi
-                      kỹ năng đều có ít nhất 1 thành viên có thể đảm nhận.
-                    </span>
-                  </div>
-                </div>
-              )}
-
-              {/* Single dependency bottleneck alert */}
-              {singleDeps.length > 0 && (
-                <div className="mt-2.5 rounded-xl border-l-4 border-l-red-600 border border-red-200 bg-red-50/80 p-3.5 text-xs text-red-950 sm:text-sm">
-                  <div className="flex items-start gap-2">
-                    <AlertTriangle className="h-4 w-4 shrink-0 text-red-600 mt-0.5" />
-                    <div>
-                      <span className="font-bold">Chỉ dựa vào một người: </span>
-                      {singleDeps
-                        .map((d) => `${d.skillName} (${d.memberName})`)
-                        .join('; ')}
-                      . Nếu người đó bận hoặc quá tải, nhóm sẽ bị nghẽn tiến độ.
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          </section>
-
-          {/* Capability Matrix Table matching the HTML attachment */}
+          {/* Matrix Table */}
           <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs sm:p-6">
             <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
               <div>
                 <h2 className="text-base font-bold text-slate-900">
-                  Bản đồ năng lực cả nhóm
+                  Bảng tổng hợp kỹ năng toàn nhóm
                 </h2>
                 <p className="mt-0.5 text-xs text-slate-500">
-                  Chạm vào bất kỳ ô nào để trực tiếp đổi mức kỹ năng của thành viên.
+                  Hiển thị theo thời gian thực khi các thành viên tham gia nhóm.
                 </p>
               </div>
 
-              {/* Legend matching the attachment */}
               <div className="flex flex-wrap items-center gap-3 text-xs text-slate-600">
                 <span className="inline-flex items-center gap-1.5">
                   <span className="h-3 w-3 rounded-xs border border-slate-300 bg-slate-100" />
@@ -498,154 +701,104 @@ export function TeamAssignmentToolView({
               </div>
             </div>
 
-            {/* Matrix Table */}
-            <div className="mt-4 overflow-x-auto">
-              <table className="w-full min-w-[500px] border-separate border-spacing-1 text-left text-sm">
-                <thead>
-                  <tr>
-                    <th className="py-2 pr-3 text-xs font-semibold text-slate-500 min-w-[170px]">
-                      Kỹ năng
-                    </th>
-                    {members.map((member) => (
-                      <th
-                        key={member.id}
-                        title={member.name}
-                        className="max-w-[90px] truncate py-2 px-1 text-center text-xs font-semibold text-slate-700"
-                      >
-                        {member.name}
-                        {member.isMe && (
-                          <span className="block text-[10px] text-emerald-700 font-bold">
-                            (bạn)
-                          </span>
-                        )}
+            {currentGroup.members.length === 0 ? (
+              <div className="py-12 text-center text-sm text-slate-500">
+                Chưa có thành viên nào tham gia nhóm. Hãy chia sẻ mã nhóm{' '}
+                <strong className="font-mono font-bold text-slate-900">
+                  {currentGroup.code}
+                </strong>{' '}
+                để các thành viên cùng điền.
+              </div>
+            ) : (
+              <div className="mt-4 overflow-x-auto">
+                <table className="w-full border-separate border-spacing-1 text-left text-xs sm:text-sm">
+                  <thead>
+                    <tr>
+                      <th className="py-2 pr-2 text-xs font-semibold text-slate-500 min-w-[135px]">
+                        Kỹ năng
                       </th>
-                    ))}
-                    <th className="py-2 pl-3 text-center text-xs font-semibold text-slate-500">
-                      Tình trạng
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {TEAM_SKILLS.map((skill, skillIndex) => {
-                    const capableCount = members.filter(
-                      (m) => (m.skills[skillIndex] ?? 0) > 0
-                    ).length;
-                    const isGap = capableCount === 0;
-                    const isSingle = capableCount === 1;
-
-                    return (
-                      <tr key={skill} className="hover:bg-slate-50/50">
-                        <td className="py-2 pr-3 font-medium text-slate-900 whitespace-nowrap">
-                          {skill}
-                        </td>
-                        {members.map((member) => {
-                          const level = (member.skills[skillIndex] ??
-                            0) as SkillLevel;
-                          return (
-                            <td key={member.id} className="p-0.5 text-center">
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  handleSkillToggle(member.id, skillIndex)
-                                }
-                                title={`${member.name}: ${SKILL_LEVEL_LABELS[level]} (Bấm để đổi)`}
-                                aria-label={`${member.name} - ${skill}: ${SKILL_LEVEL_LABELS[level]}`}
-                                className={`h-8 w-full min-w-[38px] rounded-lg transition-transform active:scale-90 ${
-                                  level === 2
-                                    ? 'bg-emerald-600 shadow-2xs hover:bg-emerald-700'
-                                    : level === 1
-                                    ? 'bg-emerald-200/90 hover:bg-emerald-300'
-                                    : 'bg-slate-100 hover:bg-slate-200/80 border border-slate-200'
-                                }`}
-                              />
-                            </td>
-                          );
-                        })}
-                        <td className="py-2 pl-3 text-center whitespace-nowrap text-xs">
-                          {isGap ? (
-                            <span className="inline-flex rounded-full bg-red-100 px-2.5 py-0.5 font-bold text-red-700">
-                              Lỗ hổng
+                      {currentGroup.members.map((member) => (
+                        <th
+                          key={member.id}
+                          title={member.name}
+                          className="min-w-[56px] max-w-[84px] py-2 px-0.5 text-center align-bottom text-[11px] font-semibold text-slate-700 whitespace-normal"
+                        >
+                          <div className="flex items-center justify-center gap-0.5">
+                            <span className="whitespace-normal break-words leading-tight">
+                              {member.name}
                             </span>
-                          ) : isSingle ? (
-                            <span className="inline-flex rounded-full bg-amber-100 px-2.5 py-0.5 font-bold text-amber-800">
-                              1 người
-                            </span>
-                          ) : (
-                            <span className="inline-flex rounded-full bg-emerald-50 px-2.5 py-0.5 font-semibold text-emerald-700">
-                              Đảm bảo ({capableCount})
-                            </span>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </section>
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteMember(member.id)}
+                              title="Xóa thành viên"
+                              className="shrink-0 text-slate-300 hover:text-red-600"
+                            >
+                              <X className="h-3 w-3" />
+                            </button>
+                          </div>
+                        </th>
+                      ))}
+                      <th className="py-2 pl-2 text-center text-xs font-semibold text-slate-500 whitespace-nowrap">
+                        Tình trạng
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {TEAM_SKILLS.map((skill, skillIndex) => {
+                      const capableCount = currentGroup.members.filter(
+                        (m) => (m.skills[skillIndex] ?? 0) > 0
+                      ).length;
+                      const isGap = capableCount === 0;
+                      const isSingle = capableCount === 1;
 
-          {/* Chapter 5 Role Suggestions Card */}
-          <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs sm:p-6">
-            <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
-              <Award className="h-4 w-4 text-blue-600" />
-              <h2 className="text-base font-bold text-slate-900">
-                Gợi ý phân công vai trò (Chương 5: Làm việc nhóm)
-              </h2>
-            </div>
-
-            <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
-              {roleRecommendations.map((role) => (
-                <div
-                  key={role.roleTitle}
-                  className="rounded-xl border border-slate-200 bg-slate-50/60 p-3.5 transition-all hover:bg-white hover:border-slate-300 hover:shadow-xs"
-                >
-                  <div className="flex items-center justify-between gap-1.5">
-                    <h3 className="text-sm font-bold text-slate-900">
-                      {role.roleTitle}
-                    </h3>
-                    <span className="rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-semibold text-blue-800">
-                      {role.roleBadge}
-                    </span>
-                  </div>
-
-                  <p className="mt-1 text-xs text-slate-600 line-clamp-2">
-                    {role.roleDescription}
-                  </p>
-
-                  <div className="mt-2 text-xs text-slate-500">
-                    <span className="font-semibold text-slate-700">
-                      Kỹ năng chính:{' '}
-                    </span>
-                    {role.keySkills.join(', ')}
-                  </div>
-
-                  <div className="mt-2.5 flex items-center gap-1.5 pt-2 border-t border-slate-200/80 text-xs">
-                    <span className="font-semibold text-slate-800">
-                      Ưu tiên gợi ý:
-                    </span>
-                    {role.recommendedMembers.length > 0 ? (
-                      <div className="flex flex-wrap gap-1">
-                        {role.recommendedMembers.map((m) => (
-                          <span
-                            key={m.id}
-                            className="inline-flex rounded-md bg-emerald-100 px-2 py-0.5 text-xs font-bold text-emerald-800"
-                          >
-                            {m.name}
-                          </span>
-                        ))}
-                      </div>
-                    ) : (
-                      <span className="text-slate-400 italic">
-                        Chưa có ứng viên mạnh
-                      </span>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
+                      return (
+                        <tr key={skill} className="hover:bg-slate-50/50">
+                          <td className="py-2 pr-2 text-xs font-medium text-slate-900 sm:text-[13px]">
+                            {skill}
+                          </td>
+                          {currentGroup.members.map((member) => {
+                            const level = member.skills[skillIndex] ?? 0;
+                            return (
+                              <td key={member.id} className="p-0.5 text-center">
+                                <div
+                                  title={`${member.name}: ${SKILL_LEVEL_LABELS[level]}`}
+                                  className={`h-8 w-full min-w-[32px] rounded-lg ${
+                                    level === 2
+                                      ? 'bg-emerald-600 shadow-2xs'
+                                      : level === 1
+                                      ? 'bg-emerald-200/90'
+                                      : 'bg-slate-100 border border-slate-200'
+                                  }`}
+                                />
+                              </td>
+                            );
+                          })}
+                          <td className="py-2 pl-2 text-center whitespace-nowrap text-[11px]">
+                            {isGap ? (
+                              <span className="inline-flex rounded-full bg-red-100 px-2 py-0.5 font-bold text-red-700">
+                                Lỗ hổng
+                              </span>
+                            ) : isSingle ? (
+                              <span className="inline-flex rounded-full bg-amber-100 px-2 py-0.5 font-bold text-amber-800">
+                                1 người
+                              </span>
+                            ) : (
+                              <span className="inline-flex rounded-full bg-emerald-50 px-2 py-0.5 font-semibold text-emerald-700">
+                                Đảm bảo ({capableCount})
+                              </span>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </section>
         </div>
       </div>
     </div>
   );
 }
+

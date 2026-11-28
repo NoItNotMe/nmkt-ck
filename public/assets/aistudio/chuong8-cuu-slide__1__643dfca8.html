@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chương 8 · Cứu cái slide xấu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f1f4f7;--card:#fff;--ink:#16202b;--mute:#5a6775;--line:#d5dce4;--empty:#e4e9ee;--acc:#2563eb;--ok:#15803d;--onok:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#11161b;--card:#1a2129;--ink:#e8edf2;--mute:#97a4b1;--line:#2e3944;--empty:#27313b;--acc:#60a5fa;--ok:#4ade80;--onok:#06210f}}
+:root[data-theme="dark"]{--bg:#11161b;--card:#1a2129;--ink:#e8edf2;--mute:#97a4b1;--line:#2e3944;--empty:#27313b;--acc:#60a5fa;--ok:#4ade80;--onok:#06210f}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 "Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:820px;margin:0 auto;padding:28px 16px 48px}
+h1{font-size:clamp(26px,6vw,38px);line-height:1.15;font-weight:800;margin:6px 0 10px;letter-spacing:-.02em}
+h2{font-size:18px;font-weight:700;margin:0 0 8px}
+.src{color:var(--mute);font-size:13px;margin:0}
+.lead{color:var(--mute);margin:0 0 22px;max-width:64ch}
+section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:16px}
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:10px}
+.top b{font-size:14px}
+.pg{flex:1 1 120px;height:8px;border-radius:4px;background:var(--empty);overflow:hidden}
+.pg i{display:block;height:100%;width:0;background:var(--ok);transition:width .3s}
+.link{font:inherit;font-size:13px;color:var(--ink);background:none;border:1px solid var(--line);border-radius:8px;padding:6px 12px;min-height:36px;cursor:pointer}
+.link:disabled{opacity:.4;cursor:not-allowed}
+.go{font:inherit;font-weight:700;font-size:14px;color:var(--onok);background:var(--ok);border:0;border-radius:10px;padding:10px 16px;min-height:44px;cursor:pointer}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.hint{color:var(--mute);font-size:14px;margin:8px 0 0}
+.wk{font-size:13px;font-weight:700;color:var(--mute);margin:0 0 6px}
+.fbk{margin-top:10px;border:1.5px solid var(--ok);border-radius:10px;padding:10px 12px;font-size:14px}
+.fbk p{margin:4px 0 0}
+.sw{overflow-x:auto}
+.sl{container-type:inline-size;position:relative;min-width:520px;aspect-ratio:16/10;background:#fff;color:#16202b;border:1px solid var(--line);border-radius:8px;overflow:hidden;font-family:"Be Vietnam Pro",system-ui,sans-serif}
+.in{position:absolute;inset:0;padding:3.5cqw;display:flex;flex-direction:column;gap:1.4cqw}
+.ti{font-size:5.2cqw;font-weight:800;line-height:1.15}
+.su{font-size:2.3cqw;color:#fde68a}
+.f3 .su{color:#5a6775}
+.bd{flex:1;min-height:0;display:grid;grid-template-columns:1.1fr 1fr;gap:3cqw}
+.tx p{margin:0;font-size:1.5cqw;line-height:1.35;text-align:justify}
+.tx ul{margin:0;padding-left:3cqw;font-size:2.7cqw;line-height:1.5}
+.tx li::marker{color:#2563eb}
+.tg{margin-top:2cqw}
+.tg .g1{font:italic 700 2.6cqw "Comic Sans MS","Comic Neue",cursive;text-decoration:underline;color:#c026d3;text-shadow:.2cqw .2cqw #fde047}
+.tg .g2{font:700 2.4cqw "Courier New",monospace;color:#0891b2}
+.f5 .tg{font:600 2.6cqw "Be Vietnam Pro",system-ui,sans-serif;color:#2563eb}
+.sp{font-size:.95cqw;color:#9ca3af;padding:1.4cqw 0}
+.f2 .sp{font-size:2cqw;color:#16202b;padding:.4cqw 0}
+.stk{position:absolute;top:2.2cqw;right:2.5cqw;font-size:2.2cqw;font-weight:800;color:#fff;background:#f43f5e;padding:.6cqw 1.6cqw;border-radius:2cqw;transform:rotate(8deg);animation:bl 1s infinite}
+@keyframes bl{50%{opacity:.3}}
+[data-e]{cursor:pointer;border-radius:4px}
+[data-e]:hover{outline:2px dashed #f97316;outline-offset:2px}
+.hn{outline:3px solid #f97316;outline-offset:3px}
+.nw{animation:fl 1s}
+@keyframes fl{0%,60%{outline:3px solid #16a34a;outline-offset:3px}100%{outline:3px solid transparent}}
+.cmp{display:grid;grid-template-columns:1fr;gap:14px;margin:12px 0}
+.rl{margin:12px 0 0;padding:0;list-style:none}
+.rl li{padding:8px 0;border-top:1px solid var(--line);font-size:14px}
+@media (prefers-reduced-motion:reduce){.stk,.nw,.bn{animation:none}.pg i{transition:none}}
+
+.bB{background:linear-gradient(#0b1f4d,#0a58a8);color:#fff}
+.bB .t{font-size:2cqw}.bB.f4 .t{font-size:5cqw;font-weight:800}
+.bB .bb{flex:1}.bB p{margin:0 0 1cqw;font-size:1.7cqw;line-height:1.3;text-align:justify}
+.bB ul{margin:0;padding-left:3cqw;font-size:3.4cqw;line-height:1.5}
+.bB .sc,.bB .ct{font-size:1.5cqw;color:#fde68a;font-style:italic}.bB .ct{font-style:normal;color:#bfdbfe;font-size:1.8cqw}
+.bB .s2{font-size:.95cqw;color:#7d93b8}.bB.f2 .s2{font-size:2cqw;color:#fff}
+.bC{background:#5ec8ff}
+.bC .t{font:italic 900 4.6cqw Impact,"Arial Black",sans-serif;background:linear-gradient(#fff,#e11d48);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:.15cqw #000;transform:skew(-8deg);transform-origin:left}
+.bC.f2 .t{font:800 5cqw "Be Vietnam Pro",system-ui,sans-serif;background:none;color:#16202b;-webkit-text-stroke:0;transform:none}
+.bC .bn{align-self:center;background:#000;color:#fde047;border:.6cqw solid #eab308;padding:.3cqw 3cqw;font:900 3.2cqw Impact,sans-serif;animation:bl 1s infinite}
+.bC .su2{font-size:2.3cqw;color:#35566e}
+.bC .pic{position:relative}.bC .pic span{position:absolute;line-height:1}
+.bC.f1 .pic{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2cqw}.bC.f1 .pic span{position:static;font-size:10cqw}
+.bC .cx{font-size:1.2cqw;color:#35566e}.bC ul{margin:0;padding-left:3cqw;font-size:2.8cqw;line-height:1.55;color:#16202b}
+.bD{background:#00ff1a}.bD.f1{background:#fff}
+.bD .in{color:#ffff00}.bD.f1 .in{color:#16202b}
+.bD .t{font-size:4.6cqw;font-weight:700}
+.bD .dl{flex:1;display:flex;flex-direction:column;justify-content:space-around;padding:1.5cqw 2.5cqw;background:repeating-linear-gradient(45deg,#f0f 0 1.5cqw,#0ff 1.5cqw 3cqw)}
+.bD.f2 .dl{background:#f1f5f9}
+.bD .r{display:flex;justify-content:space-between;align-items:center;font-size:2.8cqw}
+.bD .st{min-width:12cqw;text-align:center;border-radius:1cqw;padding:.3cqw 1cqw;font-weight:700;color:#fff;background:#f00}.bD .st.g{background:#0a0}
+.bD.f3 .st{background:#c2410c}.bD.f3 .st.g{background:#1d4ed8}
+.bE .t{font-size:1.8cqw;color:#9ca3af}.bE.f3 .t{font-size:3.8cqw;font-weight:800;color:#16202b}
+.bE .fl{position:relative;flex:1}.bE svg{position:absolute;inset:0;width:100%;height:100%}
+.bE .bx{position:absolute;display:flex;align-items:center;justify-content:center;text-align:center;font-size:1.1cqw;border-radius:.8cqw;padding:.5cqw}
+.bE.f2 .bx{font-size:2.2cqw}.bE .bx.u{background:#2563eb;color:#fff;font-family:inherit}
+.bE .ar{position:absolute;text-align:center;font-size:2.6cqw;color:#16202b;line-height:1}
+</style>
+</head>
+<body>
+<main>
+<p class="src">Nhập môn về kỹ thuật · Chương 8 · Giao tiếp kỹ thuật</p>
+<h1>Cứu cái slide xấu</h1>
+<p class="lead">Slide dưới đây vi phạm nhiều quy tắc thuyết trình. Bấm vào từng chỗ bạn thấy sai. Tìm đúng thì slide tự sửa và hiện quy tắc tương ứng. Mỗi slide có 3–7 lỗi, bí thì bấm “Gợi ý”.</p>
+
+<section>
+<div class="top"><b id="prog"></b><div class="pg"><i id="pgi"></i></div><button class="link" id="hintb" type="button">Gợi ý</button><button class="link" id="newb" type="button">Slide khác</button></div>
+<div class="sw"><div id="slide"></div></div>
+<div id="fb" aria-live="polite"></div>
+</section>
+
+<section id="end" hidden></section>
+
+<p class="src">Dựa trên phần chuẩn bị thuyết trình bằng PowerPoint và chiến lược tổng thể (slide 30–37) và phần viết báo cáo kỹ thuật (slide 68), chương 8; cùng tài liệu “The World’s Worst PowerPoint Presentation Ever” và bài “15 Bad PowerPoint Slides Examples to Avoid” (SlideUpLift).</p>
+</main>
+<script>
+var RB=["#dc2626","#ea580c","#ca8a04","#16a34a","#2563eb","#9333ea"];
+var ERR=[null,
+{n:"Quá nhiều chữ",r:"Dùng cụm từ ngắn thay vì đoạn văn. Quy tắc 6×7: không quá 6 dòng mỗi slide, không quá 7 từ mỗi dòng (slide 30, 32)."},
+{n:"Chữ quá nhỏ",r:"Dùng phông chữ lớn: tiêu đề trên 18, nội dung trên 12, tốt nhất từ 20–22 (slide 30, 32)."},
+{n:"Tương phản kém",r:"Nền, chữ và hình ảnh cần tương phản tốt để người ngồi cuối phòng vẫn đọc được (slide 34)."},
+{n:"Quá nhiều màu",r:"Không dùng quá nhiều màu. Thống nhất kiểu, cỡ và màu chữ trong cả bài (slide 32, 35)."},
+{n:"Quá nhiều kiểu chữ",r:"Không dùng quá nhiều font và kiểu chữ. Chọn kiểu chữ đơn giản, dễ đọc (slide 32, 35)."},
+{n:"Biểu đồ thiếu nhãn",r:"Đồ thị phải có tiêu đề, nhãn trục, đơn vị và được dán nhãn rõ ràng, đơn giản (slide 35, 68)."},
+{n:"Hiệu ứng gây xao nhãng",r:"Hình ảnh động phải có mục đích rõ ràng, chỉ dùng âm thanh khi cần, và không gây mất tập trung bằng quá nhiều thứ trên một slide (slide 32, 34)."}];
+var TOPICS=[
+{t:"Hệ thống tưới cây tự động",s:"Đồ án Nhập môn kỹ thuật · Nhóm 3",p:"Hệ thống sử dụng cảm biến độ ẩm đất để đo độ ẩm tại gốc cây, sau đó vi điều khiển so sánh giá trị đo được với ngưỡng đã cài đặt, nếu độ ẩm thấp hơn ngưỡng thì vi điều khiển sẽ bật máy bơm nước để tưới cho cây, khi độ ẩm đạt ngưỡng thì máy bơm tự động tắt lại, đồng thời hệ thống gửi thông báo về điện thoại của người dùng qua Wi-Fi để theo dõi tình trạng của cây ở bất cứ đâu.",b:["Cảm biến đo độ ẩm đất","Vi điều khiển so với ngưỡng","Thấp hơn ngưỡng thì bật bơm","Gửi thông báo qua Wi-Fi"],g:["TƯỚI ĐÚNG LÚC","TIẾT KIỆM NƯỚC"],sp:"Nguồn 12 V · Bơm 2 A · Cảm biến 0–100 % · Wi-Fi 2,4 GHz",ct:"Độ ẩm đất trong ngày",cy:"Độ ẩm (%)",cx:["6h","9h","12h","15h"],cv:[72,55,38,64],ym:100}
+];
+var $=function(i){return document.getElementById(i)};
+var st;
+TOPICS.forEach(function(t){t.L="A";t.E=ERR});
+var EB=[null,
+{n:"Tường chữ",r:"Mỗi ý chỉ một cụm từ ngắn, tối đa 6 dòng, mỗi dòng tối đa 7 từ. Slide để nhìn lướt chứ không để đọc (Worst PowerPoint, trang 3–4; SlideUpLift #1, #9)."},
+{n:"Chữ quá nhỏ",r:"Dòng thông số nhỏ xíu thì người ngồi cuối phòng không đọc được. Thử đứng cuối phòng, nếu đọc không thoải mái thì phải tăng cỡ chữ (SlideUpLift #10)."},
+{n:"Chép nguyên kịch bản, thiếu nguồn",r:"Slide là công cụ hỗ trợ, không phải máy nhắc lời. Đừng đọc lại những gì đã ghi, hãy nhìn khán giả, và ghi nguồn trích dẫn trên slide (Worst PowerPoint, trang 13–14; SlideUpLift #14)."},
+{n:"Không có thứ bậc thị giác",r:"Tiêu đề lớn nhất, rồi đến tiêu đề phụ, rồi nội dung. Nếu mọi thứ to như nhau, người xem không biết nhìn đâu trước (SlideUpLift #13)."}];
+var EC=[null,
+{n:"Quá nhiều hình",r:"Một đến hai hình mỗi slide là đủ. Hình rải rác, lệch hàng, kích cỡ lộn xộn khiến slide rối và lạc đề (Worst PowerPoint, trang 7–8; SlideUpLift #11, #15)."},
+{n:"Tiêu đề WordArt khó đọc",r:"Tránh chữ nghệ thuật, chữ nghiêng, viền và đổ bóng chồng nhau. Dùng một phông đơn giản, rõ nét (SlideUpLift #5)."},
+{n:"Trang trí không liên quan",r:"Biểu ngữ nhấp nháy và đôi mắt hoạt hình không giúp người xem hiểu bài. Mọi thành phần trên slide phải phục vụ nội dung (Worst PowerPoint, trang 7, 10; SlideUpLift #2)."},
+{n:"Chỉ có hình, không có giải thích",r:"Hình minh hoạ cần đi kèm vài ý chính để người xem biết phải rút ra điều gì. Cân bằng giữa hình và chữ (SlideUpLift #5)."}];
+var ED=[null,
+{n:"Màu nền chói, chữ khó đọc",r:"Tránh màu quá chói. Chữ tối trên nền sáng là dễ đọc nhất, đừng dùng chữ vàng trên nền xanh lá (Worst PowerPoint, trang 5–6; SlideUpLift #3)."},
+{n:"Chữ đè lên hoa văn",r:"Chữ đặt trên nền nhiều màu thì gần như không có màu chữ nào nổi bật. Đặt chữ trên nền trơn (SlideUpLift #6)."},
+{n:"Chỉ phân biệt bằng đỏ và xanh lá",r:"Người mù màu khó phân biệt đỏ và xanh lá. Thêm ký hiệu hoặc chữ (✔/✘) và dùng cặp màu dễ phân biệt như xanh dương và cam (Worst PowerPoint, trang 6)."}];
+var EE=[null,
+{n:"Sơ đồ rối, mũi tên không có chiều",r:"Sắp các bước theo một hướng đọc rõ ràng và nối bằng mũi tên có chiều. Người xem phải thấy ngay cái gì nối với cái gì (SlideUpLift #7, #12)."},
+{n:"Khối không đồng nhất, chữ nhỏ",r:"Các khối cùng loại phải cùng kích thước, màu và kiểu chữ; nhãn phải đủ lớn để đọc từ xa. Rút gọn nhãn thay vì thu nhỏ chữ (SlideUpLift #8, #10, #12, #15)."},
+{n:"Tiêu đề không nêu thông điệp",r:"Tiêu đề nên nêu điều người xem cần nhớ, thay vì chỉ ghi “Sơ đồ” (SlideUpLift #12)."}];
+TOPICS.push(
+{L:"B",E:EB,t:"Bê tông cốt thép",p:["Bê tông cốt thép là vật liệu xây dựng kết hợp bê tông chịu nén rất tốt với thép chịu kéo rất tốt, nhờ vậy cấu kiện làm việc hiệu quả hơn nhiều so với dùng riêng từng loại vật liệu.","Khi dầm chịu uốn, vùng phía trên bị nén còn vùng phía dưới bị kéo, vì thế người thiết kế đặt thép dọc ở phía dưới và thép đai xung quanh để chống nứt và chống cắt.","Hai vật liệu làm việc chung được vì có hệ số giãn nở nhiệt gần nhau và thép được bê tông bao bọc nên không bị gỉ."],b:["Bê tông chịu nén tốt","Thép chịu kéo tốt","Đặt thép ở vùng chịu kéo","Giãn nở nhiệt gần như nhau"],sc:"Như các bạn đã thấy trên slide, em xin đọc lại toàn bộ nội dung để mọi người cùng nghe, và nếu em đọc sai thì mong các bạn thông cảm.",src:"Nguồn: TCVN 5574:2018, Thiết kế kết cấu bê tông và bê tông cốt thép.",sp:"Bê tông B25: Rb = 14,5 MPa · Thép CB400-V: Rs = 350 MPa · Lớp bảo vệ ≥ 25 mm"},
+{L:"C",E:EC,t:"Chọn linh kiện cho robot dò line",s:"Đồ án Nhập môn kỹ thuật · Nhóm 2",b:["Vi điều khiển Arduino Uno","Cảm biến dò line 5 mắt","Hai động cơ DC có hộp số","Pin Li-ion 7,4 V"]},
+{L:"D",E:ED,t:"Pin Li-ion cho xe điện",r:[["Năng lượng trên cân nặng",1],["Tuổi thọ nhiều chu kỳ sạc",1],["Giá thành",0],["An toàn khi quá nhiệt",0]]},
+{L:"E",E:EE,t0:"Sơ đồ",t:"Thiết kế kỹ thuật: lặp lại đến khi đạt",b:["Xác định vấn đề","Nghiên cứu","Đề xuất giải pháp","Chế tạo mẫu","Thử nghiệm"]});
+function arr(n,v){var a=[0];for(var i=0;i<n;i++)a.push(v);return a}
+function fc(f){return f.map(function(v,i){return v?" f"+i:""}).join("")}
+function W(c,f,b,at){return '<div class="sl '+c+fc(f)+'"><div'+(at||' class="in"')+'>'+b+'</div></div>'}
+function li(b){return '<ul>'+b.map(function(x){return '<li>'+x+'</li>'}).join("")+'</ul>'}
+function lB(T,f,live){var a=mkA(f,live);
+ return W("bB",f,'<div'+a(4,"t")+'>'+T.t+'</div><div'+a(1,"bb")+'>'+(f[1]?li(T.b):T.p.map(function(x){return '<p>'+x+'</p>'}).join(""))+'</div><div'+a(3,f[3]?"ct":"sc")+'>'+(f[3]?T.src:T.sc)+'</div><div'+a(2,"s2")+'>'+T.sp+'</div>')}
+var CP=["🤖","🔧","⚙️","🔩","🔋","💡","🧲","📡","🛠️"];
+function lC(T,f,live){var a=mkA(f,live),p="";
+ if(f[1])p='<span>🤖</span><span>⚙️</span>';
+ else CP.forEach(function(e,i){p+='<span style="left:'+(i*37%78)+'%;top:'+(i*53%66)+'%;font-size:'+(5+i*7%6)+'cqw;transform:rotate('+(i*47%70-35)+'deg)">'+e+'</span>'});
+ return W("bC",f,'<div'+a(2,"t")+'>'+T.t+'</div>'+(f[3]?'<div'+a(3,"su2")+'>'+T.s+'</div>':'<div'+a(3,"bn")+'>WELCOME ✨ 👀</div>')+'<div class="bd"><div'+a(1,"pic")+'>'+p+'</div><div'+a(4,"cx")+'>'+(f[4]?li(T.b):'Xem hình.')+'</div></div>')}
+function lD(T,f,live){var a=mkA(f,live);
+ var r=T.r.map(function(x){return '<div class="r"><span>'+x[0]+'</span><span'+a(3,"st"+(x[1]?" g":""))+'>'+(f[3]?(x[1]?"✔ Tốt":"✘ Kém"):"●")+'</span></div>'}).join("");
+ return W("bD",f,'<div class="t">'+T.t+'</div><div'+a(2,"dl")+'>'+r+'</div>',a(1,"in"))}
+var BP=[[4,62,22,16],[58,10,17,22],[28,38,24,13],[66,60,22,18],[6,12,19,20]],BC=["#ef4444","#eab308","#22c55e","#a855f7","#f97316"],BF=["'Courier New'","Georgia","Impact","'Comic Sans MS'","Times"];
+function bp(p){return "left:"+p[0]+"%;top:"+p[1]+"%;width:"+p[2]+"%;height:"+p[3]+"%"}
+function lE(T,f,live){var a=mkA(f,live),s="";
+ var P=T.b.map(function(_,i){return f[1]?[2+20*i,38,16,24]:BP[i]});
+ if(f[1])P.slice(1).forEach(function(_,i){s+='<div'+a(1,"ar")+' style="left:'+(18+20*i)+'%;top:46%;width:4%">➜</div>'});
+ else{s='<svg'+a(1)+' viewBox="0 0 100 100" preserveAspectRatio="none">';P.slice(1).forEach(function(p,i){var q=P[i];s+='<line x1="'+(q[0]+q[2]/2)+'" y1="'+(q[1]+q[3]/2)+'" x2="'+(p[0]+p[2]/2)+'" y2="'+(p[1]+p[3]/2)+'" stroke="#6b7280" stroke-width="2" vector-effect="non-scaling-stroke"/>'});s+='</svg>'}
+ T.b.forEach(function(x,i){s+='<div'+a(2,"bx"+(f[2]?" u":""))+' style="'+bp(P[i])+(f[2]?"":";background:"+BC[i]+";color:#fff;font-family:"+BF[i])+'">'+x+'</div>'});
+ return W("bE",f,'<div'+a(3,"t")+'>'+(f[3]?T.t:T.t0)+'</div><div class="fl">'+s+'</div>')}
+var LAY={A:lA,B:lB,C:lC,D:lD,E:lE};
+function N(){return st.T.E.length-1}
+function chart(T,f){
+ var x0=34,y0=118,pw=170,ph=84,bw=26,gap=(pw-4*bw)/5;
+ var s='<svg viewBox="0 0 220 150" width="100%" role="img" aria-label="Biểu đồ cột">';
+ s+='<line x1="'+x0+'" y1="'+y0+'" x2="'+(x0+pw)+'" y2="'+y0+'" stroke="#16202b"/><line x1="'+x0+'" y1="'+y0+'" x2="'+x0+'" y2="'+(y0-ph)+'" stroke="#16202b"/>';
+ T.cv.forEach(function(v,i){
+  var h=v/T.ym*ph,x=x0+gap+i*(bw+gap);
+  s+='<rect x="'+x+'" y="'+(y0-h)+'" width="'+bw+'" height="'+h+'" fill="#2563eb"/>';
+  if(f[6])s+='<text x="'+(x+bw/2)+'" y="'+(y0+12)+'" font-size="9" text-anchor="middle" fill="#16202b">'+T.cx[i]+'</text>';
+ });
+ if(f[6]){
+  s+='<text x="110" y="14" font-size="11" font-weight="700" text-anchor="middle" fill="#16202b">'+T.ct+'</text>';
+  [0,.5,1].forEach(function(k){s+='<text x="'+(x0-4)+'" y="'+(y0-k*ph+3)+'" font-size="9" text-anchor="end" fill="#16202b">'+Math.round(T.ym*k)+'</text>'});
+  s+='<text x="8" y="'+(y0-ph/2)+'" font-size="9" text-anchor="middle" fill="#16202b" transform="rotate(-90 8 '+(y0-ph/2)+')">'+T.cy+'</text>';
+ }
+ return s+'</svg>';
+}
+function mkA(f,live){return function(n,b){
+  b=b||"";
+  if(!live)return b?' class="'+b+'"':"";
+  if(f[n])return ' data-d="1" class="'+b+(st.last==n?' nw':'')+'"';
+  return ' data-e="'+n+'" role="button" tabindex="0" aria-label="Vùng slide cần kiểm tra" class="'+b+(st.hn==n?' hn':'')+'"';
+ }}
+function slide(T,f,live){return LAY[T.L](T,f,live)}
+function lA(T,f,live){
+ var a=mkA(f,live);
+ var ti=f[4]?T.t:T.t.split("").map(function(ch,i){return ch==" "?" ":'<span style="color:'+RB[i%6]+'">'+ch+'</span>'}).join("");
+ var tx=f[1]?'<ul>'+T.b.map(function(x){return '<li>'+x+'</li>'}).join("")+'</ul>':'<p>'+T.p+'</p>';
+ var tg=f[5]?T.g[0]+" · "+T.g[1]:'<span class="g1">'+T.g[0]+'</span> <span class="g2">'+T.g[1]+'</span>';
+ var cls="sl";for(var k=1;k<=7;k++)if(f[k])cls+=" f"+k;
+ return '<div class="'+cls+'"><div class="in"><div'+a(4,"ti")+'>'+ti+'</div><div'+a(3,"su")+'>'+T.s+'</div>'+
+  '<div class="bd"><div><div'+a(1,"tx")+'>'+tx+'</div><div'+a(5,"tg")+'>'+tg+'</div></div><div'+a(6)+'>'+chart(T,f)+'</div></div>'+
+  '<div'+a(2,"sp")+'>'+T.sp+'</div></div>'+(f[7]?'':'<div'+a(7,"stk")+'>⭐ MỚI!!! 🔊</div>')+'</div>';
+}
+function cnt(){var n=0;for(var i=1;i<=N();i++)if(st.f[i])n++;return n}
+function start(){
+ var prev=st?st.T:null,pool=TOPICS.filter(function(x){return x!==prev});
+ var T=pool[Math.floor(Math.random()*pool.length)];st={T:T,f:arr(T.E.length-1,0),miss:0,hints:0,msg:"",last:0,hn:0};render();
+}
+function render(){
+ var n=cnt();
+ $("slide").innerHTML=slide(st.T,st.f,true);
+ $("prog").textContent="Đã sửa "+n+" / "+N()+" lỗi";
+ $("pgi").style.width=(n/N()*100)+"%";
+ $("hintb").disabled=n==N();
+ $("fb").innerHTML=st.msg?'<p class="hint">'+st.msg+'</p>':st.last?'<div class="fbk"><b>✔ Đã sửa: '+st.T.E[st.last].n+'</b><p>'+st.T.E[st.last].r+'</p></div>':'<p class="hint">Bấm vào chỗ bạn thấy sai trên slide.</p>';
+ if(n==N())showEnd();else $("end").hidden=true;
+}
+function showEnd(){
+ var h='<h2>Bạn đã cứu cả slide</h2><p class="hint" style="margin:0">Bấm nhầm '+st.miss+' lần, dùng gợi ý '+st.hints+' lần.</p>';
+ h+='<div class="cmp"><div><p class="wk">Trước</p><div class="sw">'+slide(st.T,arr(N(),0),false)+'</div></div><div><p class="wk">Sau</p><div class="sw">'+slide(st.T,arr(N(),1),false)+'</div></div></div>';
+ h+='<ul class="rl">'+st.T.E.slice(1).map(function(e){return '<li><b>'+e.n+'.</b> '+e.r+'</li>'}).join("")+'</ul>';
+ h+='<p style="margin:14px 0 0"><button class="go" id="again" type="button">Thử slide khác</button></p>';
+ $("end").innerHTML=h;$("end").hidden=false;
+}
+function pickE(t){
+ var el=t.closest?t.closest("[data-e],[data-d]"):null;
+ if(el&&el.dataset.e){st.f[+el.dataset.e]=1;st.last=+el.dataset.e;st.msg="";st.hn=0;render();return}
+ if(t.closest&&t.closest("[data-d]")){st.msg="Chỗ này đã được sửa rồi.";render();return}
+ if(t.closest&&t.closest(".sl")){st.miss++;st.msg="Chỗ này chưa có lỗi. Hãy thử vùng khác.";render()}
+}
+$("slide").addEventListener("click",function(e){pickE(e.target)});
+$("slide").addEventListener("keydown",function(e){if((e.key=="Enter"||e.key==" ")&&e.target.dataset&&e.target.dataset.e){e.preventDefault();pickE(e.target)}});
+$("hintb").addEventListener("click",function(){
+ var l=[];for(var i=1;i<=N();i++)if(!st.f[i])l.push(i);
+ if(!l.length)return;
+ st.hn=l[Math.floor(Math.random()*l.length)];st.hints++;st.msg="";render();
+ setTimeout(function(){st.hn=0;if(cnt()<N())render()},2500);
+});
+$("newb").addEventListener("click",start);
+$("end").addEventListener("click",function(e){if(e.target.id=="again"){start();$("slide").scrollIntoView({block:"center",behavior:"smooth"})}});
+start();
+</script>
+</body>
+</html>

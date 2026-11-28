@@ -44,19 +44,19 @@ test('Newly added items 5-9 have descriptive titles and subtitles', () => {
   assert.equal(PLACEHOLDER_ITEMS[5].title, 'Kỹ thuật sáng tạo SCAMPER & 5 Why');
   assert.equal(
     PLACEHOLDER_ITEMS[5].subtitle,
-    'Chương 6: Kỹ năng giải quyết vấn đề và sáng tạo'
+    'Chương 6: Kỹ năng giải quyết vấn đề'
   );
 
   assert.equal(PLACEHOLDER_ITEMS[6].id, 'muc-7');
-  assert.equal(PLACEHOLDER_ITEMS[6].title, 'Quy đổi đơn vị kỹ thuật & Hệ SI');
+  assert.equal(PLACEHOLDER_ITEMS[6].title, 'Quy đổi đơn vị về hệ SI');
   assert.equal(PLACEHOLDER_ITEMS[6].subtitle, 'Chương 7: Cơ sở kỹ thuật');
 
   assert.equal(PLACEHOLDER_ITEMS[7].id, 'muc-8');
-  assert.equal(PLACEHOLDER_ITEMS[7].title, 'Chuẩn hóa báo cáo & Thuyết trình');
+  assert.equal(PLACEHOLDER_ITEMS[7].title, 'Chữa slide');
   assert.equal(PLACEHOLDER_ITEMS[7].subtitle, 'Chương 8: Giao tiếp trong kỹ thuật');
 
   assert.equal(PLACEHOLDER_ITEMS[8].id, 'muc-9');
-  assert.equal(PLACEHOLDER_ITEMS[8].title, 'Phân tích tình huống đạo đức kỹ sư');
+  assert.equal(PLACEHOLDER_ITEMS[8].title, 'Tình huống đạo đức');
   assert.equal(PLACEHOLDER_ITEMS[8].subtitle, 'Chương 9: Đạo đức nghề nghiệp');
 });
 

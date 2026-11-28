@@ -28,11 +28,11 @@ test('TeamGroupStore supports custom group code and prevents duplicates', () => 
   );
 });
 
-test('TeamGroupStore upserts members When2Meet-style (case-insensitive match) and removes members', () => {
+test('TeamGroupStore upserts members (case-insensitive match) and removes members', () => {
   const store = new TeamGroupStore(null);
-  const group = store.createGroup('Nhóm thử nghiệm', 'TEST99');
+  store.createGroup('Nhóm thử nghiệm', 'TEST99');
 
-  const first = store.upsertMember('TEST99', 'Minh', [2, 1, 0, 0, 0, 0, 0, 0, 0, 0]);
+  const first = store.upsertMember('TEST99', 'Minh', [2, 1, 0, 0, 0, 0]);
   assert.equal(first.group.members.length, 1);
   assert.equal(first.member.name, 'Minh');
   assert.equal(first.member.skills[0], 2);
@@ -44,7 +44,7 @@ test('TeamGroupStore upserts members When2Meet-style (case-insensitive match) an
   assert.equal(returning.member.skills[0], 2);
 
   // Second member joins
-  const second = store.upsertMember('TEST99', 'Lan', [0, 2, 1, 0, 0, 0, 0, 0, 0, 0]);
+  const second = store.upsertMember('TEST99', 'Lan', [0, 2, 1, 0, 0, 0]);
   assert.equal(second.group.members.length, 2);
 
   // Remove first member
@@ -60,7 +60,7 @@ test('TeamGroupStore persists and reloads from JSON file safely', () => {
   try {
     const store1 = new TeamGroupStore(filePath);
     const created = store1.createGroup('Nhóm Lưu Trữ', 'SAVE01');
-    store1.upsertMember(created.code, 'An', [1, 2, 0, 0, 0, 0, 0, 0, 0, 0]);
+    store1.upsertMember(created.code, 'An', [1, 2, 0, 0, 0, 0]);
 
     const store2 = new TeamGroupStore(filePath);
     const reloaded = store2.getGroup('SAVE01');
@@ -68,7 +68,7 @@ test('TeamGroupStore persists and reloads from JSON file safely', () => {
     assert.equal(reloaded.name, 'Nhóm Lưu Trữ');
     assert.equal(reloaded.members.length, 1);
     assert.equal(reloaded.members[0].name, 'An');
-    assert.deepEqual(reloaded.members[0].skills, [1, 2, 0, 0, 0, 0, 0, 0, 0, 0]);
+    assert.deepEqual(reloaded.members[0].skills, [1, 2, 0, 0, 0, 0]);
   } finally {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   }
