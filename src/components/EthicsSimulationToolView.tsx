@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import {
-  ArrowLeft,
   ArrowRight,
   Check,
   Copy,
@@ -193,18 +192,7 @@ export function EthicsSimulationToolView({
 
   return (
     <div className="mx-auto min-h-[calc(100svh_-_3.5rem)] w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
-      {onBackToList && (
-        <div className="mb-6">
-          <button
-            type="button"
-            onClick={onBackToList}
-            className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 text-xs font-medium text-slate-700 transition-colors hover:border-slate-900 hover:bg-slate-50 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700"
-          >
-            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-            <span>Quay lại danh sách công cụ</span>
-          </button>
-        </div>
-      )}
+
 
       <header className="border-b border-slate-200 pb-6">
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-medium text-slate-500 sm:text-sm">

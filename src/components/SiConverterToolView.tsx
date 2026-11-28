@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react';
-import { ArrowLeft } from 'lucide-react';
+
 import { evaluateSiInput, SI_EXAMPLES } from '../utils/siConverter';
 
 interface SiConverterToolViewProps {
@@ -54,18 +54,7 @@ export function SiConverterToolView({
 
   return (
     <div className="mx-auto min-h-[calc(100svh_-_3.5rem)] w-full max-w-[600px] px-6 pt-10 pb-14 sm:pt-14">
-      {onBackToList && (
-        <div className="mb-8">
-          <button
-            type="button"
-            onClick={onBackToList}
-            className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 transition-colors hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700"
-          >
-            <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
-            <span>Quay lại danh sách công cụ</span>
-          </button>
-        </div>
-      )}
+
 
       <header className="mb-8">
         <div className="flex flex-wrap items-center gap-x-2 text-xs font-medium text-slate-500">

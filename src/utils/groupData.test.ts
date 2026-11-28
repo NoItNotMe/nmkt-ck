@@ -41,7 +41,7 @@ test('Newly added items 5-9 have descriptive titles and subtitles', () => {
   assert.equal(PLACEHOLDER_ITEMS[4].subtitle, 'Chương 5: Kỹ năng làm việc nhóm');
 
   assert.equal(PLACEHOLDER_ITEMS[5].id, 'muc-6');
-  assert.equal(PLACEHOLDER_ITEMS[5].title, 'Kỹ thuật sáng tạo SCAMPER & 5 Why');
+  assert.equal(PLACEHOLDER_ITEMS[5].title, 'Hướng dẫn giải quyết vấn đề');
   assert.equal(
     PLACEHOLDER_ITEMS[5].subtitle,
     'Chương 6: Kỹ năng giải quyết vấn đề'

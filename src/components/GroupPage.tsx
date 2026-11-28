@@ -5,6 +5,7 @@ import { EngineeringQuizView } from './EngineeringQuizView';
 import { EthicsSimulationToolView } from './EthicsSimulationToolView';
 import { GroupBarButton } from './GroupBarButton';
 import { GanttChartToolView } from './GanttChartToolView';
+import { ProblemSolvingGuideView } from './ProblemSolvingGuideView';
 import { SiConverterToolView } from './SiConverterToolView';
 import { SlideFixerToolView } from './SlideFixerToolView';
 import { TeamAssignmentToolView } from './TeamAssignmentToolView';
@@ -50,6 +51,11 @@ export function GroupPage({
     return <TeamAssignmentToolView onBackToList={onBackToList} />;
   }
 
+  // If muc-6 is selected, render the Chapter 6 problem solving guide
+  if (selectedSubpage === 'muc-6') {
+    return <ProblemSolvingGuideView />;
+  }
+
   // If muc-7 is selected, render the Chapter 7 minimalist SI unit converter
   if (selectedSubpage === 'muc-7') {
     return <SiConverterToolView onBackToList={onBackToList} />;
@@ -75,17 +81,6 @@ export function GroupPage({
 
     return (
       <div className="mx-auto min-h-[calc(100svh_-_3.5rem)] w-full max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
-        <div className="mb-6">
-          <button
-            type="button"
-            onClick={onBackToList}
-            className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 text-xs font-medium text-slate-700 transition-colors hover:border-slate-900 hover:bg-slate-50 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700"
-          >
-            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-            <span>Quay lại danh sách công cụ</span>
-          </button>
-        </div>
-
         {/* Empty page canvas / Placeholder tool */}
         <div className="flex min-h-[55vh] w-full flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-50/70 p-8 text-center sm:p-12">
           <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-200 bg-white text-blue-600 shadow-xs">

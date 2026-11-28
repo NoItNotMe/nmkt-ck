@@ -43,10 +43,10 @@ export const PLACEHOLDER_ITEMS: readonly PlaceholderItem[] = [
   },
   {
     id: 'muc-6',
-    title: 'Kỹ thuật sáng tạo SCAMPER & 5 Why',
+    title: 'Hướng dẫn giải quyết vấn đề',
     subtitle: 'Chương 6: Kỹ năng giải quyết vấn đề',
     description:
-      'Công cụ kích thích ý tưởng theo 7 hướng SCAMPER, kết hợp bản đồ tư duy và biểu đồ xương cá xác định nguyên nhân gốc rễ.',
+      'Tổng hợp khung tư duy trực quan (5W1H, SCAMPER, Sáu chiếc mũ tư duy, Ishikawa), kênh hỏi đáp trợ lý AI và bài viết chuyên đề tham khảo.',
   },
   {
     id: 'muc-7',
