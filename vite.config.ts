@@ -10,9 +10,6 @@ export default defineConfig(() => {
     plugins: [
       react(),
       tailwindcss(),
-      // Copies src/assets into dist/ so root-relative URLs like
-      // "/src/assets/images/..." (e.g. generate_image output) still resolve
-      // in production builds. Do not remove.
       {
         name: 'copy-unbundled-src-assets',
         apply: 'build',
@@ -28,6 +25,15 @@ export default defineConfig(() => {
           }
         },
       },
+      {
+        name: 'fix-gh-pages-asset-paths',
+        apply: 'build',
+        transform(code, id) {
+          if (/\.(tsx|ts|jsx|js|css|html)$/.test(id) && !id.includes('node_modules')) {
+            return code.replace(/(["'`(])\/src\/assets\//g, '$1/nmkt-ck/src/assets/');
+          }
+        },
+      },
     ],
     resolve: {
       alias: {
@@ -35,10 +41,7 @@ export default defineConfig(() => {
       },
     },
     server: {
-      // HMR is disabled in AI Studio via DISABLE_HMR env var.
-      // Do not modify—file watching is disabled to prevent flickering during agent edits.
       hmr: process.env.DISABLE_HMR !== 'true',
-      // Disable file watching when DISABLE_HMR is true to save CPU during agent edits.
       watch: process.env.DISABLE_HMR === 'true' ? null : {},
     },
   };
