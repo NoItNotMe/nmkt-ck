@@ -31,8 +31,17 @@ export default defineConfig(() => {
         transform(code, id) {
           if (/\.(tsx|ts|jsx|js|css|html)$/.test(id) && !id.includes('node_modules')) {
             return code
-              .replace(/(["'`(])\/assets\/aistudio\//g, '$1/nmkt-ck/assets/aistudio/')
-              .replace(/(["'`(])\/src\/assets\//g, '$1/nmkt-ck/src/assets/');
+              .replace(/(["'`(])\/(?!nmkt-ck\/)assets\//g, '$1/nmkt-ck/assets/')
+              .replace(/(["'`(])\/(?!nmkt-ck\/)src\/assets\//g, '$1/nmkt-ck/src/assets/');
+          }
+        },
+        generateBundle(_, bundle) {
+          for (const file of Object.values(bundle)) {
+            if (file.type === 'chunk' && typeof file.code === 'string') {
+              file.code = file.code.replace(/\/(?!nmkt-ck\/)assets\//g, '/nmkt-ck/assets/');
+            } else if (file.type === 'asset' && typeof file.source === 'string') {
+              file.source = file.source.replace(/\/(?!nmkt-ck\/)assets\//g, '/nmkt-ck/assets/');
+            }
           }
         },
       },
