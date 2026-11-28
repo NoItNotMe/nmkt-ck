@@ -30,7 +30,9 @@ export default defineConfig(() => {
         apply: 'build',
         transform(code, id) {
           if (/\.(tsx|ts|jsx|js|css|html)$/.test(id) && !id.includes('node_modules')) {
-            return code.replace(/(["'`(])\/src\/assets\//g, '$1/nmkt-ck/src/assets/');
+            return code
+              .replace(/(["'`(])\/assets\/aistudio\//g, '$1/nmkt-ck/assets/aistudio/')
+              .replace(/(["'`(])\/src\/assets\//g, '$1/nmkt-ck/src/assets/');
           }
         },
       },
